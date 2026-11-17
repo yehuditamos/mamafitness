@@ -232,6 +232,11 @@ a{color:inherit}
 .lessbtn{position:absolute;top:calc(var(--safeT) + 64px);left:12px;z-index:4;height:30px;padding:0 11px;border-radius:99px;background:rgba(0,0,0,.18);color:inherit;font-size:12px;font-weight:800;opacity:.7;backdrop-filter:blur(6px)}
 .card.light .lessbtn,.card.m.light .lessbtn{background:rgba(22,19,15,.08)}
 .qc .lessbtn,.p .lessbtn,.g .lessbtn,.c .lessbtn,.k .lessbtn,.end .lessbtn{color:#fff}
+/* good news */
+.nwc .content{bottom:auto;top:calc(var(--safeT) + 100px)}
+.nwe{font-size:64px;line-height:1;margin:18px 0 10px}
+.nwc .hook{font-size:clamp(30px,8.6vw,42px)}
+.nwp{font-size:16.5px;line-height:1.55;margin:14px 0 0;opacity:.92;max-width:32ch}
 /* quiet moment */
 .qc .qin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px 190px 28px;color:#fff;z-index:2}
 .qc .hook{font-size:clamp(34px,10vw,46px);margin-top:28px}
@@ -430,6 +435,20 @@ const S = {
   tvar:  {id:"ZMdDTn-s1z8", c:"The Skinny Confidential", who:"Tony Robbins", role:"בפודקאסט The Skinny Confidential", title:"Tony Robbins on The Need For Variety And Uncertainty in Life", he:"למה צריך גיוון וחוסר ודאות", hook:"למה את צריכה גם *חוסר ודאות?*", c1:"#D84315", c2:"#1E0B05", c3:"#FFB74D"}
 };
 Object.values(S).forEach(x=>x.vert=true);
+/* חדשות טובות בלבד, מהארץ ומהעולם. נבחרו ידנית ונוסחו מחדש בעברית, עם קישור למקור. עודכן: 17.11.2026 */
+const NEWS_UPDATED = "17.11.2026";
+const NW = {
+  alz:   {e:"🧠", where:"ישראל", h:"בינה מלאכותית ישראלית מזהה סיכון לאלצהיימר *שנים לפני* הסימנים הראשונים", p:"מודל שפותח מתוך מחקר של כללית־בילינסון, ALZAI ואוניברסיטת אריאל עבר בהצלחה בדיקת תיקוף רחבה בארה״ב. הוא מזהה סימנים מוקדמים כבר בתיקים רפואיים רגילים.", src:"Israel National News", url:"https://www.israelnationalnews.com/news/436231", d:"15.11.2026", c:["#6B4BD6","#170E36","#C6B6FF"]},
+  soil:  {e:"🌱", where:"ישראל", h:"חוקרים ישראלים פיתחו כלי שמגלה *חיידקים שלא הכרנו* באדמה", p:"כלי AI שמזהה DNA של חיידקים גם כשהם לא מופיעים באף מאגר. זה יכול לעזור למצוא חיידקים שמגנים על יבולים ועוזרים לצמחים לעמוד בבצורת.", src:"World Israel News", url:"https://worldisraelnews.com/israeli-ai-breakthrough-could-unlock-new-possibilities-for-agriculture/", d:"2.11.2026", c:["#2F5D46","#0E2A20","#9FD3A8"]},
+  time:  {e:"🏆", where:"ישראל", h:"המצאות עם שורשים ישראליים *ברשימת ההמצאות הטובות* של TIME לשנת 2026", p:"ביניהן רובוט שמטפל בכוורות דבורים, מודל AI שמסמן לרופאים ממצאים דחופים בצילומים, וכיסא בטיחות לתינוק שהופך לעגלה.", src:"JNS / Heritage Florida Jewish News", url:"https://www.heritagefl.com/story/2026/11/06/news/made-in-israel-startup-nations-footprint-on-times-best-inventions-of-2026/24264.html", d:"6.11.2026", c:["#E8A33D","#3A2208","#FFE08A"]},
+  swim:  {e:"🏊‍♀️", where:"ישראל", h:"אופיר שמחה זכתה *במדליית ארד* באולימפיאדת הנוער", p:"במשחה 200 מטר גב.", src:"הארץ", url:"https://www.haaretz.co.il/news/dailynews/2026-11-01/ty-article-live/000001a1-9403-d03f-aded-deff54250000?liveBlogItemId=1205348202", d:"1.11.2026", c:["#2B6CB0","#0B1E36","#7FD1FF"]},
+  beaver:{e:"🦫", where:"העולם", h:"הבונים חזרו ללוך נס *אחרי 500 שנה*", p:"משפחה של שישה בונים כבר חיה באזור, ובשלוש השנים הקרובות מתוכננות לפחות 15 משפחות.", src:"Good News Dose", url:"https://goodnewsdose.com/good-news-this-week/", d:"10.11.2026", c:["#5B3A12","#1E0B05","#FFB74D"]},
+  ntd:   {e:"🩺", where:"העולם", h:"מחלת השינה ירדה *ב־98%* מאז 1999", p:"ארגון הבריאות העולמי הודיע על התקדמות גדולה מול מחלות טרופיות מוזנחות: 63 מדינות כבר חיסלו לפחות מחלה אחת כזו, לעומת 42 בסוף 2020.", src:"Positive News", url:"https://www.positive.news/society/good-news-stories-from-week-46-of-2026/", d:"13.11.2026", c:["#00897B","#062A26","#7DF0D6"]},
+  vacc:  {e:"💉", where:"העולם", h:"חיסון אישי *כמעט חצה* את הסיכון שסרטן העור יחזור", p:"בניסוי קליני גדול. החיסון בונה את עצמו מהחומר הגנטי של הגידול של כל מטופל, בטכנולוגיית mRNA.", src:"Positive News", url:"https://www.positive.news/society/good-news-stories-from-week-44-of-2026/", d:"30.10.2026", c:["#C2185B","#2A0F1E","#FF8A65"]},
+  nature:{e:"🌍", where:"העולם", h:"הטבע משתקם *בקצב הכי מהיר* שנמדד אי פעם", p:"לפי דוח של האו״ם, 252 מיליון הקטאר של יבשה, ים ומים מתוקים נמצאים בשיקום פעיל ב־149 מדינות. שטח בגודל קזחסטן.", src:"Positive News", url:"https://www.positive.news/society/good-news-stories-from-week-45-of-2026/", d:"6.11.2026", c:["#2F5D46","#0E2A20","#F6D86B"]},
+  barb:  {e:"👶", where:"העולם", h:"בברבדוס כבר *לא נולדים תינוקות* עם HIV", p:"המדינה עצרה את ההעברה מאם לתינוק. הבדיקה והטיפול חינם לכל אישה בהריון.", src:"Positive News", url:"https://www.positive.news/society/good-news-stories-from-week-45-of-2026/", d:"6.11.2026", c:["#AD1457","#2B0616","#F48FB1"]},
+  goats: {e:"🐐", where:"העולם", h:"ילד בן 6 והעיזים שלו גייסו *15,800 דולר* לכלבים בלי בית", p:"אחרי שהכלב שלו מת, הוא ישב ליד הכביש עם העיזים ושלט שהכין בעצמו. אנשים זרים שלחו את השאר.", src:"Good News Dose", url:"https://goodnewsdose.com/good-news-this-week/", d:"12.11.2026", c:["#F9A825","#3B2A05","#FFF176"]}
+};
 const M = {
   cal:   {q:"מה שלא נכנס *ליומן,* נשאר משאלה.", sub:"לחצי ״אני עושה״ על כל תוכן שנגע בך.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", art:"sun", light:true},
   move:  {q:"תנועה באה *לפני* מוטיבציה.", sub:"לא מחכים להרגיש. מתחילים, וההרגשה מצטרפת בדרך.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", art:"wave"},
@@ -548,7 +567,7 @@ const Q = {
   shoulders:{q:"לסדר את הנשימה. לשחרר את *הלסת.*", sub:"עוד רגע ממשיכים.", c1:"#9FD3A8", c2:"#0E2A20"},
   slow:   {q:"אף אחד לא *ממהר* פה.", sub:"גם לא את.", c1:"#F48FB1", c2:"#2B0616"}
 };
-const KIND = {v:"n",m:"n",k:"n",q:"n",g:"r",p:"r",c:"r",w:"a"};
+const KIND = {v:"n",m:"n",k:"n",q:"n",nw:"n",g:"r",p:"r",c:"r",w:"a"};
 const trackItems = id => TOPICS[id].cards.map(c=>({...c, key:"t-"+c.k}));
 function detectTopic(text){ for(const id in TOPICS) if(TOPICS[id].re.test(text||"")) return id; return null; }
 let topics = (()=>{ try{
@@ -561,7 +580,7 @@ let topics = (()=>{ try{
 /* ---------- מנוע הקצב ----------
    רוב הפיד מזין ומנקה את הראש (סרטונים, מסרים, רגעי שקט). שאלה או משימה מגיעות רק מדי פעם,
    אף פעם לא שתיים ברצף, והכל אפשר פשוט לגלול הלאה. */
-const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q};
+const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q,nw:NW};
 const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
 /* ---------- ״פחות מזה״: הפיד לומד ממה שמעצבן אותך ---------- */
@@ -574,7 +593,8 @@ function buildFeed(){
   const answered = {...rl("guts",{}), ...rl("polls",{})};
   const ok = x => !PREF.hide.includes(x.key);
   const vids = shuffle(Object.keys(S).map(k=>({type:"v", key:"v-"+k, ...S[k]})));
-  const light = shuffle([...Object.keys(M).map(k=>mk("m",k)), ...Object.keys(K).map(k=>mk("k",k)), ...Object.keys(Q).map(k=>mk("q",k))]);
+  const news = shuffle(Object.keys(NW).map(k=>mk("nw",k)).filter(x=>!seenWithin(x.key,2))).slice(0,5);
+  const light = shuffle([...Object.keys(M).map(k=>mk("m",k)), ...Object.keys(K).map(k=>mk("k",k)), ...Object.keys(Q).map(k=>mk("q",k)), ...news]);
   const nour=[]; vids.forEach((v,i)=>{ nour.push(v); if(light[i]) nour.push(light[i]); }); nour.push(...light.slice(vids.length));
   const reflMax = Math.max(0, 6 - lessOf("ask")*3);
   let refl = shuffle([...Object.keys(G).map(k=>mk("g",k)), ...Object.keys(P).map(k=>mk("p",k)), mk("c","word")])
@@ -601,6 +621,7 @@ function label(it){
   if(it.type==="k") return `״${plain(it.t).split("·")[0].trim()}״`;
   if(it.type==="w") return `האימון ״${it.habit}״`;
   if(it.type==="q") return `״${plain(it.q)}״`;
+  if(it.type==="nw") return `החדשה ״${plain(it.h)}״`;
   return `״${plain(it.q)}״`;
 }
 const ytUrl = id => (Object.values(S).some(x=>x.id===id) ? "https://www.youtube.com/shorts/" : "https://www.youtube.com/watch?v=")+id;
@@ -717,6 +738,17 @@ function cardHTML(it){
         ${it.opts?`<div class="opts gopts">${it.opts.map((o,i)=>`<button class="opt gopt ${a&&a.i===i?"pick":""}" data-g="${it.key}" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`
           :`<form class="gin" data-g="${it.key}"><textarea rows="2" maxlength="140" placeholder="${esc(it.input)}">${a&&a.text?esc(a.text):""}</textarea><button>זהו ←</button></form>`}
         <div class="gres" id="gres-${it.key}">${a?gutRes(it,a):""}</div>
+      </div>${railHTML(it)}</article>`;
+  }
+  if(it.type==="nw"){
+    return `<article class="card nwc" id="${it.key}" data-k="${it.key}" style="--acc:${it.c[2]}">
+      ${blobs(it.c[0],it.c[1],it.c[2])}<div class="shade" style="height:70%"></div>
+      <div class="content" style="color:#fff">
+        <span class="chip"><span class="d" style="background:#9FD3A8"></span>חדשות טובות · ${it.where==="ישראל"?"🇮🇱 מהארץ":"🌍 מהעולם"}</span>
+        <div class="nwe">${it.e}</div>
+        <h2 class="hook">${kin(it.h)}</h2>
+        <p class="nwp fade">${esc(it.p)}</p>
+        <div class="orig fade">${esc(it.src)} · ${esc(it.d)} · <a href="${it.url}" target="_blank" rel="noopener">לכתבה ↗</a></div>
       </div>${railHTML(it)}</article>`;
   }
   if(it.type==="q"){
@@ -1403,6 +1435,7 @@ function storySlides(){
   return [
     {secs:4, pal, html:`<div class="k">${new Date().toLocaleDateString("he-IL",{weekday:"long",day:"numeric",month:"long"})}</div><h2>${hi} 🌱</h2><p>הסטורי של היום. דקה אחת, ואת ממשיכה.</p>`},
     {secs:6, pal:[pal[2],pal[1],pal[0]], html:`<div class="k">המשפט של היום</div><h2>${kinS(w[0])}</h2><p>${esc(w[1])}</p>`},
+    (()=>{ const ks=Object.keys(NW), n=NW[ks[d%ks.length]]; return {secs:8, pal:n.c, html:`<div class="k">החדשה הטובה של היום · ${n.where==="ישראל"?"🇮🇱":"🌍"}</div><div style="font-size:54px;margin-bottom:8px">${n.e}</div><h2 style="font-size:clamp(30px,8.6vw,40px)">${kinS(n.h)}</h2><p>${esc(n.p)}</p><a class="btn paper" href="${n.url}" target="_blank" rel="noopener">לכתבה ↗</a>`}; })(),
     {secs:9, pal, html:`<div class="k">שאלה אחת</div><h2>מה הכוונה שלך *להיום?*`.replace(/\*(.+?)\*/g,"<em>$1</em>")+`</h2>
       <div class="opts">${["רוגע","מיקוד","תנועה","קשר"].map(v=>`<button class="opt ${todays===v?"pick":""}" data-intent="${v}">${v}</button>`).join("")}</div>`},
     {secs:8, pal:[pal[1],"#000",pal[0]], html:`<div class="k">האתגר של היום</div><h2>${esc(dr[0])}</h2><p>${esc(dr[1])}</p><button class="btn paper" data-dare="${esc(dr[0])}">אני עושה את זה</button>`},
@@ -1426,10 +1459,10 @@ function openStory(){
   ST.raf=requestAnimationFrame(loop);
   el.querySelector(".x").onclick=closeStory;
   let downAt=0;
-  el.onpointerdown=e=>{ downAt=Date.now(); if(e.target.closest("button")) return; ST&&(ST.paused=true); };
+  el.onpointerdown=e=>{ downAt=Date.now(); if(e.target.closest("button,a")) return; ST&&(ST.paused=true); };
   el.onpointerup=el.onpointercancel=()=>{ ST&&(ST.paused=false); };
   el.onclick=e=>{
-    if(!e.target.closest("button")){                       // הקשה: שמאל = הבא, ימין = הקודם. החזקה ארוכה = רק עצירה
+    if(!e.target.closest("button,a")){                       // הקשה: שמאל = הבא, ימין = הקודם. החזקה ארוכה = רק עצירה
       if(Date.now()-downAt>350 || !ST) return;
       if(e.clientX < innerWidth*0.66) nextSlide(); else showSlide(Math.max(0,ST.i-1));
       return;
@@ -1468,6 +1501,7 @@ $("#infoBtn").onclick=()=>{
    <label class="f">🌱 המונה למעלה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">סופר רק מה שעשית: תובנות, פעולות, הזמנות ואימונים. לא כמה גללת.</p>
    <label class="f">מה באמת עובד</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">שלושת הכפתורים, הקשה כפולה לשמירה, שאלות לבטן, אימונים קצרים עם טיימר, סקרים ואתגרים שנשמרים אצלך, ניגון אוטומטי של סרטונים, שאלת שליפה בכניסה הבאה (אחרי הפסקה של חצי שעה לפחות), הוספה ליומן, שיתוף בוואטסאפ או בהעתקה, ומגבלת זמן.</p>
    <label class="f">🎯 הפיד שמתכוונן אלייך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רוב הפיד כאן כדי שתיהני ותנקי את הראש. שאלה או משימה מגיעות רק מדי פעם, ותמיד אפשר פשוט לגלול הלאה. כשאת כותבת תשובה, הפיד מזהה את הנושא (אימונים, העסק, הבית, שקט בראש, ביטחון) ושוזר בין הסרטונים כרטיסים בשבילך. הכל קורה במכשיר שלך.${topics.length?` המסלולים שלך: ${topics.map(t=>TOPICS[t].name).join(", ")}.`:""}</p>
+   <label class="f">📰 חדשות טובות</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רק חדשות טובות, מהארץ ומהעולם, בלי פוליטיקה. נבחרו ידנית, נוסחו מחדש בעברית, ולכל אחת יש קישור למקור. עודכן לאחרונה: ${NEWS_UPDATED}.</p>
    <label class="f">מה עדיין הדגמה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">התוכן נבחר ידנית לגרסה הזו. אין סינון אוטומטי, אין אלגוריתם ואין משתמשים אחרים. הסרטונים נבדקו כקיימים ביוטיוב ב־${VERIFIED_ON}. הכותרות בעברית הן ניסוח שלנו לרעיון של כל הרצאה, לא ציטוט. כרטיסי המסר, השאלות והאימונים מקוריים. האימונים קצרים וכלליים, לא תוכנית אישית: אם יש כאב או מגבלה רפואית, מדלגים. זה לא מוצר רפואי ואין כאן הבטחה לשינוי.</p>
    <label class="f">הפרטיות שלך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">אין חשבון. כל מה שכתבת נשמר רק בדפדפן הזה, במכשיר הזה, ועלול להימחק אם ינוקו נתוני הגלישה. כרגע שמורים: ${insights.length} תובנות, ${actions.length} פעולות.</p>
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
