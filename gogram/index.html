@@ -450,7 +450,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 .stack{display:grid;gap:8px;margin-top:14px}
 .ok{display:flex;gap:10px;align-items:flex-start;background:#E3EEE6;color:#1f4231;border-radius:14px;padding:12px;font-size:14px;line-height:1.5}
 .toast{position:fixed;left:50%;top:calc(var(--safeT) + 64px);transform:translate(-50%,-10px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:99px;font-weight:800;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.25)}
-.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast.on{opacity:1;transform:translate(-50%,0)}.toast.act{pointer-events:auto;padding:6px 6px 6px 16px;display:flex;align-items:center;gap:10px}.tkeep{border:0;border-radius:99px;background:var(--lc,#FFD25C);color:#16130F;font:inherit;font-weight:900;font-size:13.5px;padding:8px 12px}
 
 /* overlays */
 .over{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;padding:calc(var(--safeT) + 22px) 20px calc(var(--safeB) + 20px);overflow-y:auto}
@@ -1195,7 +1195,7 @@ let insights = LS.get("insights", []), actions = LS.get("actions", []), shares =
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("on"),2300); }
+function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.remove("act"); el.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("on"),2300); }
 const pad = n => String(n).padStart(2,"0");
 const heDays = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
 const fmtWhen = d => `יום ${heDays[d.getDay()]}, ${d.getDate()}.${d.getMonth()+1} בשעה ${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -1647,7 +1647,7 @@ function plainPlayer(r){
   let st=-1, muted=true;
   const cmd=(func,args=[])=>{ try{ f.contentWindow.postMessage(JSON.stringify({event:"command",func,args}),"*"); }catch(e){} };
   const isActive = activeKey===r.card.id;
-  f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=${isActive?1:0}&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=${id}&origin=${encodeURIComponent(location.origin)}`;
+  f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=${isActive?1:0}&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=${id}${ccOn?"&cc_load_policy=1&cc_lang_pref=iw&hl=iw":""}&origin=${encodeURIComponent(location.origin)}`;
   f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen=true; f.title="YouTube";
   f.onload=()=>{ try{ f.contentWindow.postMessage(JSON.stringify({event:"listening",id:r.card.id,channel:"widget"}),"*"); }catch(e){}
     r.ready=true; r.card.classList.add("yt-ready"); if(r.wantPlay) startRec(r); if(ccOn) setTimeout(()=>applyCC(r),800); };
@@ -1665,7 +1665,7 @@ function ensurePlayer(card){
   if(EMBED==="plain" || !(window.YT && YT.Player)){ plainPlayer(r); return r; }
   r.rt=setTimeout(()=>{ if(!r.ready && players.get(card.id)===r){ try{ r.p.destroy(); }catch(e){} plainPlayer(r); } },4000);
   r.p = new YT.Player(host, { videoId: card.dataset.yt, host:"https://www.youtube-nocookie.com",
-    playerVars:{ playsinline:1, rel:0, modestbranding:1, controls:1, origin:location.origin, hl:"iw", cc_lang_pref:"iw" },
+    playerVars:{ playsinline:1, rel:0, modestbranding:1, controls:1, origin:location.origin, hl:"iw", cc_lang_pref:"iw", ...(ccOn?{cc_load_policy:1}:{}) },
     events:{
       onReady:()=>{ clearTimeout(r.rt); if(r.plain) return; r.ready=true; card.classList.add("yt-ready"); syncMute(r); if(ccOn) applyCC(r); if(r.wantPlay) startRec(r); else if(r.wantWarm) warm(r); },
       onStateChange:e=>onState(r, e.data),
@@ -1710,7 +1710,7 @@ function onState(r, st){
     r.warming=false; try{ r.p.pauseVideo(); r.p.seekTo(0,true); }catch(e){} return;
   }
   if(st===1) r.warming=false;
-  if(st===1 && ccOn && !r.ccDone){ r.ccDone=true; applyCC(r); }
+  if(st===1 && ccOn){ applyCC(r); }
   if(st===0 && activeKey===r.card.id){ try{ r.p.seekTo(0,true); r.p.playVideo(); }catch(e){} }   // לופ, כמו ברילס
   if(st===1){
     r.card.classList.remove("yt-blocked");
@@ -1892,18 +1892,26 @@ function answerPoll(key,i){
   card.querySelectorAll(".opt").forEach((o,j)=>o.classList.toggle("pick",j===i));
   $("#res-"+key).innerHTML=resHTML(it,i);
 }
-/* double-tap = שומרת לי: מסגרת לד בצבע חדש, והפריט חוזר אלייך אחרי 3 ימים ושוב אחרי שבוע */
+/* double-tap = לייק בשבילי: מסגרת לד בצבע חדש. שמירה (חוזר אחרי 3 ימים ושבוע) רק בכפתור שבהודעה */
 let lastTap=0;
 function led(){ const el=$("#led"); let i=rl("ledi",0); const c=LEDC[i%LEDC.length]; try{ localStorage.setItem("gg_ledi",i+1); }catch(e){}
   el.style.setProperty("--lc",c); document.documentElement.style.setProperty("--lc",c); el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); navigator.vibrate && navigator.vibrate(12); return c; }
 const HEB_DAY=["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+const LIKES = rl("likes",{});
 function keepTap(key,x,y){ led();
   const b=document.createElement("div"); b.className="burst"; b.textContent="✦"; b.style.left=x+"px"; b.style.top=y+"px"; b.style.color="var(--lc)"; document.body.appendChild(b); setTimeout(()=>b.remove(),850);
+  LIKES[key]=Date.now(); try{ localStorage.setItem("gg_likes",JSON.stringify(LIKES)); }catch(e){}
+  const today=Object.values(LIKES).filter(t=>new Date(t).toDateString()===new Date().toDateString()).length;
+  const el=$("#toast"), kept=KEEP.some(k=>k.key===key);
+  el.innerHTML=`✦ ${today} היום${kept?" · שמור":` <button class="tkeep" data-keep="${key}">שיחזור אליי</button>`}`;
+  el.classList.add("on","act"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("on","act"),3200);
+}
+function keepIt(key){
   let e=KEEP.find(k=>k.key===key);
   if(!e){ e={key,at:Date.now(),back:Date.now()+3*DAY,n:0}; KEEP.push(e); saveKeep(); }
-  const week=KEEP.filter(k=>Date.now()-k.at<7*DAY).length;
-  toast(`נשמר ✦ יחזור אלייך ביום ${HEB_DAY[new Date(e.back).getDay()]} · ${week} השבוע`);
+  $("#toast").classList.remove("act"); toast(`נשמר. יחזור אלייך ביום ${HEB_DAY[new Date(e.back).getDay()]}`);
 }
+document.addEventListener("click",e=>{ const t=e.target.closest("[data-keep]"); if(t){ e.stopPropagation(); keepIt(t.dataset.keep); } },true);
 feed.addEventListener("pointerup",e=>{
   if(e.target.closest("button,a,input,textarea,.ra,.slides .inner h3")) { lastTap=0; return; }
   const card=e.target.closest(".card"); if(!card||card.id==="end") return;
