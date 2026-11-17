@@ -301,12 +301,17 @@ a{color:inherit}
 .stbeats li::before,.tlsteps li::before{content:counter(b);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#16130F;font-weight:900;font-size:13px;margin-left:8px}
 .stbeats li.on,.tlsteps li.on{display:block;animation:pop .35s}
 .stnext{margin-left:64px;width:calc(100% - 64px)}
+.like1{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.28);backdrop-filter:blur(8px);color:#fff;font-size:30px;line-height:1;display:grid;place-items:center;padding:0 0 3px;transition:transform .15s}
+.like1:active{transform:scale(.85)}
+.like1.on{color:var(--lc,#FF4D2E);border-color:var(--lc,#FF4D2E);box-shadow:0 0 10px var(--lc,#FF4D2E),0 0 26px var(--lc,#FF4D2E),inset 0 0 10px var(--lc,#FF4D2E);text-shadow:0 0 8px var(--lc,#FF4D2E);animation:pop .4s}
+.light .like1:not(.on){color:#16130F;border-color:rgba(22,19,15,.5);background:rgba(255,255,255,.5)}
+
 .plx{color:var(--acc)}.plq{margin:8px 0 0 64px;font-size:15px;opacity:.85;font-weight:700}
 .plopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 0 0}.plopts .gso{text-align:center;padding:0 8px}
 .plg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.plg>div{background:rgba(0,0,0,.3);border-radius:14px;padding:10px 11px;font-size:14px;line-height:1.4}.plg b{display:block;color:var(--acc);font-size:15px;margin-bottom:4px}.plg span{display:block;margin-top:3px}
 .plc .gsr{margin-left:0}.plc .gsq{margin-left:0}
 
-.rail{left:auto;right:16px;bottom:calc(var(--safeB) + 18px)}
+.tagline{display:none}.rail{left:auto;right:16px;bottom:calc(var(--safeB) + 14px);flex-direction:row;align-items:flex-end;gap:12px}.rail .ra .b{width:44px;height:44px}.rail .ra svg{width:21px;height:21px}.rail .ra{width:58px;font-size:11px}
 .act1{border:0;border-radius:999px;background:rgba(243,238,228,.94);color:#16130F;font:inherit;font-weight:900;font-size:15px;height:46px;padding:0 18px;box-shadow:0 6px 20px rgba(0,0,0,.28);white-space:nowrap}
 .act1:active{transform:scale(.94)}
 .content{padding-left:20px!important;padding-bottom:calc(var(--safeB) + 84px)!important}
@@ -1132,6 +1137,7 @@ const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.ra
 const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
 /* ---------- ״פחות מזה״: הפיד לומד ממה שמעצבן אותך ---------- */
 const rl = (k,d) => { try{ const v=localStorage.getItem("gg_"+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
+const LIKES = rl("likes",{});
 const KEEP = rl("keep",[]);   // [{key,at,back,n}] שמירה בדאבל־טאפ, חוזרת אחרי 3 ואז 7 ימים
 const saveKeep = () => { try{ localStorage.setItem("gg_keep",JSON.stringify(KEEP)); }catch(e){} };
 const LEDC=["#FF4D2E","#FFD25C","#7CF29A","#5CC8FF","#B98CFF","#FF6FD8","#FF9F1C","#00E5C3"];
@@ -1194,6 +1200,11 @@ function buildFeed(){
     { const pa=rl("pl",{}); let pls=units.filter(u=>u[0].type==="pl"); for(const u of pls) units.splice(units.indexOf(u),1);
       if(pls.length<3) pls.push(...shuffle(Object.keys(PL).filter(k=>!("pl-"+k in pa) && !pls.some(u=>u[0].key==="pl-"+k))).slice(0,3-pls.length).map(k=>[mk("pl",k)]));
       pls.slice(0,3).forEach((u,j)=>units.splice(Math.min(1+j*5,units.length),0,u)); }
+    { const t=likeTaste(); if(Object.keys(t).length){
+        const wr=x=>Math.random()/(1+tasteScore(x,t)*0.6);
+        const vs=vq.map(v=>[wr(v),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); vq.length=0; vq.push(...vs);
+        const pl=units.filter(u=>u[0].type==="pl"), rest=units.filter(u=>u[0].type!=="pl").map(u=>[wr(u[0]),u]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+        units.length=0; units.push(...rest); pl.forEach((u,j)=>units.splice(Math.min(1+j*5,units.length),0,u)); } }
     const w=[]; let lastV=false;
     if(vq.length){ w.push(vq.shift()); lastV=true; }
     let tail=0; for(const u of units){ if(!lastV){ if(vq.length) w.push(vq.shift()); else if(++tail>6) break; } w.push(...u); lastV=u[u.length-1].type==="v"; }
@@ -1285,13 +1296,20 @@ const IC = {
 const ACT_LBL={v:"עוד ממנה ▶",pl:"⚖️ עוד קוטביות",st:"💰 עוד סיפור כזה",gs:"🎯 עוד ניחוש",tl:"🧠 עוד כלי",bk:"📚 עוד ספר כזה",g:"🔥 עוד שאלה",p:"➡️ עוד בחירה",k:"➡️ עוד כזה",q:"➡️ עוד כזה",nw:"📰 עוד ידיעה",ba:"➡️ עוד צעד"};
 function railHTML(it){
   if(!it) return `<div class="rail"></div>`;
-  let lbl, kind="more";
-  if(it.type==="m" && it.url){ kind="url"; lbl = it.kind==="study"?"🔬 תוכיחו לי":it.kind==="video"?"🎬 לסרטון":"📖 מתוך הספר"; }
-  else if(it.type==="nm" && it.url){ kind="url"; lbl="😮 מאיפה המספר"; }
-  else if(it.type==="v" && it.who) lbl=`עוד ${it.who.split(",")[0]} ▶`;
-  else lbl = ACT_LBL[it.type] || "➡️ עוד כזה";
-  return `<div class="rail"><button class="act1" data-act="${kind}" data-k="${it.key}">${lbl}</button></div>`;
+  const on=!!LIKES[it.key];
+  // ״אני עושה״ (ליומן) רק איפה שיש משהו לעשות, ״בואי איתי״ (שיתוף) רק איפה שיש מה לשלוח
+  const DO=new Set(["bk","tl","ba","m","k"]), SH=new Set(["v","st","nm","gs","pl","nw","m","bk"]);
+  const d=actions.some(x=>x.key===it.key), sh=shares.includes(it.key);
+  return `<div class="rail"><button class="like1 ${on?"on":""}" data-like="${it.key}" aria-label="אהבתי">${on?"♥":"♡"}</button>${DO.has(it.type)?`<button class="ra ${d?"done":""}" data-a="do" data-k="${it.key}"><span class="b">${IC.do}</span>אני עושה</button>`:""}${SH.has(it.type)?`<button class="ra ${sh?"done":""}" data-a="with" data-k="${it.key}"><span class="b">${IC.with}</span>בואי איתי</button>`:""}</div>`;
 }
+/* מה אהבת מלמד את הפיד: סוג הכרטיס, הדוברת, תחום הספר */
+function likeTaste(){
+  const t={}, add=k=>{ t[k]=(t[k]||0)+1; };
+  Object.keys(LIKES).forEach(key=>{ const m=key.match(/^([a-z]+)-(.+)$/); if(!m) return; add("t:"+m[1]);
+    if(m[1]==="v" && S[m[2]]) add("w:"+S[m[2]].who); if(m[1]==="bk" && BK[m[2]]) add("c:"+BK[m[2]].cat); });
+  return t;
+}
+function tasteScore(f,t){ return (t["t:"+f.type]||0) + 2*(t["w:"+f.who]||0) + 2*(t["c:"+f.cat]||0); }
 function likePred(it){
   if(it.type==="v") return f=>f.type==="v" && f.who===it.who;
   if(it.type==="bk") return f=>f.type==="bk" && f.cat===it.cat;
@@ -1693,9 +1711,11 @@ function refreshRail(key){ const c=document.getElementById(key); if(!c) return; 
 
 /* ---------- interactions in feed ---------- */
 const feed=$("#feed");
-feed.addEventListener("click",e=>{ const b=e.target.closest(".act1"); if(!b) return; e.stopPropagation();
-  const it=byKey(b.dataset.k); if(!it) return;
-  if(b.dataset.act==="url") window.open(it.url,"_blank","noopener"); else moreLike(it.key); },true);
+feed.addEventListener("click",e=>{ const b=e.target.closest("[data-like]"); if(!b) return; e.stopPropagation();
+  const k=b.dataset.like;
+  if(LIKES[k]){ delete LIKES[k]; try{ localStorage.setItem("gg_likes",JSON.stringify(LIKES)); }catch(err){} syncLike(k); toast("הורד מהאהובים"); return; }
+  const r=b.getBoundingClientRect(); keepTap(k, r.left+r.width/2, r.top); },true);
+function syncLike(k){ document.querySelectorAll(`[data-like="${k}"]`).forEach(b=>{ const on=!!LIKES[k]; b.classList.toggle("on",on); b.textContent=on?"♥":"♡"; }); }
 
 /* ---------- YouTube: ניגון אוטומטי בנגן הרשמי (IFrame Player API) ----------
    סרטון אחד בלבד מתנגן: זה שבמרכז המסך. מתחיל מושתק (mute → playVideo), נעצר כשגוללים הלאה,
@@ -1995,13 +2015,12 @@ let lastTap=0;
 function led(){ const el=$("#led"); let i=rl("ledi",0); const c=LEDC[i%LEDC.length]; try{ localStorage.setItem("gg_ledi",i+1); }catch(e){}
   el.style.setProperty("--lc",c); document.documentElement.style.setProperty("--lc",c); el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); navigator.vibrate && navigator.vibrate(12); return c; }
 const HEB_DAY=["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
-const LIKES = rl("likes",{});
 function keepTap(key,x,y){ led();
   const b=document.createElement("div"); b.className="burst"; b.textContent="✦"; b.style.left=x+"px"; b.style.top=y+"px"; b.style.color="var(--lc)"; document.body.appendChild(b); setTimeout(()=>b.remove(),850);
-  LIKES[key]=Date.now(); try{ localStorage.setItem("gg_likes",JSON.stringify(LIKES)); }catch(e){}
+  LIKES[key]=Date.now(); try{ localStorage.setItem("gg_likes",JSON.stringify(LIKES)); }catch(e){} syncLike(key);
   const today=Object.values(LIKES).filter(t=>new Date(t).toDateString()===new Date().toDateString()).length;
   const el=$("#toast"), kept=KEEP.some(k=>k.key===key);
-  el.innerHTML=`✦ ${today} היום${kept?" · שמור":` <button class="tkeep" data-keep="${key}">שיחזור אליי</button>`}`;
+  el.innerHTML=`♥ יותר כאלה בפיד · ${today} היום${kept?" · שמור":` <button class="tkeep" data-keep="${key}">שיחזור אליי</button>`}`;
   el.classList.add("on","act"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("on","act"),3200);
 }
 function keepIt(key){
