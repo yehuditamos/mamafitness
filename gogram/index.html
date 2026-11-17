@@ -39,7 +39,34 @@ button{cursor:pointer;border:0;background:none;padding:0}
 a{color:inherit}
 
 /* ---------- top overlay ---------- */
-.top{position:fixed;inset:0 0 auto 0;z-index:20;padding:calc(var(--safeT) + 10px) 14px 0;display:flex;align-items:center;gap:8px;pointer-events:none}
+.top{position:fixed;inset:0 0 auto 0;z-index:20;padding:calc(var(--safeT) + 10px) 12px 0;display:flex;align-items:center;gap:6px;pointer-events:none}
+.sring{width:40px;height:40px;border-radius:50%;padding:2.5px;background:conic-gradient(from 200deg,#FF4D2E,#F6D86B,#9FD3A8,#7FD1FF,#C6B6FF,#FF4D2E);flex-shrink:0;animation:spinr 6s linear infinite}
+.sring span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--ink);color:var(--paper);font-size:11px;font-weight:900;border:2px solid var(--ink);animation:spinr 6s linear infinite reverse}
+.sring.seen{background:rgba(243,238,228,.35);animation:none}.sring.seen span{animation:none}
+@keyframes spinr{to{transform:rotate(360deg)}}
+/* story viewer */
+.story{position:fixed;inset:0;z-index:55;background:#000;display:none;flex-direction:column;touch-action:none;user-select:none;-webkit-user-select:none}
+.story.on{display:flex;animation:ovIn .25s ease-out}
+.sbars{position:absolute;top:calc(var(--safeT) + 10px);right:10px;left:10px;display:flex;gap:4px;z-index:3}
+.sbars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35);overflow:hidden}
+.sbars i b{display:block;height:100%;width:0;background:#fff}
+.shead{position:absolute;top:calc(var(--safeT) + 22px);right:12px;left:12px;display:flex;align-items:center;gap:10px;z-index:3;color:#fff;font-weight:800;font-size:14px}
+.shead .sav{width:32px;height:32px;border-radius:50%;background:var(--paper);color:var(--ink);display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:13px;direction:ltr}
+.shead small{opacity:.7;font-weight:500}
+.shead .x{margin-right:auto;width:36px;height:36px;color:#fff;font-size:22px}
+.sslide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:calc(var(--safeT) + 80px) 26px calc(var(--safeB) + 40px);color:#fff;overflow:hidden}
+.sslide .bg{z-index:0}
+.sslide>*:not(.bg){position:relative;z-index:2}
+.sslide .k{font-size:13px;font-weight:900;letter-spacing:.4px;opacity:.8;margin-bottom:10px}
+.sslide h2{font-family:var(--serif);font-weight:900;font-size:clamp(36px,10.5vw,52px);line-height:1.05;margin:0 0 14px;text-wrap:balance}
+.sslide h2 em{font-style:normal;color:var(--acc,#FFD25C)}
+.sslide p{font-size:17px;line-height:1.5;margin:0 0 16px;opacity:.92;max-width:30ch}
+.sslide .opts{padding:0;margin-top:6px}
+.sslide .opt{height:58px;font-size:18px}
+.sslide .opt.pick{background:var(--ink);color:#fff}
+.sslide .btn{position:relative;z-index:4}
+.stap{position:absolute;top:0;bottom:0;width:34%;z-index:1}
+.stap.prev{right:0}.stap.next{left:0}
 .top>*{pointer-events:auto}
 .brand{height:36px;padding:0 6px 0 14px;border-radius:99px;background:rgba(243,238,228,.94);backdrop-filter:blur(10px);display:flex;align-items:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
 .brand b{font-family:var(--serif);font-weight:900;font-size:20px;letter-spacing:-.4px;direction:ltr}
@@ -347,6 +374,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 
 <header class="top">
   <div class="brand"><b>Go<i>Gram</i></b><span class="grow" id="grow" title="תובנות, פעולות והזמנות שלך">🌱 <span id="growN">0</span></span></div>
+  <button class="sring" id="storyBtn" aria-label="הסטורי של היום"><span>היום</span></button>
   <div class="flex"></div>
   <button class="pill inb" id="inboxBtn" aria-label="הודעות"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><b class="badge" id="inboxN" hidden>0</b></button>
   <button class="pill" id="timerPill" aria-label="משך שימוש"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">10:00</span></button>
@@ -362,6 +390,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 <div class="toast" id="toast"></div>
 <section class="over recall" id="recall" aria-live="polite"></section>
 <section class="over timeup" id="timeup"></section>
+<section class="story" id="story" aria-label="סטורי"></section>
 
 <script>
 /* GoGram · סבב 2. הכל רץ בדפדפן, בלי שרת ובלי חשבון. נתונים ב-localStorage בלבד. */
@@ -1332,7 +1361,7 @@ function drawTimer(){
   const s=Math.max(0,Math.ceil(r)); $("#timerTxt").textContent=`${Math.floor(s/60)}:${pad(s%60)}`;
   const f=$("#timeFill"); f.style.transform=`scaleX(${Math.max(0,r/((limitMin+session.extra)*60))})`; f.style.background = r<60?"var(--tomato)":"var(--paper)";
 }
-const overlayOn = () => $("#recall").classList.contains("on") || $("#timeup").classList.contains("on");
+const overlayOn = () => $("#recall").classList.contains("on") || $("#timeup").classList.contains("on") || $("#story").classList.contains("on");
 function tick(){
   const now=Date.now(), dt=(now-lastTick)/1000; lastTick=now;
   if(document.hidden || session.ended || overlayOn()) return;
@@ -1358,6 +1387,71 @@ function showTimeUp(byChoice){
   $("#tuMore").onclick=()=>{ if(!limitMin){ el.classList.remove("on"); return; } session.extra+=5; session.ended=false; LS.set("session",session); el.classList.remove("on"); drawTimer(); toast("עוד 5 דקות. בהצלחה"); };
 }
 $("#inboxBtn").onclick=sheetInbox;
+/* ---------- סטורי יומי: מתחלף כל יום, 5 שקופיות, דקה אחת ----------
+   הקשה בצד שמאל = הבא, ימין = הקודם, החזקה = עצירה. הטבעת למעלה צבעונית עד שצפית היום. */
+const DAILY = {
+  words:[["מה שלא נכנס *ליומן,* נשאר משאלה.","צעד אחד קטן היום שווה יותר מתוכנית גדולה מחר."],["את לא צריכה להרגיש מוכנה. את צריכה *להתחיל.*","ההרגשה מצטרפת בדרך."],["הרגל נבנה בימים *הבינוניים.*","לא בימים הטובים."],["לעולם לא *פעמיים* ברצף.","פספסת? הכלל היחיד הוא לא לפספס את הבא."],["מנוחה היא *חלק* מהעבודה.","גם גוף וגם ראש גדלים בהפסקה."],["ביטחון בא *אחרי* הפעולה.","לא לפניה."],["שלמות היא דחיינות *בבגדים יפים.*","תוציאי גרסה, לא יצירת מופת."],["אף אחד לא *ממהר* פה.","גם לא את."],["תנועה באה *לפני* מוטיבציה.","מתחילים, והחשק מגיע."],["שאלה טובה שווה יותר *ממאה סרטונים.*","איזו שאלה את סוחבת היום?"],["להגיד ״אני גאה בך״ לוקח *שתי שניות.*","ונשאר הרבה יותר."],["את עושה יותר ממה שאת *חושבת.*","תני לזה רגע לשקוע."],["הכי קל לוותר ביום *השלישי.*","תגיעי לרביעי."],["עסק גדל בקצב *השיחות* שאת מנהלת.","הודעה אחת היום. רק אחת."]],
+  dares:[["10 דקות בלי טלפון אחרי שקמת","להתחיל את הבוקר עם עצמך, לא עם אחרים."],["הודעה אחת למישהי שלא דיברת איתה חודש","שתי שורות. ״חשבתי עלייך.״"],["לשתות כוס מים לפני הקפה","הגוף שלך יגיד תודה."],["15 דקות הליכה בלי אוזניות","רק את והמחשבות."],["לכתוב 3 דברים שהלכו טוב היום","לפני השינה. על נייר."],["לסיים משימה אחת שדחית","הכי קטנה שיש ברשימה."],["לשים את הטלפון בחדר אחר שעה","ולראות מה קורה."],["לבקש עזרה בדבר אחד","זה לא חולשה. זה ניהול."],["20 סקוואטים עכשיו","או 10. העיקר לזוז."],["להגיד ״לא״ לדבר אחד שלא מתאים","ולהרגיש כמה מקום זה מפנה."]],
+  palettes:[["#FF4D2E","#3B2347","#F6D86B"],["#2B6CB0","#0B1E36","#7FD1FF"],["#2F5D46","#0E2A20","#9FD3A8"],["#C2185B","#2A0F1E","#FF8A65"],["#6B4BD6","#170E36","#C6B6FF"],["#E8A33D","#3A2208","#FFE08A"]]
+};
+const todayStr = () => new Date().toDateString();
+const dayNo = () => Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5);
+function storySlides(){
+  const d=dayNo(), w=DAILY.words[d%DAILY.words.length], dr=DAILY.dares[d%DAILY.dares.length], pal=DAILY.palettes[d%DAILY.palettes.length];
+  const h=new Date().getHours(), hi = h<12?"בוקר טוב":h<17?"צהריים טובים":h<21?"ערב טוב":"לילה טוב";
+  const intent=LS.get("intent",null), todays = intent && intent.d===todayStr() ? intent.v : null;
+  return [
+    {secs:4, pal, html:`<div class="k">${new Date().toLocaleDateString("he-IL",{weekday:"long",day:"numeric",month:"long"})}</div><h2>${hi} 🌱</h2><p>הסטורי של היום. דקה אחת, ואת ממשיכה.</p>`},
+    {secs:6, pal:[pal[2],pal[1],pal[0]], html:`<div class="k">המשפט של היום</div><h2>${kinS(w[0])}</h2><p>${esc(w[1])}</p>`},
+    {secs:9, pal, html:`<div class="k">שאלה אחת</div><h2>מה הכוונה שלך *להיום?*`.replace(/\*(.+?)\*/g,"<em>$1</em>")+`</h2>
+      <div class="opts">${["רוגע","מיקוד","תנועה","קשר"].map(v=>`<button class="opt ${todays===v?"pick":""}" data-intent="${v}">${v}</button>`).join("")}</div>`},
+    {secs:8, pal:[pal[1],"#000",pal[0]], html:`<div class="k">האתגר של היום</div><h2>${esc(dr[0])}</h2><p>${esc(dr[1])}</p><button class="btn paper" data-dare="${esc(dr[0])}">אני עושה את זה</button>`},
+    {secs:4, pal, html:`<h2>זהו. נתראה *מחר.*`.replace(/\*(.+?)\*/g,"<em>$1</em>")+`</h2><p>הטבעת למעלה תחזור להיות צבעונית מחר בבוקר.</p>`}
+  ];
+}
+function kinS(t){ return esc(t).replace(/\*(.+?)\*/g,"<em>$1</em>"); }
+let ST=null;
+function openStory(){
+  const sl=storySlides(), el=$("#story");
+  pauseActive();
+  el.innerHTML=`<div class="sbars">${sl.map(()=>"<i><b></b></i>").join("")}</div>
+    <div class="shead"><span class="sav">G</span><div>GoGram <small>· הסטורי של היום</small></div><button class="x" aria-label="סגירה">✕</button></div>
+    <div id="sbody"></div>`;
+  el.classList.add("on");
+  ST={i:0, sl, t:0, el:0, paused:false, last:performance.now(), raf:0};
+  showSlide(0);
+  const loop=()=>{ if(!ST) return; const now=performance.now(); if(!ST.paused) ST.el+=(now-ST.last)/1000; ST.last=now;
+    const s=ST.sl[ST.i], f=Math.min(1,ST.el/s.secs); const b=el.querySelectorAll(".sbars b")[ST.i]; if(b) b.style.width=(f*100)+"%";
+    if(f>=1) nextSlide(); ST&&(ST.raf=requestAnimationFrame(loop)); };
+  ST.raf=requestAnimationFrame(loop);
+  el.querySelector(".x").onclick=closeStory;
+  let downAt=0;
+  el.onpointerdown=e=>{ downAt=Date.now(); if(e.target.closest("button")) return; ST&&(ST.paused=true); };
+  el.onpointerup=el.onpointercancel=()=>{ ST&&(ST.paused=false); };
+  el.onclick=e=>{
+    if(!e.target.closest("button")){                       // הקשה: שמאל = הבא, ימין = הקודם. החזקה ארוכה = רק עצירה
+      if(Date.now()-downAt>350 || !ST) return;
+      if(e.clientX < innerWidth*0.66) nextSlide(); else showSlide(Math.max(0,ST.i-1));
+      return;
+    }
+    const b=e.target.closest("[data-intent]"); if(b){ LS.set("intent",{d:todayStr(), v:b.dataset.intent}); el.querySelectorAll("[data-intent]").forEach(x=>x.classList.toggle("pick",x===b)); toast(`הכוונה של היום: ${b.dataset.intent} 🌱`); setTimeout(nextSlide,700); return; }
+    const d=e.target.closest("[data-dare]"); if(d){ const txt=d.dataset.dare; closeStory(); setTimeout(()=>sheetDo({type:"m", key:"story-"+dayNo(), q:"האתגר של היום", sub:""}, txt),200); }
+  };
+  LS.set("storySeen", todayStr()); drawStoryRing();
+}
+function showSlide(i){
+  if(!ST) return; ST.i=i; ST.el=0;
+  const s=ST.sl[i], bars=$("#story").querySelectorAll(".sbars b");
+  bars.forEach((b,j)=>b.style.width = j<i ? "100%" : "0%");
+  const light=ST.sl[0].pal[2];
+  $("#sbody").innerHTML=`<div class="sslide" style="--acc:${light}">${blobs(s.pal[0],s.pal[1],s.pal[2])}${s.html}</div>`;
+  $("#sbody .sslide").querySelectorAll(".blob").forEach(b=>b.style.animationPlayState="running");
+}
+function nextSlide(){ if(!ST) return; if(ST.i<ST.sl.length-1) showSlide(ST.i+1); else closeStory(); }
+function closeStory(){ if(!ST) return; cancelAnimationFrame(ST.raf); ST=null; $("#story").classList.remove("on"); $("#story").innerHTML=""; setTimeout(playActive,200); }
+function drawStoryRing(){ $("#storyBtn").classList.toggle("seen", LS.get("storySeen","")===todayStr()); }
+$("#storyBtn").onclick=openStory;
+drawStoryRing();
 $("#timerPill").onclick=()=>{
   openSheet(`<h3>כמה זמן לתת לזה?</h3><p class="lead">כשהזמן נגמר הפיד נעצר ומזמין אותך לצאת ליישם. תמיד אפשר לבחור להמשיך.</p>
    <div class="chs" id="lim">${[5,10,15,0].map(m=>`<button class="ch ${m===limitMin?"on":""}" data-m="${m}">${m?m+" דק׳":"בלי מגבלה"}</button>`).join("")}</div>
