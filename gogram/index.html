@@ -1632,7 +1632,9 @@ const CC_TRACK = {languageCode:"en", translationLanguage:{languageCode:"iw", lan
 function applyCC(r){
   if(!r || !r.ready || !r.p) return;
   try{
-    if(ccOn){ r.p.loadModule && r.p.loadModule("captions"); r.p.setOption && r.p.setOption("captions","track",CC_TRACK); r.p.setOption && r.p.setOption("captions","fontSize",3); }
+    if(ccOn){ r.p.loadModule && r.p.loadModule("captions"); r.p.setOption && r.p.setOption("captions","track",CC_TRACK); r.p.setOption && r.p.setOption("captions","fontSize",3);
+      // המודול נטען אחרי רגע, ואז ההגדרה נקלטת. מנסים שוב כמה פעמים
+      [500,1500,3000].forEach(t=>setTimeout(()=>{ try{ if(ccOn){ r.p.setOption("captions","track",CC_TRACK); r.p.setOption("captions","fontSize",3); } }catch(e){} },t)); }
     else { r.p.unloadModule && r.p.unloadModule("captions"); }
   }catch(e){}
 }
