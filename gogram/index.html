@@ -237,6 +237,40 @@ a{color:inherit}
 .nwe{font-size:64px;line-height:1;margin:18px 0 10px}
 .nwc .hook{font-size:clamp(30px,8.6vw,42px)}
 .nwp{font-size:16.5px;line-height:1.55;margin:14px 0 0;opacity:.92;max-width:32ch}
+/* free flow */
+.ffw{position:fixed;inset:0;z-index:58;background:#F6F1E7;color:var(--ink);display:none;flex-direction:column}
+.ffw.on{display:flex;animation:ovIn .3s ease-out}
+.ffw.night{background:#0E1424;color:#E9EEF8}
+.ffbar{display:flex;align-items:center;gap:10px;padding:calc(var(--safeT) + 12px) 16px 8px}
+.ffbar .t{flex:1;font-weight:900;font-size:15px}
+.ffbar .t small{display:block;font-weight:500;font-size:12px;opacity:.65}
+.ffclock{font-variant-numeric:tabular-nums;font-weight:900;font-size:15px;padding:6px 12px;border-radius:99px;background:rgba(0,0,0,.06)}
+.night .ffclock{background:rgba(255,255,255,.1)}
+.ffx{width:38px;height:38px;border-radius:50%;font-size:20px;color:inherit}
+.ffprog{height:3px;margin:0 16px;border-radius:3px;background:rgba(0,0,0,.08);overflow:hidden}
+.night .ffprog{background:rgba(255,255,255,.12)}
+.ffprog i{display:block;height:100%;width:0;background:var(--tomato);transition:width .4s}
+.night .ffprog i{background:#7FD1FF}
+.ffarea{flex:1;position:relative;padding:0 18px}
+.ffw textarea{width:100%;height:100%;border:0;background:transparent;resize:none;outline:none;box-shadow:none;padding:14px 2px 40vh;font-family:var(--serif);font-size:21px;line-height:1.55;color:inherit;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 22%,#000 62%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 22%,#000 62%)}
+.ffw textarea::placeholder{color:inherit;opacity:.35}
+.ffnudge{position:absolute;right:18px;left:18px;bottom:14px;text-align:center;font-weight:800;font-size:15px;opacity:0;transform:translateY(8px);transition:.5s;pointer-events:none}
+.ffnudge.on{opacity:.75;transform:none}
+.ffrule{padding:6px 18px 0;font-size:12.5px;opacity:.6;font-weight:600}
+.ffend{padding:calc(var(--safeT) + 26px) 20px calc(var(--safeB) + 20px);overflow-y:auto;flex:1}
+.ffend h2{font-family:var(--serif);font-weight:900;font-size:clamp(36px,10vw,48px);line-height:1.05;margin:0 0 10px}
+.ffend p{font-size:16px;line-height:1.55;margin:0 0 14px;opacity:.85}
+.ffend .lbl{font-weight:900;font-size:14px;margin:18px 0 8px}
+.ffsent{display:block;width:100%;text-align:right;background:rgba(0,0,0,.05);border-radius:14px;padding:12px 14px;margin-bottom:8px;font-family:var(--serif);font-size:17px;line-height:1.4;color:inherit}
+.night .ffsent{background:rgba(255,255,255,.08)}
+.ffsent.on{background:var(--tomato);color:#fff}
+.ffburn{animation:burnout 1.1s ease-in forwards}
+@keyframes burnout{0%{filter:none;opacity:1}60%{filter:blur(6px);opacity:.4;transform:translateY(-20px) scale(.98)}100%{opacity:0;transform:translateY(-60px) scale(.9);filter:blur(14px)}}
+.fwc .content{bottom:auto;top:calc(var(--safeT) + 100px);padding-left:20px}
+.fwc .hook{font-size:clamp(36px,10.5vw,50px)}
+.fwc .sub{margin:14px 64px 18px 0;font-size:16.5px;line-height:1.5;opacity:.9;margin-left:64px;margin-right:0}
+.fwc .btn{width:calc(100% - 64px);margin:0 0 10px 64px}
 /* quiet moment */
 .qc .qin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px 190px 28px;color:#fff;z-index:2}
 .qc .hook{font-size:clamp(34px,10vw,46px);margin-top:28px}
@@ -378,12 +412,12 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 <body>
 
 <header class="top">
-  <div class="brand"><b>Go<i>Gram</i></b><span class="grow" id="grow" title="תובנות, פעולות והזמנות שלך">🌱 <span id="growN">0</span></span></div>
+  <div class="brand" id="infoBtn" role="button" aria-label="על GoGram"><b>Go<i>Gram</i></b><span class="grow" id="grow" title="תובנות, פעולות והזמנות שלך">🌱 <span id="growN">0</span></span></div>
   <button class="sring" id="storyBtn" aria-label="הסטורי של היום"><span>היום</span></button>
   <div class="flex"></div>
   <button class="pill inb" id="inboxBtn" aria-label="הודעות"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><b class="badge" id="inboxN" hidden>0</b></button>
   <button class="pill" id="timerPill" aria-label="משך שימוש"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">10:00</span></button>
-  <button class="pill i" id="infoBtn" aria-label="על הגרסה">i</button>
+  <button class="pill i pen" id="ffBtn" aria-label="פריפלואו"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
 </header>
 <div class="timebar"><i id="timeFill"></i></div>
 
@@ -396,6 +430,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 <section class="over recall" id="recall" aria-live="polite"></section>
 <section class="over timeup" id="timeup"></section>
 <section class="story" id="story" aria-label="סטורי"></section>
+<section class="ffw" id="ffw" aria-label="פריפלואו"></section>
 
 <script>
 /* GoGram · סבב 2. הכל רץ בדפדפן, בלי שרת ובלי חשבון. נתונים ב-localStorage בלבד. */
@@ -587,7 +622,7 @@ function mergeContent(c){
   return changed;
 }
 try{ mergeContent(JSON.parse(localStorage.getItem("gg_content")||"null")); }catch(e){}
-const KIND = {v:"n",m:"n",k:"n",q:"n",nw:"n",g:"r",p:"r",c:"r",w:"a"};
+const KIND = {v:"n",m:"n",k:"n",q:"n",nw:"n",g:"r",p:"r",c:"r",fw:"r",w:"a"};
 const trackItems = id => TOPICS[id].cards.map(c=>({...c, key:"t-"+c.k}));
 function detectTopic(text){ for(const id in TOPICS) if(TOPICS[id].re.test(text||"")) return id; return null; }
 let topics = (()=>{ try{
@@ -600,7 +635,8 @@ let topics = (()=>{ try{
 /* ---------- מנוע הקצב ----------
    רוב הפיד מזין ומנקה את הראש (סרטונים, מסרים, רגעי שקט). שאלה או משימה מגיעות רק מדי פעם,
    אף פעם לא שתיים ברצף, והכל אפשר פשוט לגלול הלאה. */
-const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q,nw:NW};
+const FWC = {pages:{q:"פריפלואו"}};
+const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q,nw:NW,fw:FWC};
 const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
 /* ---------- ״פחות מזה״: הפיד לומד ממה שמעצבן אותך ---------- */
@@ -617,7 +653,7 @@ function buildFeed(){
   const light = shuffle([...Object.keys(M).map(k=>mk("m",k)), ...Object.keys(K).map(k=>mk("k",k)), ...Object.keys(Q).map(k=>mk("q",k)), ...news]);
   const nour=[]; vids.forEach((v,i)=>{ nour.push(v); if(light[i]) nour.push(light[i]); }); nour.push(...light.slice(vids.length));
   const reflMax = Math.max(0, 6 - lessOf("ask")*3);
-  let refl = shuffle([...Object.keys(G).map(k=>mk("g",k)), ...Object.keys(P).map(k=>mk("p",k)), mk("c","word")])
+  let refl = [...(PREF.hide.includes("fw-pages")?[]:[mk("fw","pages")]), ...shuffle([...Object.keys(G).map(k=>mk("g",k)), ...Object.keys(P).map(k=>mk("p",k)), mk("c","word")])]
     .filter(x=>ok(x) && !(x.key in answered) && !seenWithin(x.key,3)).slice(0,reflMax);
   // אימונים: מעט כברירת מחדל, ופחות אם ביקשת או אם את מדלגת עליהם
   const actMax = Math.max(0, 3 - lessOf("w")*2 - Math.floor((PREF.skips.w||0)/2));
@@ -634,7 +670,7 @@ function buildFeed(){
 }
 function interleave(a,b){ const out=[]; let i=0,j=0; while(i<a.length||j<b.length){ if(j<b.length) out.push(b[j++]); if(j<b.length) out.push(b[j++]); if(i<a.length) out.push(a[i++]); } return out; }
 const FEED = buildFeed();
-const byKey = k => FEED.find(f=>f.key===k);
+const byKey = k => FEED.find(f=>f.key===k) || (k && /^(ff|story)-/.test(k) ? {type:"m", key:k, q: k.startsWith("ff-") ? "מה שכתבת בפריפלואו" : "האתגר של היום", sub:"", art:"q", bg:"#16130F", fg:"#fff", ac:"#FF4D2E"} : undefined);
 const plain = s => s.replace(/\*/g,"");
 function label(it){
   if(it.type==="v") return `״${it.he}״ של ${it.who}`;
@@ -642,6 +678,7 @@ function label(it){
   if(it.type==="w") return `האימון ״${it.habit}״`;
   if(it.type==="q") return `״${plain(it.q)}״`;
   if(it.type==="nw") return `החדשה ״${plain(it.h)}״`;
+  if(it.type==="fw") return "הפריפלואו";
   return `״${plain(it.q)}״`;
 }
 const ytUrl = id => (Object.values(S).some(x=>x.id===id) ? "https://www.youtube.com/shorts/" : "https://www.youtube.com/watch?v=")+id;
@@ -760,6 +797,17 @@ function cardHTML(it){
         <div class="gres" id="gres-${it.key}">${a?gutRes(it,a):""}</div>
       </div>${railHTML(it)}</article>`;
   }
+  if(it.type==="fw"){
+    const night=new Date().getHours()>=20 || new Date().getHours()<4;
+    return `<article class="card fwc" id="${it.key}" data-k="${it.key}" style="--acc:#F6D86B">
+      ${blobs(night?"#283593":"#FF4D2E", night?"#0A0D2B":"#3B2347", "#F6D86B")}
+      <div class="content" style="color:#fff"><span class="chip">✍️ פריפלואו</span>
+        <h2 class="hook" style="margin-top:14px">${kin(night?"הרבה בראש לפני *השינה?*":"יש לך הרבה *בראש?*")}</h2>
+        <div class="sub fade">${night?"5 דקות לשפוך הכל לדף. נעביר את זה למחר, ואת הולכת לישון עם ראש נקי.":"לשפוך הכל לדף, בלי לעצור ובלי לתקן. אף אחד לא רואה, אפילו לא אנחנו."}</div>
+        <button class="btn paper" data-ff="${night?"night":"free"}">${night?"🌙 ראש נקי לפני שינה":"✍️ 5 דקות לשפוך"}</button>
+        ${night?`<button class="btn line" style="color:#fff" data-ff="free">שפיכה חופשית</button>`:""}
+      </div>${railHTML(it)}</article>`;
+  }
   if(it.type==="nw"){
     return `<article class="card nwc" id="${it.key}" data-k="${it.key}" style="--acc:${it.c[2]}">
       ${blobs(it.c[0],it.c[1],it.c[2])}<div class="shade" style="height:70%"></div>
@@ -835,7 +883,7 @@ function endHTML(){
       <span class="gk" style="background:var(--paper);color:var(--moss)">סוף הפיד. בכוונה.</span>
       <h2>יצאת מפה<br>גדולה יותר.</h2>
       <div id="sumBox">${summaryHTML()}</div>
-      <div class="stack"><button class="btn paper full" id="endGo">יוצאת ליישם 🌱</button></div>
+      <div class="stack"><button class="btn paper full" id="endGo">יוצאת ליישם 🌱</button><button class="btn line full" style="color:var(--paper)" data-ff="auto">✍️ לפני שאת יוצאת: 3 דקות לשפוך</button></div>
 
       ${installed?"":`<div class="endblock">
         <h3>שימי את GoGram ליד אינסטגרם</h3>
@@ -1432,13 +1480,113 @@ function showTimeUp(byChoice){
     ${up.map(a=>`<div class="todo">${esc(a.text)}<small>${fmtWhen(new Date(a.when))}</small></div>`).join("")}
     <div class="spacer"></div>
     <div class="bye" id="bye"><h2 style="font-size:34px">לכי לגדול 🌱</h2><p>אפשר לסגור את הלשונית. נתראה בפעם הבאה, עם שאלה אחת.</p></div>
-    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="btn line full" id="tuMore">בחירה מודעת: עוד 5 דקות</button></div>
+    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="btn line full" data-ff="auto">✍️ 3 דקות לשפוך את הראש</button><button class="btn line full" id="tuMore">בחירה מודעת: עוד 5 דקות</button></div>
     <p class="note" style="color:#fff;opacity:.85">זו לא חסימה. זו עצירה שבחרת בעצמך, ואפשר להמשיך אם זה באמת מה שאת רוצה.</p>`;
   el.classList.add("on");
   $("#tuGo").onclick=()=>{ $("#bye").classList.add("on"); $("#tuBtns").style.display="none"; };
   $("#tuMore").onclick=()=>{ if(!limitMin){ el.classList.remove("on"); return; } session.extra+=5; session.ended=false; LS.set("session",session); el.classList.remove("on"); drawTimer(); toast("עוד 5 דקות. בהצלחה"); };
 }
 $("#inboxBtn").onclick=sheetInbox;
+/* ---------- פריפלואו: לשפוך את הראש לדף ----------
+   מבוסס על שלושה כלים מוכרים:
+   1. Morning Pages (ג'וליה קמרון): כתיבה רציפה, בלי לעצור, בלי לתקן, בלי לקרוא אחורה, רק בשבילך. 3 עמודים ≈ 750 מילים.
+   2. כתיבה רגשית (פנבייקר): 15-20 דקות על מחשבות ורגשות. החלק החשוב הוא להבין משהו, לא רק לפרוק.
+   3. רשימה לפני שינה (Scullin, Baylor 2018): 5 דקות של רשימת משימות ספציפית לפני השינה עזרו להירדם מהר יותר.
+   הכל נשמר רק במכשיר. כלום לא עולה לקבוצה. */
+const FF_PROMPTS = {
+  free:["ומה עוד?","מה מסתובב לך בראש עכשיו?","מה מפריע לך, אפילו קצת?","מה הגוף שלך מרגיש?","מה את לא אומרת בקול?","מה היית עושה אם לא היה אכפת לך מה יחשבו?","על מי את חושבת היום?","מה את רוצה, באמת?","תמשיכי. גם ״אין לי מה לכתוב״ זה בסדר לכתוב."],
+  night:["מה צריך לקרות מחר?","למי צריך לחזור?","מה נשאר פתוח היום?","מה הכי ספציפי שאפשר לכתוב?","עוד משהו קטן שמציק?"]
+};
+let FF=null;
+function openFF(mode){
+  if(mode==="auto") mode = (new Date().getHours()>=20 || new Date().getHours()<4) ? "night" : "free";
+  const mins = mode==="night" ? 5 : (mode==="short" ? 3 : 5);
+  const el=$("#ffw"); pauseActive(); closeSheet();
+  el.className="ffw on"+(mode==="night"?" night":"");
+  el.innerHTML=`<div class="ffbar"><button class="ffx" id="ffClose" aria-label="סגירה">✕</button>
+      <div class="t">${mode==="night"?"🌙 ראש נקי לפני שינה":"✍️ פריפלואו"}<small id="ffMeta">0 מילים</small></div>
+      <button class="ffclock" id="ffClock">${mins}:00</button></div>
+    <div class="ffprog"><i id="ffProg"></i></div>
+    <div class="ffrule">${mode==="night"?"כל מה שצריך לעשות מחר והלאה. שורה לכל דבר, הכי ספציפי שאפשר.":"לא עוצרים. לא מתקנים. לא קוראים אחורה. רק בשבילך."}</div>
+    <div class="ffarea"><textarea id="ffText" dir="rtl" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="${mode==="night"?"להתקשר לרופאת השיניים לקבוע תור...":"מה שעולה. ממש מה שעולה..."}"></textarea><div class="ffnudge" id="ffNudge"></div></div>
+    <div style="padding:8px 16px calc(var(--safeB) + 10px);display:flex;gap:8px"><button class="btn ${mode==="night"?"paper":"ink"} full" id="ffDone">סיימתי</button></div>`;
+  const ta=$("#ffText"); ta.focus();   // בתוך הלחיצה, כדי שהמקלדת תיפתח באייפון
+  FF={mode, total:mins*60, left:mins*60, last:Date.now(), typed:Date.now(), iv:0, ni:0, target: mode==="night"?0:750};
+  ta.oninput=()=>{ FF.typed=Date.now(); $("#ffNudge").classList.remove("on"); const w=wordsOf(ta.value);
+    $("#ffMeta").textContent = mode==="night" ? `${linesOf(ta.value).length} דברים` : `${w} מילים${w>=750?" · 3 עמודים 🎉":` מתוך 750`}`;
+    $("#ffProg").style.width = mode==="night" ? Math.min(100,(1-FF.left/FF.total)*100)+"%" : Math.min(100,w/7.5)+"%";
+    ta.scrollTop=ta.scrollHeight; };
+  FF.iv=setInterval(()=>{
+    if(!FF) return; const now=Date.now(); if(!document.hidden) FF.left=Math.max(0,FF.left-(now-FF.last)/1000); FF.last=now;
+    const s=Math.ceil(FF.left); $("#ffClock").textContent = s>0 ? `${Math.floor(s/60)}:${pad(s%60)}` : "✓";
+    if(mode==="night") $("#ffProg").style.width=Math.min(100,(1-FF.left/FF.total)*100)+"%";
+    if(now-FF.typed>7000 && ta.value.length && !$("#ffNudge").classList.contains("on")){   // עצרת? שאלה קטנה כדי להמשיך לזרום
+      const P=FF_PROMPTS[mode]; $("#ffNudge").textContent=P[FF.ni++%P.length]; $("#ffNudge").classList.add("on"); }
+    if(FF.left<=0 && !FF.timeShown){ FF.timeShown=true; toast(mode==="night"?"5 דקות. אפשר לסיים":"הזמן נגמר. אפשר להמשיך, או לסיים"); }
+  },500);
+  $("#ffClock").onclick=()=>{ FF.left+=120; FF.total+=120; FF.timeShown=false; toast("עוד 2 דקות"); };
+  $("#ffDone").onclick=finishFF;
+  $("#ffClose").onclick=()=>{ if(ta.value.trim().length>20 && !confirmClose) { confirmClose=true; toast("לחיצה נוספת סוגרת בלי לשמור"); setTimeout(()=>confirmClose=false,2500); return; } closeFF(); };
+}
+let confirmClose=false;
+const wordsOf = t => (t.trim().match(/\S+/g)||[]).length;
+const linesOf = t => t.split(/\n+/).map(x=>x.replace(/^[\s•\-*\d.)]+/,"").trim()).filter(x=>x.length>1);
+function closeFF(){ if(FF){ clearInterval(FF.iv); FF=null; } const el=$("#ffw"); el.className="ffw"; el.innerHTML=""; setTimeout(playActive,200); }
+const TASKY=/(צריכה|צריך|חייבת|חייב|לא לשכוח|מחר|להתקשר|לשלוח|לקבוע|לסיים|לקנות|לבדוק|לדבר עם|לכתוב ל|אני אעשה|הייתי רוצה ל|רוצה ל)/;
+function finishFF(){
+  if(!FF) return; const mode=FF.mode, text=$("#ffText").value.trim(); clearInterval(FF.iv);
+  if(!text){ closeFF(); return; }
+  const w=wordsOf(text), el=$("#ffw"), key="ff-"+Date.now().toString(36);
+  if(mode==="night"){
+    const items=linesOf(text).slice(0,15), when=new Date(); when.setDate(when.getDate()+1); when.setHours(LS.get("peak","morning")==="evening"?18:8,0,0,0);
+    items.forEach((t,i)=>actions.push({id:key+"-"+i, key, text:t, when:when.getTime(), mins:15, via:"night", at:Date.now()}));
+    LS.set("actions",actions); savePage(text,w,mode); drawInbox(); drawGrow(true);
+    el.innerHTML=`<div class="ffend"><h2>לילה טוב 🌙</h2><p>${items.length} דברים יצאו מהראש ונשמרו. מחר ב־${pad(when.getHours())}:00 הם יחכו לך בתיבת ההודעות, אחד אחד.</p>
+      <p style="font-size:14px;opacity:.7">מחקר מאוניברסיטת Baylor מצא שמי שכתבו לפני השינה רשימה ספציפית של מה שצריך לעשות נרדמו מהר יותר ממי שכתבו מה כבר עשו.</p>
+      <div class="stack"><button class="btn paper full" onclick="closeFF()">סגירה</button></div></div>`;
+    FF=null; return;
+  }
+  const sents = [...new Set(text.split(/[.!?\n]+/).map(x=>x.trim()).filter(x=>x.length>12))];
+  const tasks = sents.filter(x=>TASKY.test(x)).slice(0,4);
+  const gems = sents.filter(x=>!tasks.includes(x)).sort((a,b)=>b.length-a.length).slice(0,5);
+  el.innerHTML=`<div class="ffend"><h2>שפכת ${w} מילים.</h2><p>${w>=750?"3 עמודים שלמים. ":""}איך הראש עכשיו? עכשיו מחליטים מה לעשות עם זה.</p>
+    ${tasks.length?`<div class="lbl">⏰ נשמע כמו משימה. להעביר ליומן?</div>${tasks.map((t,i)=>`<button class="ffsent" data-task="${i}">${esc(t)}</button>`).join("")}`:""}
+    ${gems.length?`<div class="lbl">💡 יש פה משפט שאת רוצה לזכור? (לא חובה)</div>${gems.map((t,i)=>`<button class="ffsent" data-gem="${i}">${esc(t)}</button>`).join("")}`:""}
+    <div class="lbl">ומה עם הדף עצמו?</div>
+    <div class="stack"><button class="btn ink full" id="ffKeep">לשמור במגירה (רק אצלי)</button><button class="btn line full" id="ffBurn">🔥 לשחרר ולמחוק</button></div>
+    <p style="font-size:13px;opacity:.6;margin-top:12px">הדף לא עולה לשום מקום. גם אם תשמרי, הוא נשאר רק בטלפון הזה.</p></div>`;
+  el.onclick=e=>{
+    const t=e.target.closest("[data-task]"); if(t){ const txt=tasks[+t.dataset.task]; t.classList.add("on"); sheetDo(byKey(key), txt.slice(0,110)); return; }
+    const g=e.target.closest("[data-gem]"); if(g){ const txt=gems[+g.dataset.gem].slice(0,220);
+      insights.push({id:Date.now().toString(36), key, text:txt, at:Date.now(), seen:0, reviews:0}); LS.set("insights",insights); drawGrow(true);
+      g.classList.add("on"); toast("נשמר. בעוד כמה ימים נשאל אם את זוכרת"); return; }
+  };
+  $("#ffKeep").onclick=()=>{ savePage(text,w,"free"); toast("נשמר במגירה 🔒"); closeFF(); };
+  $("#ffBurn").onclick=()=>{ const end=el.querySelector(".ffend"); end.classList.add("ffburn"); setTimeout(()=>{ toast("שוחרר. הראש קל יותר 🌬️"); closeFF(); },1100); };
+  FF=null;
+}
+function savePage(text,words,mode){ const P=LS.get("pages",[]); P.unshift({at:Date.now(), words, mode, text}); LS.set("pages",P.slice(0,60)); }
+function sheetDrawer(){
+  const P=LS.get("pages",[]);
+  openSheet(`<h3>המגירה 🔒</h3><p class="lead">הדפים ששמרת. רק בטלפון הזה. ג׳וליה קמרון ממליצה לא לקרוא אותם בשבועות הראשונים, פשוט לכתוב.</p>
+    ${P.length?P.map((p,i)=>`<details class="ib" style="margin-bottom:8px"><summary style="font-weight:800">${new Date(p.at).toLocaleDateString("he-IL",{weekday:"short",day:"numeric",month:"numeric"})} · ${p.words} מילים ${p.mode==="night"?"🌙":"✍️"}</summary><div style="white-space:pre-wrap;font-family:var(--serif);font-size:16px;line-height:1.5;margin-top:10px">${esc(p.text)}</div><button class="btn line" style="margin-top:10px;height:38px" data-del="${i}">מחיקה</button></details>`).join(""):`<div class="ib-empty">עוד אין כאן דפים.</div>`}
+    <div class="stack"><button class="btn ink full" data-ff="free">✍️ דף חדש</button></div>`);
+  $("#sheet").onclick=e=>{ const d=e.target.closest("[data-del]"); if(d){ const P2=LS.get("pages",[]); P2.splice(+d.dataset.del,1); LS.set("pages",P2); sheetDrawer(); } };
+}
+function sheetFFMenu(){
+  const night=new Date().getHours()>=20 || new Date().getHours()<4, n=LS.get("pages",[]).length;
+  openSheet(`<h3>✍️ פריפלואו</h3><p class="lead">לשפוך את כל מה שבראש לדף. בלי לעצור, בלי לתקן, בלי שאף אחד יראה.</p>
+    <div class="stack">
+      <button class="btn ${night?"line":"ink"} full" data-ff="free">שפיכה חופשית · 5 דקות</button>
+      <button class="btn ${night?"ink":"line"} full" data-ff="night">🌙 ראש נקי לפני שינה · 5 דקות</button>
+      <button class="btn line full" id="ffDrawer">המגירה שלי${n?` (${n})`:""}</button></div>
+    <p class="note">בשפיכה החופשית הטקסט הישן מיטשטש למעלה, כדי שלא תחזרי לקרוא ולתקן. אם תעצרי, תופיע שאלה קטנה שתעזור להמשיך. בסוף בוחרים: לשמור, לשחרר, או להוציא ממנו משימה או משפט לזכור.</p>`);
+  $("#ffDrawer").onclick=sheetDrawer;
+}
+/* כל כפתור עם data-ff, בכל מקום באפליקציה, פותח את הכתיבה */
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-ff]"); if(!b) return; e.preventDefault(); e.stopPropagation();
+  $("#timeup").classList.remove("on"); openFF(b.dataset.ff); },true);
+$("#ffBtn").onclick=sheetFFMenu;
 /* ---------- סטורי יומי: מתחלף כל יום, 5 שקופיות, דקה אחת ----------
    הקשה בצד שמאל = הבא, ימין = הקודם, החזקה = עצירה. הטבעת למעלה צבעונית עד שצפית היום. */
 const DAILY = {
@@ -1521,13 +1669,14 @@ $("#infoBtn").onclick=()=>{
    <label class="f">🌱 המונה למעלה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">סופר רק מה שעשית: תובנות, פעולות, הזמנות ואימונים. לא כמה גללת.</p>
    <label class="f">מה באמת עובד</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">שלושת הכפתורים, הקשה כפולה לשמירה, שאלות לבטן, אימונים קצרים עם טיימר, סקרים ואתגרים שנשמרים אצלך, ניגון אוטומטי של סרטונים, שאלת שליפה בכניסה הבאה (אחרי הפסקה של חצי שעה לפחות), הוספה ליומן, שיתוף בוואטסאפ או בהעתקה, ומגבלת זמן.</p>
    <label class="f">🎯 הפיד שמתכוונן אלייך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רוב הפיד כאן כדי שתיהני ותנקי את הראש. שאלה או משימה מגיעות רק מדי פעם, ותמיד אפשר פשוט לגלול הלאה. כשאת כותבת תשובה, הפיד מזהה את הנושא (אימונים, העסק, הבית, שקט בראש, ביטחון) ושוזר בין הסרטונים כרטיסים בשבילך. הכל קורה במכשיר שלך.${topics.length?` המסלולים שלך: ${topics.map(t=>TOPICS[t].name).join(", ")}.`:""}</p>
+   <label class="f">✍️ פריפלואו</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">כפתור העט למעלה: שפיכה חופשית של מחשבות, או ״ראש נקי לפני שינה״ שהופך את הרשימה לתזכורות של מחר. הדפים נשמרים רק במכשיר.</p>
    <label class="f">📰 חדשות טובות</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רק חדשות טובות, מהארץ ומהעולם, בלי פוליטיקה. נבחרו ידנית, נוסחו מחדש בעברית, ולכל אחת יש קישור למקור. עודכן לאחרונה: ${CONTENT_UPDATED ? new Date(CONTENT_UPDATED).toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}) : NEWS_UPDATED}. מתרענן אוטומטית פעמיים ביום.</p>
    <label class="f">מה עדיין הדגמה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">התוכן נבחר ידנית לגרסה הזו. אין סינון אוטומטי, אין אלגוריתם ואין משתמשים אחרים. הסרטונים נבדקו כקיימים ביוטיוב ב־${VERIFIED_ON}. הכותרות בעברית הן ניסוח שלנו לרעיון של כל הרצאה, לא ציטוט. כרטיסי המסר, השאלות והאימונים מקוריים. האימונים קצרים וכלליים, לא תוכנית אישית: אם יש כאב או מגבלה רפואית, מדלגים. זה לא מוצר רפואי ואין כאן הבטחה לשינוי.</p>
    <label class="f">הפרטיות שלך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">אין חשבון. כל מה שכתבת נשמר רק בדפדפן הזה, במכשיר הזה, ועלול להימחק אם ינוקו נתוני הגלישה. כרגע שמורים: ${insights.length} תובנות, ${actions.length} פעולות.</p>
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
   $("#infoA2hs").onclick=sheetInstall;
   $("#demoRecall").onclick=()=>{ const ins=pickInsight(true); closeSheet(); if(!ins){ toast("קודם לחצי ״לקחתי״ על תוכן כלשהו"); return; } showRecall(ins); };
-  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
+  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips","pages","intent","storySeen"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
 };
 
 /* ---------- boot ---------- */
