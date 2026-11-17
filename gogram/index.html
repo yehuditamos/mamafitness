@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16130F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GoGram">
+<meta name="description" content="GoGram · פחות לגלול. יותר לגדול.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>GoGram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3EEE4; --paper2:#EAE3D5; --ink:#16130F; --ink2:#4A443B; --mute:#8B8274;
+  --tomato:#FF4D2E; --moss:#2F5D46; --sky:#CFE3F0; --butter:#F6D86B; --plum:#3B2347;
+  --safeT:env(safe-area-inset-top,0px); --safeB:env(safe-area-inset-bottom,0px);
+  --serif:"Frank Ruhl Libre",Georgia,serif; --sans:"Heebo",system-ui,-apple-system,sans-serif;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--ink);color:var(--ink);font-family:var(--sans)}
+body{overflow:hidden;overscroll-behavior:none}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+a{color:inherit}
+
+/* ---------- top overlay ---------- */
+.top{position:fixed;inset:0 0 auto 0;z-index:20;padding:calc(var(--safeT) + 10px) 14px 0;display:flex;align-items:center;gap:8px;pointer-events:none}
+.top>*{pointer-events:auto}
+.brand{height:36px;padding:0 6px 0 14px;border-radius:99px;background:rgba(243,238,228,.94);backdrop-filter:blur(10px);display:flex;align-items:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+.brand b{font-family:var(--serif);font-weight:900;font-size:20px;letter-spacing:-.4px;direction:ltr}
+.brand b i{font-style:normal;color:var(--tomato)}
+.grow{height:26px;min-width:26px;padding:0 8px;border-radius:99px;background:var(--moss);color:var(--paper);font-weight:800;font-size:13px;display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.grow.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.45)}100%{transform:scale(1)}}
+.flex{flex:1}
+.pill{height:36px;padding:0 12px;border-radius:99px;background:rgba(22,19,15,.82);backdrop-filter:blur(10px);color:var(--paper);display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums;box-shadow:0 4px 18px rgba(0,0,0,.12)}
+.pill.i{width:36px;padding:0;justify-content:center;font-family:var(--serif);font-size:18px}
+.timebar{position:fixed;z-index:21;top:calc(var(--safeT) + 52px);right:14px;left:14px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden;pointer-events:none}
+.timebar i{display:block;height:100%;width:100%;background:var(--paper);transform-origin:right;transition:transform 1s linear,background .4s}
+
+/* ---------- feed ---------- */
+.feed{position:fixed;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.card{height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;overflow:hidden;isolation:isolate}
+.bg{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.bg:after{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.16;mix-blend-mode:overlay;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.9;animation:drift 16s ease-in-out infinite alternate;animation-play-state:paused}
+.card.in .blob{animation-play-state:running}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-14%,10%) scale(1.15)}100%{transform:translate(10%,-8%) scale(.92)}}
+.shade{position:absolute;inset:auto 0 0 0;height:62%;background:linear-gradient(transparent,rgba(0,0,0,.55));z-index:0;pointer-events:none}
+
+.content{position:absolute;right:0;left:0;bottom:0;padding:0 20px calc(var(--safeB) + 26px) 84px;z-index:2}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:99px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);color:#fff}
+.chip .d{width:7px;height:7px;border-radius:50%;background:var(--tomato)}
+.chips-top{position:absolute;top:calc(var(--safeT) + 66px);right:16px;display:flex;gap:6px;z-index:2}
+.hook{font-family:var(--serif);font-weight:900;font-size:clamp(33px,9.6vw,46px);line-height:1.07;letter-spacing:-.4px;margin:0;text-wrap:balance}
+.hook em{font-style:normal;color:var(--acc,#FFD25C)}
+.w{display:inline-block;opacity:0;transform:translateY(.45em);filter:blur(4px)}
+.card.in .w{animation:wordIn .55s cubic-bezier(.2,.9,.25,1) forwards;animation-delay:calc(var(--i)*65ms + 120ms)}
+@keyframes wordIn{to{opacity:1;transform:none;filter:none}}
+.fade{opacity:0;transform:translateY(8px);transition:opacity .5s .55s,transform .5s .55s}
+.card.in .fade{opacity:1;transform:none}
+.who{margin-top:14px;display:flex;align-items:center;gap:10px;color:#fff;font-size:15px;font-weight:700}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-weight:900;font-size:16px;background:var(--paper);color:var(--ink);direction:ltr;flex-shrink:0}
+.who small{display:block;font-weight:500;font-size:12.5px;opacity:.82}
+.orig{margin-top:10px;font-size:12px;color:rgba(255,255,255,.75);line-height:1.45}
+.orig a{color:#fff;font-weight:700}
+
+/* play */
+.play{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:#fff}
+.play .ring{width:88px;height:88px;border-radius:50%;background:rgba(243,238,228,.96);display:grid;place-items:center;position:relative;box-shadow:0 14px 40px rgba(0,0,0,.35);transition:transform .15s}
+.play:active .ring{transform:scale(.93)}
+.play .ring:before,.play .ring:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(243,238,228,.6);animation:pulse 2.4s ease-out infinite;animation-play-state:paused}
+.play .ring:after{animation-delay:1.2s}
+.card.in .play .ring:before,.card.in .play .ring:after{animation-play-state:running}
+@keyframes pulse{from{transform:scale(1);opacity:.9}to{transform:scale(1.8);opacity:0}}
+.play svg{width:30px;height:30px;margin-left:-4px;fill:var(--ink)}
+.play span{font-size:13px;font-weight:800;background:rgba(0,0,0,.28);padding:5px 12px;border-radius:99px;backdrop-filter:blur(6px)}
+.mono{position:absolute;top:16%;left:-4%;font-family:var(--serif);font-weight:900;font-size:62vw;line-height:.8;color:rgba(255,255,255,.08);direction:ltr;letter-spacing:-.06em;z-index:0;pointer-events:none;white-space:nowrap}
+.yt-wrap{position:absolute;top:calc(var(--safeT) + 64px);right:0;left:0;z-index:4;display:none}
+.card.yt-on .yt-wrap{display:block}
+.card.yt-on .play,.card.yt-on .mono,.card.yt-on .chips-top{display:none}
+.yt-slot{aspect-ratio:16/9;background:#000;box-shadow:0 18px 50px rgba(0,0,0,.4);position:relative}
+.yt-slot iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.yt-bar{display:flex;align-items:center;gap:10px;padding:10px 16px 0;min-height:46px}
+.snd{display:none;height:36px;padding:0 14px;border-radius:99px;background:var(--paper);color:var(--ink);font-weight:900;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);flex-shrink:0}
+.card.yt-ready.yt-muted .snd{display:inline-flex;align-items:center}
+.yt-note{display:none;color:#fff;font-size:13px;font-weight:700;line-height:1.4;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.yt-note a{color:#fff}
+.card.yt-blocked .yt-note,.card.yt-fail .yt-note{display:block}
+.card.yt-fail .yt-slot,.card.yt-fail .snd{display:none}
+
+/* rail */
+.rail{position:absolute;left:10px;bottom:calc(var(--safeB) + 22px);z-index:3;display:flex;flex-direction:column;gap:14px;align-items:center}
+.ra{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-size:11.5px;font-weight:800;text-shadow:0 1px 6px rgba(0,0,0,.35);width:64px}
+.ra .b{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);display:grid;place-items:center;border:1.5px solid rgba(255,255,255,.35);transition:transform .15s,background .25s}
+.ra:active .b{transform:scale(.88)}
+.ra svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.ra.done .b{background:var(--tomato);border-color:var(--tomato)}
+.light .ra{color:var(--ink);text-shadow:none}
+.light .ra .b{background:rgba(22,19,15,.08);border-color:rgba(22,19,15,.25)}
+.light .ra svg{stroke:var(--ink)}
+.light .ra.done svg{stroke:#fff}
+
+/* message */
+.m .content{bottom:auto;top:calc(var(--safeT) + 92px)}
+.m .hook{font-size:clamp(40px,12.4vw,60px);line-height:1.02}
+.m .sub{margin-top:18px;font-size:17px;line-height:1.5;max-width:26ch;font-weight:500}
+.m svg.art{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.card.in svg.art .float{animation:float 7s ease-in-out infinite alternate}
+@keyframes float{to{transform:translate(-14px,22px) rotate(6deg)}}
+.m .tagline{position:absolute;right:20px;bottom:calc(var(--safeB) + 30px);font-size:12.5px;font-weight:800;opacity:.6;z-index:2}
+
+/* poll */
+.p .content{bottom:auto;top:calc(var(--safeT) + 96px);padding-left:20px}
+.p .q{font-family:var(--serif);font-weight:900;font-size:clamp(36px,10.6vw,52px);line-height:1.04;margin:10px 0 22px}
+.opts{display:grid;gap:10px;padding-left:64px}
+.opt{height:66px;border-radius:20px;background:#fff;color:var(--ink);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:0 8px 24px rgba(0,0,0,.18);transition:transform .2s,opacity .3s,background .3s}
+.opt:active{transform:scale(.97)}
+.opt .e{font-size:26px}
+.p.answered .opt{opacity:.35}
+.p.answered .opt.pick{opacity:1;background:var(--ink);color:#fff;transform:scale(1.02)}
+.res{margin-top:16px;padding-left:64px;max-height:0;overflow:hidden;transition:max-height .5s}
+.p.answered .res{max-height:300px}
+.res p{margin:0 0 12px;font-size:17px;line-height:1.5;font-weight:600;color:#fff}
+.res .go{height:44px;padding:0 16px;border-radius:99px;background:var(--paper);color:var(--ink);font-weight:900;font-size:14.5px;display:inline-flex;align-items:center;gap:6px}
+.res small{display:block;margin-top:10px;font-size:12px;opacity:.75;color:#fff}
+
+/* carousel */
+.k .content{bottom:auto;top:calc(var(--safeT) + 82px);padding:0}
+.k .kt{padding:0 20px;color:#fff;font-weight:800;font-size:14px;opacity:.85}
+.slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-top:14px;direction:rtl}
+.slides::-webkit-scrollbar{display:none}
+.sl{flex:0 0 100%;scroll-snap-align:center;padding:0 20px 0 84px}
+.sl .inner{height:min(56dvh,500px);border-radius:28px;padding:24px 22px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.sl .n{font-family:var(--serif);font-weight:900;font-size:110px;line-height:.8}
+.sl h3{font-family:var(--serif);font-weight:900;font-size:clamp(27px,7.6vw,36px);line-height:1.08;margin:0}
+.sl p{margin:10px 0 0;font-size:16px;line-height:1.5;font-weight:500;opacity:.85}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:14px;padding-left:64px}
+.dots i{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.4);transition:.3s}
+.dots i.on{width:22px;background:#fff}
+.swipe{color:#fff;text-align:center;padding-left:64px;font-size:12.5px;font-weight:800;margin-top:10px;opacity:.75}
+
+/* challenge */
+.c .content{bottom:auto;top:calc(var(--safeT) + 96px);padding-left:20px}
+.cin{margin:22px 64px 0 0;display:flex;gap:8px;margin-left:64px;margin-right:0}
+.cin input{flex:1;min-width:0;height:60px;border-radius:18px;border:0;background:#fff;padding:0 18px;font-size:22px;font-weight:800;font-family:var(--serif);outline:none;color:var(--ink)}
+.cin button{height:60px;padding:0 18px;border-radius:18px;background:var(--ink);color:#fff;font-weight:900;font-size:15px}
+.cdone{display:none;margin:18px 0 0 64px;font-family:var(--serif);font-size:30px;font-weight:900;line-height:1.15}
+.c.saved .cin{display:none}.c.saved .cdone{display:block;animation:pop .6s}
+
+/* gut question */
+.g .content,.wo .content{bottom:auto;top:calc(var(--safeT) + 86px);padding-left:20px}
+.gk,.wk{display:inline-block;font-size:13px;font-weight:900;letter-spacing:.4px;padding:6px 12px;border-radius:99px;background:var(--tomato);color:#fff;margin-bottom:14px;animation:shake .6s .2s both;animation-play-state:paused}
+.card.in .gk{animation-play-state:running}
+@keyframes shake{0%{transform:scale(.6) rotate(-6deg);opacity:0}50%{transform:scale(1.12) rotate(3deg);opacity:1}75%{transform:rotate(-2deg)}100%{transform:none}}
+.g .hook{font-size:clamp(36px,10.6vw,52px);margin-bottom:22px}
+.gopts{padding-left:64px}
+.g.answered .gopt{opacity:.35}.g.answered .gopt.pick{opacity:1;background:var(--tomato);color:#fff}
+.gin{display:flex;flex-direction:column;gap:8px;margin-left:64px}
+.gin textarea{border:0;border-radius:18px;font-size:19px;font-family:var(--serif);font-weight:700;min-height:86px;background:#fff;color:var(--ink)}
+.gin button{height:52px;border-radius:16px;background:var(--tomato);color:#fff;font-weight:900;font-size:16px}
+.g.answered .gin button{display:none}
+.gres{margin:16px 64px 0 0;margin-left:64px;margin-right:0}
+.gres p{margin:0 0 12px;font-size:17.5px;line-height:1.5;font-weight:700;animation:ovIn .4s}
+.gres .go{height:46px;padding:0 18px;border-radius:99px;background:var(--paper);color:var(--ink);font-weight:900;font-size:15px}
+.gres small{display:block;margin-top:10px;font-size:12px;opacity:.65}
+/* workout */
+.wk{background:rgba(0,0,0,.14);color:inherit;animation:none}
+.wo .hook{font-size:clamp(34px,10vw,48px)}
+.wbox{position:relative;width:min(56vw,230px);aspect-ratio:1;margin:18px auto 14px;transform:translateX(-30px)}
+.wring{width:100%;height:100%}
+.wprog{transition:stroke-dashoffset .25s linear}
+.wmid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.wsec{font-family:var(--serif);font-weight:900;font-size:64px;line-height:1;font-variant-numeric:tabular-nums}
+.wcue{font-weight:900;font-size:19px;margin-top:6px;min-height:24px}
+.wo.run .wcue{animation:cue .5s}
+@keyframes cue{from{transform:scale(1.3);opacity:.3}}
+.wgo{width:calc(100% - 64px);margin-left:64px;height:58px;font-size:18px}
+.wtip{margin:12px 0 0 64px;font-size:14px;line-height:1.5;opacity:.85}
+.wdone-n{margin:10px 0 0 64px;font-weight:900;font-size:14px}
+.wo.run .wbox{animation:breathe 2s ease-in-out infinite}
+@keyframes breathe{50%{transform:translateX(-30px) scale(1.04)}}
+/* end */
+.card.end{height:auto;min-height:100dvh}
+.endin{position:relative;z-index:2;padding:calc(var(--safeT) + 84px) 22px calc(var(--safeB) + 40px);color:var(--paper)}
+.endin h2{font-family:var(--serif);font-weight:900;font-size:clamp(42px,12.5vw,58px);line-height:1;margin:0 0 18px}
+.sum{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sum div{background:rgba(243,238,228,.14);border-radius:18px;padding:10px 14px;font-weight:800;font-size:14px;display:flex;align-items:baseline;gap:6px}
+.sum b{font-family:var(--serif);font-size:30px;font-weight:900;color:var(--butter)}
+.sum-best{background:var(--paper);color:var(--ink);border-radius:20px;padding:16px;margin:4px 0 14px;font-family:var(--serif);font-weight:700;font-size:21px;line-height:1.35}
+.sum-best small{display:block;font-family:var(--sans);font-size:12.5px;color:var(--mute);font-weight:600;margin-bottom:6px}
+.sum-empty{font-size:17px;line-height:1.5;margin:0 0 14px;opacity:.9}
+.endblock{margin-top:22px;border-top:1px solid rgba(243,238,228,.2);padding-top:20px}
+.endblock h3{font-family:var(--serif);font-weight:900;font-size:28px;line-height:1.1;margin:0 0 8px}
+.endblock p{margin:0 0 14px;font-size:15.5px;line-height:1.5;opacity:.9}
+#joinF input{width:100%;height:54px;border:0;border-radius:16px;padding:0 16px;font-size:17px;margin-bottom:8px;background:#fff;color:var(--ink);outline:none}
+.jlabel{font-weight:800;font-size:14px;margin:8px 0 2px}
+#jInt .ch{background:transparent;color:var(--paper);border-color:rgba(243,238,228,.6)}
+#jInt .ch.on{background:var(--paper);color:var(--ink)}
+.jnote{font-size:12.5px!important;opacity:.7!important;margin-top:10px!important}
+.steps{margin:6px 0 14px;padding:0 22px 0 0;display:grid;gap:10px;font-size:16px;line-height:1.5;font-weight:600}
+.steps li::marker{font-family:var(--serif);font-weight:900;color:var(--tomato)}
+.tipbox{background:var(--butter);border-radius:16px;padding:14px;font-size:14.5px;line-height:1.55}
+.end h2{font-family:var(--serif);font-weight:900;font-size:46px;line-height:1.02;margin:0 0 14px}
+.end p{margin:0 0 20px;font-size:17px;line-height:1.55;opacity:.9}
+.btn{height:54px;border-radius:18px;padding:0 18px;font-weight:900;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.ink{background:var(--ink);color:var(--paper)}
+.btn.paper{background:var(--paper);color:var(--ink)}
+.btn.line{border:1.5px solid currentColor}
+.btn.tomato{background:var(--tomato);color:#fff}
+.btn.full{width:100%}
+
+/* burst */
+.burst{position:fixed;z-index:30;pointer-events:none;font-size:64px;transform:translate(-50%,-50%);animation:burst .8s cubic-bezier(.2,1.4,.3,1) forwards}
+@keyframes burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}100%{opacity:0;transform:translate(-50%,-120%) scale(1)}}
+
+/* hint */
+.hint{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--safeT) + 104px);z-index:15;display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-weight:800;font-size:13px;text-shadow:0 1px 8px rgba(0,0,0,.4);transition:opacity .5s;pointer-events:none;text-align:center}
+.hint .arr{font-size:26px;animation:nud 1.3s ease-in-out infinite}
+@keyframes nud{50%{transform:translateY(-10px)}}
+
+/* ---------- sheets ---------- */
+.scrim{position:fixed;inset:0;background:rgba(22,19,15,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--paper);border-radius:28px 28px 0 0;padding:10px 18px calc(var(--safeB) + 18px);transform:translateY(105%);transition:transform .34s cubic-bezier(.2,.85,.2,1);max-height:92dvh;overflow-y:auto}
+.sheet.on{transform:none}
+.grab{width:44px;height:5px;border-radius:5px;background:rgba(22,19,15,.18);margin:0 auto 12px}
+.sheet h3{font-family:var(--serif);font-weight:900;font-size:28px;margin:4px 0 4px;line-height:1.12}
+.sheet .lead{margin:0 0 14px;color:var(--ink2);font-size:14.5px;line-height:1.5}
+.ctx{display:flex;gap:10px;align-items:center;background:var(--paper2);border-radius:14px;padding:10px 12px;font-size:13.5px;margin-bottom:14px;color:var(--ink2)}
+.ctx b{color:var(--ink)}
+label.f{display:block;font-weight:800;font-size:14px;margin:12px 0 6px}
+textarea,input[type=date],input[type=time]{width:100%;border:1.5px solid var(--ink);border-radius:14px;background:#fff;padding:12px 14px;font-size:16px;line-height:1.45;outline:none}
+textarea{min-height:92px;resize:none}
+textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.chs{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ch{height:38px;padding:0 14px;border-radius:99px;border:1.5px solid var(--ink);font-weight:800;font-size:14px;background:#fff}
+.ch.on{background:var(--ink);color:var(--paper)}
+.note{font-size:12.5px;color:var(--mute);line-height:1.5;margin-top:10px}
+.preview{border:1.5px dashed var(--ink);border-radius:16px;padding:14px;margin-top:14px;background:#fff}
+.preview .k{font-size:12px;font-weight:800;color:var(--mute);margin-bottom:6px}
+.preview .t{font-weight:900;font-size:16.5px;line-height:1.35}
+.preview .wh{font-size:14px;margin-top:4px;color:var(--ink2)}
+.stack{display:grid;gap:8px;margin-top:14px}
+.ok{display:flex;gap:10px;align-items:flex-start;background:#E3EEE6;color:#1f4231;border-radius:14px;padding:12px;font-size:14px;line-height:1.5}
+.toast{position:fixed;left:50%;top:calc(var(--safeT) + 64px);transform:translate(-50%,-10px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:99px;font-weight:800;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* overlays */
+.over{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;padding:calc(var(--safeT) + 22px) 20px calc(var(--safeB) + 20px);overflow-y:auto}
+.over.on{display:flex;animation:ovIn .35s ease-out}
+@keyframes ovIn{from{opacity:0;transform:scale(1.03)}}
+.recall{background:var(--sky)}
+.timeup{background:var(--tomato);color:#fff}
+.over .eyebrow{font-size:13px;font-weight:900;letter-spacing:.5px;opacity:.75}
+.over h2{font-family:var(--serif);font-weight:900;font-size:clamp(34px,10vw,46px);line-height:1.06;margin:10px 0 12px}
+.over p{font-size:16.5px;line-height:1.55;margin:0 0 12px}
+.reveal{background:#fff;border-radius:18px;padding:16px;margin:8px 0 14px;font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.35;border:1.5px solid var(--ink)}
+.reveal small{display:block;font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--mute);margin-bottom:6px}
+.spacer{flex:1;min-height:18px}
+.todo{background:rgba(255,255,255,.16);border-radius:14px;padding:12px 14px;margin:6px 0;font-weight:800;font-size:15px}
+.todo small{display:block;font-weight:500;opacity:.85;font-size:12.5px;margin-top:2px}
+.bye{display:none;text-align:center}.bye.on{display:block}
+.tu-sum .sum div{background:rgba(255,255,255,.18)}.tu-sum .sum b{color:#fff}
+@media (min-width:640px){
+  .feed{max-width:440px;margin:0 auto;left:0;right:0}
+  .top,.timebar{max-width:440px;margin:0 auto}
+  .timebar{max-width:412px}
+  .sheet{max-width:520px;margin:0 auto}
+  .mono{font-size:270px}
+  body{background:#0b0a08}
+}
+@media (prefers-reduced-motion:reduce){ .blob,.w,.fade,.ring:before,.ring:after{animation:none!important;opacity:1!important;transform:none!important;filter:none!important} }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><b>Go<i>Gram</i></b><span class="grow" id="grow" title="תובנות, פעולות והזמנות שלך">🌱 <span id="growN">0</span></span></div>
+  <div class="flex"></div>
+  <button class="pill" id="timerPill" aria-label="משך שימוש"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">10:00</span></button>
+  <button class="pill i" id="infoBtn" aria-label="על הגרסה">i</button>
+</header>
+<div class="timebar"><i id="timeFill"></i></div>
+
+<main class="feed" id="feed"></main>
+<div class="hint" id="hint"><span class="arr">↑</span>גללי למעלה<br><span style="font-weight:600;opacity:.85">הקשה כפולה = לקחתי</span></div>
+
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true"></section>
+<div class="toast" id="toast"></div>
+<section class="over recall" id="recall" aria-live="polite"></section>
+<section class="over timeup" id="timeup"></section>
+
+<script>
+/* GoGram · סבב 2. הכל רץ בדפדפן, בלי שרת ובלי חשבון. נתונים ב-localStorage בלבד. */
+const JOIN_WA = "972525383871"; // הרשמות מגיעות כהודעת וואטסאפ מוכנה
+const APP_URL = "https://yehuditamos.github.io/mamafitness/gogram/";
+const VERIFIED_ON = "17.11.2026";
+
+/* ---------- content: נבחר ידנית ----------
+   hook = שאלת סקרנות שכתבנו על רעיון ההרצאה (לא ציטוט). *מילה* = הדגשה. */
+const V = {
+  tony:   {id:"BwFOwyoH-3g", c:"Tony Robbins", who:"Tony Robbins", role:"מאמן ואסטרטג לחיים ולעסקים", title:"Why We Do What We Do | TED Talks", he:"למה אנחנו עושים את מה שאנחנו עושים", hook:"לא חסרים לך *משאבים.* חסרה לך *תושייה.*", c1:"#FF4D2E", c2:"#3B2347", c3:"#F6D86B"},
+  sivers: {id:"NHopJHSlVo4", c:"TED", who:"Derek Sivers", role:"יזם, מייסד CD Baby", title:"Keep your goals to yourself", he:"לשמור את המטרות לעצמך", hook:"למה לספר על המטרה שלך עלול *להרחיק* אותך ממנה?", short:true, c1:"#2F5D46", c2:"#0E2A20", c3:"#9FD3A8"},
+  mel:    {id:"Lp7E973zozc", c:"TEDx Talks", who:"Mel Robbins", role:"מאמנת וסופרת", title:"How to stop screwing yourself over", he:"איך להפסיק לחבל בעצמך", hook:"את אף פעם לא *תרגישי מוכנה.* אז מה כן?", c1:"#C2185B", c2:"#2A0F1E", c3:"#FF8A65"},
+  sinek:  {id:"u4ZoJKF_VuA", c:"TEDx Talks", who:"Simon Sinek", role:"סופר ויועץ מנהיגות", title:"Start with why", he:"להתחיל מה״למה״", hook:"אנשים לא קונים *מה* שאת עושה. הם קונים *למה.*", c1:"#E8A33D", c2:"#3A2208", c3:"#FFE08A"},
+  cutts:  {id:"UNP03fDSj1U", c:"TED-Ed", who:"Matt Cutts", role:"מהנדס בגוגל", title:"Try something new for 30 days", he:"לנסות משהו חדש ל־30 יום", hook:"מה יקרה אם תנסי משהו חדש רק *ל־30 יום?*", short:true, c1:"#2B6CB0", c2:"#0B1E36", c3:"#7FD1FF"},
+  duck:   {id:"H14bBuluwB8", c:"TED", who:"Angela Lee Duckworth", role:"פסיכולוגית וחוקרת", title:"Grit: The Power of Passion and Perseverance", he:"גריט: תשוקה והתמדה", hook:"*כישרון* הוא לא מה שמנבא הכי טוב מי תצליח.", c1:"#6B4BD6", c2:"#170E36", c3:"#C6B6FF"},
+  kelly:  {id:"RcGyVTAoXEU", c:"TED", who:"Kelly McGonigal", role:"פסיכולוגית, סטנפורד", title:"How to Make Stress Your Friend", he:"איך להפוך את הלחץ לחבר", hook:"מה אם *הלחץ* לא מזיק לך כמו שחשבת?", c1:"#00897B", c2:"#062A26", c3:"#7DF0D6"},
+  tony2:  {id:"-U49BdBvmI4", c:"Tony Robbins", who:"Tony Robbins", role:"מאמן ואסטרטג לחיים ולעסקים", title:"How Tony Robbins Rewired His Mind to Achieve His Dream", he:"איך שינה את צורת החשיבה שלו", hook:"בגיל 17 הוא היה *בלי כסף ובלי בית.* מה השתנה?", c1:"#D84315", c2:"#1E0B05", c3:"#FFB74D"},
+  dweck:  {id:"_X0mgOOSpLU", c:"TED", who:"Carol Dweck", role:"פסיכולוגית, סטנפורד", title:"The power of believing that you can improve", he:"הכוח של ״עדיין״", hook:"המילה הכי חזקה בהתפתחות: *״עדיין״.*", c1:"#1565C0", c2:"#08162E", c3:"#FFD25C"},
+  achor:  {id:"fLJsdqxnZb0", c:"TED", who:"Shawn Achor", role:"חוקר פסיכולוגיה חיובית", title:"The happy secret to better work", he:"הסוד השמח לעבודה טובה יותר", hook:"ואם הסדר הפוך? קודם *שמחה,* ואז הצלחה.", c1:"#F9A825", c2:"#3B2A05", c3:"#FFF176"},
+  stjohn: {id:"Y6bbMQXQ180", c:"TED", who:"Richard St. John", role:"חוקר הצלחה", title:"Secrets of success in 8 words, 3 minutes", he:"סודות ההצלחה ב־8 מילים", hook:"מאות ראיונות. *8 מילים.* 3 דקות.", short:true, c1:"#AD1457", c2:"#2B0616", c3:"#F48FB1"},
+  tony3:  {id:"zi_22RoSklI", c:"Tony Robbins", who:"Tony Robbins", role:"מאמן ואסטרטג לחיים ולעסקים", title:"This ONE Mental Shift Will Rewrite Your Entire Future...", he:"שינוי מחשבתי אחד", hook:"על מה את *מתמקדת?* משם מגיע כל השאר.", c1:"#283593", c2:"#0A0D2B", c3:"#FF7043"}
+};
+const M = {
+  cal:   {q:"מה שלא נכנס *ליומן,* נשאר משאלה.", sub:"לחצי ״אני עושה״ על כל תוכן שנגע בך.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", art:"sun", light:true},
+  move:  {q:"תנועה באה *לפני* מוטיבציה.", sub:"לא מחכים להרגיש. מתחילים, וההרגשה מצטרפת בדרך.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", art:"wave"},
+  habit: {q:"הרגל נבנה ממה שעושים כשאין *חשק.*", sub:"הימים הטובים לא מלמדים כלום. הבינוניים בונים.", bg:"#F3EEE4", fg:"#16130F", ac:"#FF4D2E", art:"grid", light:true},
+  talk:  {q:"עסק גדל בקצב *השיחות* שאת מוכנה לנהל.", sub:"עם לקוחות, עם שותפים, ועם עצמך.", bg:"#3B2347", fg:"#F3EEE4", ac:"#FF8F6B", art:"bubbles"},
+  day3:  {q:"הכי קל לוותר ביום *השלישי.* תגיעי לרביעי.", sub:"שם בדרך כלל מתחיל להיות קל יותר.", bg:"#CFE3F0", fg:"#16130F", ac:"#3B2347", art:"count", light:true},
+  ask:   {q:"שאלה טובה שווה יותר *ממאה* סרטונים שגללת.", sub:"איזו שאלה התוכן הזה פתח אצלך?", bg:"#16130F", fg:"#F3EEE4", ac:"#FF4D2E", art:"q"}
+};
+const P = {
+  stuck: {q:"מה יותר קשה לך עכשיו?", bg:["#FF4D2E","#3B2347"], opts:[
+    {t:"להתחיל", e:"🚪", r:"אז אל תחכי לרגע שתרגישי מוכנה. הוא כנראה לא יגיע לבד. מל רובינס מדברת בדיוק על זה.", go:"v-mel"},
+    {t:"להתמיד", e:"🔁", r:"התמדה היא מיומנות שאפשר לבנות, לא תכונה שנולדים איתה. אנג׳לה דאקוורת׳ חקרה את זה שנים.", go:"v-duck"}]},
+  peak:  {q:"מתי הראש שלך הכי צלול?", bg:["#2B6CB0","#0B1E36"], pref:true, opts:[
+    {t:"בבוקר", e:"🌅", r:"רשמתי. מעכשיו, כשתלחצי ״אני עושה״, נציע קודם שעה של בוקר."},
+    {t:"בערב", e:"🌙", r:"רשמתי. מעכשיו, כשתלחצי ״אני עושה״, נציע קודם שעה של ערב."}]}
+};
+const K = {
+  biz: {t:"3 שאלות לפני כל החלטה עסקית · החליקי ←", slides:[
+    {h:"מי בדיוק ירוויח מזה?", p:"לא ״כולם״. אישה אחת, עם שם ובעיה.", bg:"#F6D86B", fg:"#16130F"},
+    {h:"מה הדבר הכי קטן שאפשר לבדוק השבוע?", p:"גרסה שעולה שעה, לא חודש.", bg:"#FF4D2E", fg:"#fff"},
+    {h:"מה אעשה אם זה לא יעבוד?", p:"כשיש תשובה, הרבה יותר קל להתחיל.", bg:"#F3EEE4", fg:"#16130F"}], bg:["#16130F","#3B2347"]},
+  thirty: {t:"ניסוי של 30 יום · 3 רעיונות להתחלה ←", slides:[
+    {h:"10 דקות כתיבה כל בוקר", p:"לא יומן מושלם. רק להוציא את הראש לדף.", bg:"#CFE3F0", fg:"#16130F"},
+    {h:"הודעה אחת ביום ללקוחה או לחברה", p:"30 שיחות קטנות בחודש. תראי מה נפתח.", bg:"#2F5D46", fg:"#F3EEE4"},
+    {h:"ערב אחד בשבוע בלי מסך", p:"ולבדוק מה קורה לשבוע שאחריו.", bg:"#F6D86B", fg:"#16130F"}], bg:["#2B6CB0","#0B1E36"]}
+};
+const C = {
+  word: {q:"מילה אחת: איך את רוצה *להרגיש* בעוד שנה?", bg:["#2F5D46","#0E2A20"], ph:"למשל: חופשייה"}
+};
+
+/* שאלות לבטן: מאגר שמתערבב בכל כניסה, כדי שזה תמיד יפתיע */
+const G = {
+  year:  {q:"אם תמשיכי בדיוק ככה עוד שנה, תהיי מרוצה?", opts:[
+           {t:"כן", r:"יופי. אז מה הדבר האחד ששומר על זה? כדאי לתת לו מקום ביומן.", cta:"do", pre:"לשמור על "},
+           {t:"לא", r:"אז משהו צריך לזוז. לא הכל. דבר אחד. מה הוא?", cta:"do", pre:""},
+           {t:"לא בטוחה", r:"״לא בטוחה״ היא בדרך כלל תשובה שמסתתר מאחוריה משהו. מה הוא?", cta:"take"}]},
+  delay: {q:"מה את דוחה כבר יותר *משבוע?*", input:"תכתבי. אף אחד לא רואה חוץ ממך.", r:"עכשיו זה כתוב. השלב הבא: לתת לזה 20 דקות ביומן, ולא ״מתישהו״.", cta:"do", pre:"להתחיל: "},
+  owe:   {q:"למי מגיעה ממך הודעה *שלא שלחת?*", input:"שם, או ״אמא״, או ״הלקוחה מיוני״", r:"היא לא צריכה להיות מושלמת. שתי שורות מספיקות.", cta:"msg"},
+  fear:  {q:"מה היית מתחילה מחר אם היית בטוחה *שלא תיכשלי?*", input:"החלום, בגרסה הכי קטנה שלו", r:"עכשיו תחשבי: מה הגרסה הכי קטנה של זה שאפשר לעשות השבוע, גם אם תיכשלי?", cta:"do", pre:"גרסה קטנה של: "},
+  first: {q:"מתי בפעם האחרונה עשית משהו *בפעם הראשונה?*", opts:[
+           {t:"השבוע", r:"מעולה. תמשיכי לאסוף ״פעם ראשונה״ כאלה.", cta:"take"},
+           {t:"החודש", r:"לא רע. מה תהיה הפעם הראשונה הבאה?", cta:"do", pre:"פעם ראשונה: "},
+           {t:"לא זוכרת", r:"זה בסדר, וזה גם סימן. בחרי משהו קטן וחדש לשבוע הזה.", cta:"do", pre:"פעם ראשונה: "}]},
+  give:  {q:"על מה את מוותרת לעצמך *שוב ושוב?*", input:"משפט אחד, בכנות", r:"כבר לכתוב את זה זה צעד. מה הוויתור הקטן הבא שלא תעשי?", cta:"do", pre:"הפעם לא מוותרת על: "},
+  body:  {q:"הגוף שלך עכשיו: כמה *אנרגיה?*", opts:[
+           {t:"גבוהה", r:"אז בואי ננצל אותה. האימון הבא מחכה לך ממש פה למטה.", cta:"move"},
+           {t:"בינונית", r:"30 שניות של תנועה בדרך כלל מעלות אותה. נסי את הכרטיס הבא.", cta:"move"},
+           {t:"נמוכה", r:"אז לא אימון. דקה של נשימה. תמצאי אותה ממש בהמשך.", cta:"move"}]}
+};
+/* אימונים קצרים שעושים עכשיו, ליד הטלפון */
+const W = {
+  squat:  {t:"30 שניות. סקוואט. עכשיו.", secs:30, ph:[[2,"יורדת ↓"],[2,"עולה ↑"]], cue:"ברכיים בכיוון האצבעות, משקל על העקבים, חזה פתוח.", easy:"קל יותר: לשבת על כיסא ולקום.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", habit:"30 שניות סקוואט"},
+  breath: {t:"דקה אחת. רק לנשום.", secs:60, ph:[[4,"שואפת"],[4,"נושפת"]], cue:"שאיפה מהאף, נשיפה ארוכה מהפה. כתפיים למטה.", easy:"אפשר לעצום עיניים.", bg:"#CFE3F0", fg:"#16130F", ac:"#2F5D46", habit:"דקה של נשימה"},
+  plank:  {t:"20 שניות. פלאנק.", secs:20, ph:[[5,"בטן אסופה"],[5,"נושמת"]], cue:"מרפקים מתחת לכתפיים, ישבן בקו הגב, לא לעצור נשימה.", easy:"קל יותר: על הברכיים.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", habit:"20 שניות פלאנק"},
+  wall:   {t:"40 שניות. שכיבות סמיכה על הקיר.", secs:40, ph:[[2,"מתקרבת ↓"],[2,"דוחפת ↑"]], cue:"גוף בקו אחד, מרפקים קרובים לגוף.", easy:"ככל שעומדים קרוב לקיר, קל יותר.", bg:"#2F5D46", fg:"#F3EEE4", ac:"#F6D86B", habit:"שכיבות סמיכה על הקיר"},
+  march:  {t:"30 שניות. ריצה במקום.", secs:30, ph:[[1,"ימין"],[1,"שמאל"]], cue:"להרים ברכיים, הידיים עובדות.", easy:"קל יותר: הליכה במקום.", bg:"#3B2347", fg:"#F3EEE4", ac:"#FF8F6B", habit:"30 שניות ריצה במקום"}
+};
+const GSLOTS = 6;
+/* order: rhythm of formats, so the next card is always a small surprise */
+const ORDER = ["v:tony","g:?","v:sivers","w:squat","p:stuck","v:mel","m:cal","g:?","k:biz","v:sinek","w:breath","c:word","v:cutts","g:?","m:move","v:duck","w:plank","p:peak","v:kelly","g:?","m:habit","v:tony2","w:wall","k:thirty","v:dweck","g:?","m:talk","v:achor","w:march","m:day3","v:stjohn","g:?","v:tony3","m:ask"];
+const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W};
+const gPool = (()=>{ const ks=Object.keys(G); for(let i=ks.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [ks[i],ks[j]]=[ks[j],ks[i]]; } return ks; })();
+let gi=0;
+const FEED = ORDER.map(s=>{ let [t,k]=s.split(":"); if(k==="?") k=gPool[gi++ % gPool.length]; const o=SRC[t][k]; return {type:t, key:t+"-"+k, ...o}; });
+const byKey = k => FEED.find(f=>f.key===k);
+const plain = s => s.replace(/\*/g,"");
+function label(it){
+  if(it.type==="v") return `״${it.he}״ של ${it.who}`;
+  if(it.type==="k") return `״${plain(it.t).split("·")[0].trim()}״`;
+  if(it.type==="w") return `האימון ״${it.habit}״`;
+  return `״${plain(it.q)}״`;
+}
+const ytUrl = id => "https://www.youtube.com/watch?v="+id;
+
+/* ---------- storage ---------- */
+const LS = {
+  get(k,d){ try{ const v=localStorage.getItem("gg_"+k); return v==null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ try{ localStorage.setItem("gg_"+k, JSON.stringify(v)); return true;}catch(e){return false;} }
+};
+const storageOK = (()=>{ try{ localStorage.setItem("gg_t","1"); localStorage.removeItem("gg_t"); return true;}catch(e){return false;} })();
+let insights = LS.get("insights", []), actions = LS.get("actions", []), shares = LS.get("shares", []), polls = LS.get("polls", {}), moves = LS.get("moves", []), guts = LS.get("guts", {});
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove("on"),2300); }
+const pad = n => String(n).padStart(2,"0");
+const heDays = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+const fmtWhen = d => `יום ${heDays[d.getDay()]}, ${d.getDate()}.${d.getMonth()+1} בשעה ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function ago(ts){ const m=Math.round((Date.now()-ts)/60000); if(m<60) return `לפני ${m} דקות`; const h=Math.round(m/60); if(h<24) return h===1?"לפני שעה":`לפני ${h} שעות`; const d=Math.round(h/24); return d===1?"אתמול":`לפני ${d} ימים`; }
+/* kinetic words: *x* → em */
+function kin(s){ let i=0, inEm=false; return s.split(" ").map(tok=>{
+  let t=tok, open=false, close=false;
+  if(t.startsWith("*")){ open=true; t=t.slice(1); } if(t.endsWith("*")||t.endsWith("*.")||t.endsWith("*,")||t.endsWith("*?")){ close=true; t=t.replace(/\*([.,?]?)$/,"$1"); }
+  if(open) inEm=true; const em=inEm; if(close) inEm=false;
+  const w=`<span class="w" style="--i:${i++}">${esc(t)}</span>`; return em?`<em>${w}</em>`:w; }).join(" "); }
+function growCount(){ return insights.length + actions.length + shares.length + moves.length; }
+function drawGrow(pop){ if(pop) passive=0; $("#growN").textContent=growCount(); if(pop){ const g=$("#grow"); g.classList.remove("pop"); void g.offsetWidth; g.classList.add("pop"); } }
+
+/* ---------- original art for message cards ---------- */
+function art(kind, ac, fg){
+  switch(kind){
+    case "sun": return `<svg class="art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><g class="float"><circle cx="300" cy="640" r="190" fill="${ac}"/></g><circle cx="300" cy="640" r="250" fill="none" stroke="${fg}" stroke-width="1.5" opacity=".2"/></svg>`;
+    case "wave": return `<svg class="art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><g class="float"><path d="M-40 600 C 80 520, 160 690, 260 600 S 430 540, 460 580 L460 840 L-40 840Z" fill="${ac}" opacity=".92"/></g><path d="M-20 660 C 80 580, 160 750, 260 660 S 420 600, 440 640" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/></svg>`;
+    case "grid": return `<svg class="art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><g class="float">${Array.from({length:30},(_,i)=>`<rect x="${40+(i%6)*56}" y="${520+Math.floor(i/6)*48}" width="40" height="34" rx="9" fill="${[0,1,2,4,5,7,8,9,10,12,13,14,15,16,17,19,20,22,23,24].includes(i)?ac:fg}" opacity="${[0,1,2,4,5,7,8,9,10,12,13,14,15,16,17,19,20,22,23,24].includes(i)?1:.12}"/>`).join("")}</g></svg>`;
+    case "bubbles": return `<svg class="art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><g class="float"><path d="M150 540 h200 a36 36 0 0 1 36 36 v80 a36 36 0 0 1 -36 36 h-110 l-40 36 v-36 h-50 a36 36 0 0 1 -36 -36 v-80 a36 36 0 0 1 36 -36z" fill="${ac}"/></g><path d="M40 470 h150 a30 30 0 0 1 30 30 v56 a30 30 0 0 1 -30 30 h-110 v26 l-28 -26 h-12 a30 30 0 0 1 -30 -30 v-56 a30 30 0 0 1 30 -30z" fill="none" stroke="${fg}" stroke-width="2.5" opacity=".55"/></svg>`;
+    case "count": return `<svg class="art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><g font-family="Frank Ruhl Libre,serif" font-weight="900"><text x="40" y="760" font-size="330" fill="${ac}" opacity=".14">3</text><g class="float"><text x="200" y="760" font-size="330" fill="${ac}">4</text></g></g></svg>`;
+    case "q": return `<svg class="art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><g class="float"><text x="40" y="780" font-family="Frank Ruhl Libre,serif" font-weight="900" font-size="440" fill="${ac}">?</text></g></svg>`;
+  }
+  return "";
+}
+
+
+/* ---------- render ---------- */
+const IC = {
+  take:`<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V16h5v-.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/></svg>`,
+  do:`<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M8.5 13.5l2.4 2.4 4.6-4.8"/></svg>`,
+  with:`<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5"/><path d="M17 8v6M14 11h6"/></svg>`,
+  play:`<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`
+};
+function railHTML(it){
+  const t=insights.some(x=>x.key===it.key), d=actions.some(x=>x.key===it.key), s=shares.includes(it.key);
+  return `<div class="rail">
+    <button class="ra ${t?"done":""}" data-a="take" data-k="${it.key}"><span class="b">${IC.take}</span>לקחתי</button>
+    <button class="ra ${d?"done":""}" data-a="do" data-k="${it.key}"><span class="b">${IC.do}</span>אני עושה</button>
+    <button class="ra ${s?"done":""}" data-a="with" data-k="${it.key}"><span class="b">${IC.with}</span>בואי איתי</button></div>`;
+}
+const blobs = (a,b,c) => `<div class="bg" style="background:${b}">
+  <div class="blob" style="width:90vw;height:90vw;max-width:520px;max-height:520px;background:${a};top:-8%;right:-25%"></div>
+  <div class="blob" style="width:70vw;height:70vw;max-width:420px;max-height:420px;background:${c};bottom:12%;left:-20%;animation-duration:19s;opacity:.55"></div>
+  <div class="blob" style="width:60vw;height:60vw;max-width:360px;max-height:360px;background:${a};bottom:-12%;right:10%;animation-duration:23s;opacity:.7"></div></div>`;
+function cardHTML(it){
+  if(it.type==="v"){
+    const ini = it.who.split(" ").map(w=>w[0]).join("").slice(0,2);
+    return `<article class="card v" id="${it.key}" data-k="${it.key}" data-yt="${it.id}" style="--acc:${it.c3}">
+      ${blobs(it.c1,it.c2,it.c3)}<div class="mono">${esc(ini)}</div><div class="shade"></div>
+      <div class="chips-top"><span class="chip"><span class="d"></span>וידאו</span>${it.short?`<span class="chip">⚡ 3 דקות</span>`:""}</div>
+      <a class="play" href="${ytUrl(it.id)}" target="_blank" rel="noopener" data-yt="${it.id}"><span class="ring">${IC.play}</span><span class="pl">צפי ביוטיוב</span></a>
+      <div class="yt-wrap"><div class="yt-slot"></div><div class="yt-bar"><button class="snd">🔊 הפעלת קול</button><span class="yt-note">הניגון האוטומטי לא התאפשר כאן. הקישי על הסרטון ▶ או <a href="${ytUrl(it.id)}" target="_blank" rel="noopener">צפי ביוטיוב ↗</a></span></div></div>
+      <div class="content" style="color:#fff">
+        <h2 class="hook">${kin(it.hook)}</h2>
+        <div class="who fade"><span class="av">${esc(ini)}</span><div>${esc(it.who)}<small>${esc(it.role)}</small></div></div>
+        <div class="orig fade">“${esc(it.title)}” · באנגלית · ערוץ ${esc(it.c)} · <a href="${ytUrl(it.id)}" target="_blank" rel="noopener">מקור ↗</a></div>
+      </div>${railHTML(it)}</article>`;
+  }
+  if(it.type==="m") return `<article class="card m ${it.light?"light":""}" id="${it.key}" data-k="${it.key}" style="--acc:${it.ac};color:${it.fg}">
+      <div class="bg" style="background:${it.bg}"></div>${art(it.art,it.ac,it.fg)}
+      <div class="content"><h2 class="hook">${kin(it.q)}</h2><div class="sub fade">${esc(it.sub)}</div></div>
+      <div class="tagline">GoGram · מסר</div>${railHTML(it)}</article>`;
+  if(it.type==="p"){
+    const ans=polls[it.key];
+    return `<article class="card p ${ans!=null?"answered":""}" id="${it.key}" data-k="${it.key}">
+      ${blobs(it.bg[0],it.bg[1],"#F6D86B")}<div class="shade" style="height:100%;opacity:.5"></div>
+      <div class="content"><span class="chip">רגע של בחירה</span>
+        <h2 class="q hook" style="color:#fff">${kin(it.q)}</h2>
+        <div class="opts">${it.opts.map((o,i)=>`<button class="opt ${ans===i?"pick":""}" data-poll="${it.key}" data-i="${i}">${esc(o.t)}<span class="e">${o.e}</span></button>`).join("")}</div>
+        <div class="res" id="res-${it.key}">${ans!=null?resHTML(it,ans):""}</div>
+      </div>${railHTML(it)}</article>`;
+  }
+  if(it.type==="k") return `<article class="card k" id="${it.key}" data-k="${it.key}">
+      ${blobs(it.bg[0],it.bg[1],"#FF4D2E")}
+      <div class="content"><div class="kt">${esc(it.t)}</div>
+        <div class="slides" data-car="${it.key}">${it.slides.map((s,i)=>`<div class="sl"><div class="inner" style="background:${s.bg};color:${s.fg}"><div class="n">${i+1}</div><div><h3>${esc(s.h)}</h3><p>${esc(s.p)}</p></div></div></div>`).join("")}</div>
+        <div class="dots" id="dots-${it.key}">${it.slides.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
+        <div class="swipe">החליקי הצידה · הקשה כפולה לשמירה</div>
+      </div>${railHTML(it)}</article>`;
+  if(it.type==="g"){
+    const a=guts[it.key];
+    return `<article class="card g ${a?"answered":""}" id="${it.key}" data-k="${it.key}" style="--acc:#FF4D2E">
+      <div class="bg" style="background:#0E0C0A"><div class="blob" style="width:80vw;height:80vw;max-width:460px;max-height:460px;background:#FF4D2E;top:-30%;left:-30%;opacity:.35"></div></div>
+      <div class="content" style="color:#F3EEE4"><span class="gk">רגע. שאלה אחת.</span>
+        <h2 class="hook">${kin(it.q)}</h2>
+        ${it.opts?`<div class="opts gopts">${it.opts.map((o,i)=>`<button class="opt gopt ${a&&a.i===i?"pick":""}" data-g="${it.key}" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`
+          :`<form class="gin" data-g="${it.key}"><textarea rows="2" maxlength="140" placeholder="${esc(it.input)}">${a&&a.text?esc(a.text):""}</textarea><button>זהו ←</button></form>`}
+        <div class="gres" id="gres-${it.key}">${a?gutRes(it,a):""}</div>
+      </div>${railHTML(it)}</article>`;
+  }
+  if(it.type==="w"){
+    const done=moves.filter(m=>m.key===it.key).length;
+    return `<article class="card wo ${it.fg==="#16130F"?"light":""}" id="${it.key}" data-k="${it.key}" style="color:${it.fg};--acc:${it.ac}">
+      <div class="bg" style="background:${it.bg}"></div>
+      <div class="content"><span class="wk">תזוזה · עכשיו, ליד הטלפון</span>
+        <h2 class="hook">${kin(it.t)}</h2>
+        <div class="wbox">
+          <svg class="wring" viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke="currentColor" stroke-opacity=".15" stroke-width="12"/><circle class="wprog" cx="100" cy="100" r="88" fill="none" stroke="${it.ac}" stroke-width="12" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" transform="rotate(-90 100 100)"/></svg>
+          <div class="wmid"><div class="wsec">${it.secs}</div><div class="wcue">מוכנה?</div></div>
+        </div>
+        <button class="btn wgo" data-w="${it.key}" style="background:${it.fg};color:${it.bg}">יאללה, התחלתי</button>
+        <p class="wtip"><b>${esc(it.cue)}</b> ${esc(it.easy)} כואב? עוצרים.</p>
+        ${done?`<div class="wdone-n">עשית את זה כבר ${done===1?"פעם אחת":done+" פעמים"} 🔥</div>`:""}
+      </div>${railHTML(it)}</article>`;
+  }
+  if(it.type==="c"){
+    const saved = insights.find(x=>x.key===it.key);
+    return `<article class="card c ${saved?"saved":""}" id="${it.key}" data-k="${it.key}" style="--acc:#F6D86B">
+      ${blobs(it.bg[0],it.bg[1],"#F6D86B")}
+      <div class="content" style="color:#fff"><span class="chip">אתגר של 20 שניות</span>
+        <h2 class="hook" style="margin-top:14px">${kin(it.q)}</h2>
+        <form class="cin" data-ch="${it.key}"><input maxlength="24" placeholder="${esc(it.ph)}" aria-label="המילה שלך"><button>שמרי לי</button></form>
+        <div class="cdone">״${esc(saved?saved.text:"")}״ 🌱<div style="font-family:var(--sans);font-size:14px;font-weight:600;opacity:.85;margin-top:8px">נשמר אצלך. בפעם הבאה נשאל אם את זוכרת.</div></div>
+      </div>${railHTML(it)}</article>`;
+  }
+}
+function gutRes(it,a){
+  const o = it.opts ? it.opts[a.i] : it;
+  const btn = {do:"להפוך את זה לפעולה ביומן", take:"לכתוב מה עולה לי", msg:"לנסח לה הודעה עכשיו", move:"לאימון ↓"}[o.cta];
+  return `<p>${esc(o.r)}</p><button class="go" data-gact="${o.cta}" data-g="${it.key}">${btn}</button><small>התשובה נשמרה רק אצלך.</small>`;
+}
+function resHTML(it,i){
+  const o=it.opts[i];
+  return `<p>${esc(o.r)}</p>${o.go?`<button class="go" data-go="${o.go}">לסרטון ↓</button>`:""}<small>התשובה נשמרה רק אצלך, במכשיר הזה.</small>`;
+}
+function sessionStats(){
+  const t=session?session.start:0, f=a=>a.filter(x=>(x.at||0)>=t).length;
+  return {take:f(insights), act:f(actions), move:f(moves), share:shares.length?LS.get("sharesToday",[]).filter(x=>x>=t).length:0,
+          best: insights.filter(x=>x.at>=t).sort((a,b)=>b.text.length-a.text.length)[0]};
+}
+function summaryHTML(){
+  const st=sessionStats(), any=st.take+st.act+st.move+st.share;
+  if(!any) return `<p class="sum-empty">הפעם רק הסתכלת. גם זה בסדר. בפעם הבאה, נסי לעצור על דבר אחד.</p>`;
+  return `<div class="sum">
+    ${st.take?`<div><b>${st.take}</b>${st.take===1?"תובנה":"תובנות"}</div>`:""}
+    ${st.act?`<div><b>${st.act}</b>${st.act===1?"פעולה ביומן":"פעולות"}</div>`:""}
+    ${st.move?`<div><b>${st.move}</b>${st.move===1?"אימון":"אימונים"}</div>`:""}
+    ${st.share?`<div><b>${st.share}</b>${st.share===1?"הזמנה":"הזמנות"}</div>`:""}</div>
+    ${st.best?`<div class="sum-best"><small>מה שלקחת מכאן היום:</small>״${esc(st.best.text)}״</div>`:""}`;
+}
+const INTERESTS = ["התפתחות אישית","עסקים ויזמות","כושר ותנועה","הרגלים","מנהיגות","זוגיות והורות"];
+function endHTML(){
+  const joined=LS.get("joined",null), installed = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  return `<article class="card end" id="end">${blobs("#2F5D46","#0E2A20","#F6D86B")}
+    <div class="endin">
+      <span class="gk" style="background:var(--paper);color:var(--moss)">סוף הפיד. בכוונה.</span>
+      <h2>יצאת מפה<br>גדולה יותר.</h2>
+      <div id="sumBox">${summaryHTML()}</div>
+      <div class="stack"><button class="btn paper full" id="endGo">יוצאת ליישם 🌱</button></div>
+
+      ${installed?"":`<div class="endblock">
+        <h3>שימי את GoGram ליד אינסטגרם</h3>
+        <p>כשהאגודל הולך לגלול, שיפגוש קודם את GoGram. ככה הגלילה הבאה שלך מגדלת משהו.</p>
+        <button class="btn paper full" id="a2hs">איך מוסיפים למסך הבית</button></div>`}
+
+      <div class="endblock" id="joinBlock">${joined?`<h3>את ברשימה 💛</h3><p>נרשמת ב־${new Date(joined.at).toLocaleDateString("he-IL")}. נעדכן אותך כשיעלה תוכן חדש.</p>`:`
+        <h3>להצטרף ל־GoGram. בחינם, לגמרי.</h3>
+        <p>אנחנו בונים את זה עכשיו, עם המשתמשות הראשונות. הירשמי ותהיי מהראשונות שמקבלות תוכן חדש ומשפיעות על מה שייבנה.</p>
+        <form id="joinF">
+          <input id="jName" placeholder="השם שלך" maxlength="40" autocomplete="name">
+          <input id="jPhone" placeholder="טלפון (לא חובה)" inputmode="tel" maxlength="20" autocomplete="tel">
+          <div class="jlabel">מה הכי מעניין אותך?</div>
+          <div class="chs" id="jInt">${INTERESTS.map(t=>`<button type="button" class="ch">${t}</button>`).join("")}</div>
+          <button class="btn tomato full" style="margin-top:14px">הרשמה חינם ←</button>
+          <p class="jnote">כרגע אין חשבונות. ההרשמה נפתחת כהודעת וואטסאפ מוכנה לצוות GoGram, ונשלחת רק כשתלחצי ״שליחה״.</p>
+        </form>`}</div>
+
+      <button class="btn line full" id="endTop" style="color:var(--paper);margin-top:18px">חזרה להתחלה</button>
+    </div></article>`;
+}
+function hookEnd(){
+  $("#endGo").onclick = ()=>showTimeUp(true);
+  $("#endTop").onclick = ()=>$("#feed").scrollTo({top:0,behavior:"smooth"});
+  const a=$("#a2hs"); if(a) a.onclick=sheetInstall;
+  const ji=$("#jInt"); if(ji) ji.onclick=e=>{ const b=e.target.closest(".ch"); if(b) b.classList.toggle("on"); };
+  const f=$("#joinF"); if(f) f.onsubmit=e=>{
+    e.preventDefault();
+    const name=$("#jName").value.trim(); if(name.length<2){ $("#jName").focus(); toast("רק שם, וזהו"); return; }
+    const phone=$("#jPhone").value.trim(), ints=[...document.querySelectorAll("#jInt .ch.on")].map(b=>b.textContent);
+    const msg=`היי! אני רוצה להצטרף ל־GoGram 🌱\nשם: ${name}${phone?`\nטלפון: ${phone}`:""}${ints.length?`\nמעניין אותי: ${ints.join(", ")}`:""}`;
+    window.open("https://wa.me/"+JOIN_WA+"?text="+encodeURIComponent(msg),"_blank");
+    LS.set("joined",{at:Date.now(), name});
+    $("#joinBlock").innerHTML=`<h3>כמעט 💛</h3><p>נפתחה הודעה בוואטסאפ. ברגע שתלחצי ״שליחה״ שם, את ברשימה.</p><p><a href="https://wa.me/${JOIN_WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener" style="color:#fff;font-weight:900">לא נפתח? לחצי כאן ↗</a></p>`;
+  };
+}
+/* ---------- הוספה למסך הבית, לפי המכשיר ---------- */
+let deferredInstall=null;
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferredInstall=e; });
+function deviceKind(){
+  const ua=navigator.userAgent||"", iOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  if(/Instagram|FBAN|FBAV|WhatsApp|Line\//i.test(ua)) return iOS?"inapp-ios":"inapp-android";
+  if(iOS) return /CriOS/.test(ua)?"ios-chrome":/FxiOS/.test(ua)?"ios-other":"ios-safari";
+  if(/Android/.test(ua)) return /SamsungBrowser/.test(ua)?"samsung":"android";
+  return "desktop";
+}
+const SHARE_IC=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>`;
+function sheetInstall(){
+  const k=deviceKind();
+  const steps = {
+    "ios-safari":["לחצי על כפתור השיתוף "+SHARE_IC+" בשורה התחתונה של ספארי","גללי מטה ובחרי ״הוספה למסך הבית״","לחצי ״הוספה״ בפינה העליונה"],
+    "ios-chrome":["לחצי על כפתור השיתוף "+SHARE_IC+" ליד שורת הכתובת","בחרי ״הוספה למסך הבית״ (אם לא רואים, גללי ב״עוד״)","לחצי ״הוספה״"],
+    "ios-other":["הכי פשוט: פתחי את הקישור בספארי","לחצי על "+SHARE_IC+" ואז ״הוספה למסך הבית״","לחצי ״הוספה״"],
+    "inapp-ios":["את בתוך הדפדפן של אינסטגרם או וואטסאפ, ומשם אי אפשר להוסיף","לחצי על ⋯ למעלה ובחרי ״פתיחה בדפדפן״ / ״Open in Safari״","בספארי: "+SHARE_IC+" ואז ״הוספה למסך הבית״"],
+    "inapp-android":["את בתוך דפדפן של אפליקציה אחרת, ומשם אי אפשר להוסיף","לחצי על ⋮ ובחרי ״פתיחה ב־Chrome״","ב־Chrome: ⋮ ואז ״הוספה למסך הבית״ או ״התקנת אפליקציה״"],
+    "android":["לחצי על ⋮ בפינה העליונה של Chrome","בחרי ״הוספה למסך הבית״ או ״התקנת אפליקציה״","אשרי ״הוספה״ / ״התקנה״"],
+    "samsung":["לחצי על ☰ בתחתית הדפדפן","בחרי ״הוספת דף אל״ ואז ״מסך הבית״","אשרי"],
+    "desktop":["ב־Chrome או Edge: לחצי על סמל ההתקנה בצד שורת הכתובת, או בתפריט ״התקנת GoGram״","בספארי במק: תפריט File ואז ״Add to Dock״","הכי טוב: פתחי את הקישור בטלפון ושמרי שם, ליד אינסטגרם"]
+  }[k];
+  const name = {"ios-safari":"אייפון · ספארי","ios-chrome":"אייפון · Chrome","ios-other":"אייפון","inapp-ios":"אייפון · דפדפן פנימי","inapp-android":"אנדרואיד · דפדפן פנימי","android":"אנדרואיד · Chrome","samsung":"Samsung Internet","desktop":"מחשב"}[k];
+  openSheet(`<h3>GoGram על מסך הבית</h3><p class="lead">זיהינו: <b>${name}</b>. שלושה צעדים, פחות מ־10 שניות.</p>
+    ${deferredInstall?`<button class="btn tomato full" id="doInstall">התקנה בלחיצה אחת</button><p class="note" style="text-align:center">או ידנית:</p>`:""}
+    <ol class="steps">${steps.map(t=>`<li>${t}</li>`).join("")}</ol>
+    <div class="tipbox"><b>הטיפ החשוב:</b> אחרי ההוספה, לחצי לחיצה ארוכה על האייקון וגררי אותו <b>ממש ליד אינסטגרם</b>. בפעם הבאה שהאגודל ילך לגלילה אוטומטית, הוא יפגוש קודם את GoGram, ותצטרכי לבחור.</div>
+    <div class="stack"><button class="btn ink full" onclick="closeSheet()">הבנתי</button></div>`);
+  const di=$("#doInstall"); if(di) di.onclick=async()=>{ try{ deferredInstall.prompt(); const r=await deferredInstall.userChoice; if(r&&r.outcome==="accepted") toast("הותקן 🌱 עכשיו גררי אותו ליד אינסטגרם"); }catch(e){} deferredInstall=null; };
+}
+let io;
+function renderFeed(){
+  $("#feed").innerHTML = FEED.map(cardHTML).join("") + endHTML();
+  hookEnd();
+  destroyAll(); io && io.disconnect();
+  io = new IntersectionObserver(es=>es.forEach(e=>{
+    e.target.classList.toggle("in", e.isIntersecting);
+  }),{root:$("#feed"),threshold:.6});
+  document.querySelectorAll(".card").forEach(c=>io.observe(c));
+  document.querySelectorAll(".slides").forEach(s=>s.addEventListener("scroll",()=>{
+    const i=Math.round(Math.abs(s.scrollLeft)/s.clientWidth);
+    document.querySelectorAll(`#dots-${s.dataset.car} i`).forEach((d,j)=>d.classList.toggle("on",j===i));
+  },{passive:true}));
+  setPlayLabels();
+  setTimeout(updateActive,0);
+}
+function setPlayLabels(){ document.querySelectorAll(".play .pl").forEach(p=>p.textContent = EMBED ? "צפי כאן" : "צפי ביוטיוב"); }
+function refreshRail(key){ const c=document.getElementById(key); if(!c) return; c.querySelector(".rail").outerHTML = railHTML(byKey(key)); }
+
+/* ---------- interactions in feed ---------- */
+const feed=$("#feed");
+
+/* ---------- YouTube: ניגון אוטומטי בנגן הרשמי (IFrame Player API) ----------
+   סרטון אחד בלבד מתנגן: זה שבמרכז המסך. מתחיל מושתק (mute → playVideo), נעצר כשגוללים הלאה,
+   כשהטאב מוסתר או כשהאפליקציה עוברת לרקע. נגנים נבנים פעם אחת ונשמרים לסרטון הנוכחי ולשכנים שלו. */
+let EMBED = null;             // null: טוען, true: ה-API זמין, false: לא זמין → קישור ידני ליוטיוב
+let soundOn = false;          // המשתמשת הפעילה קול בסשן הזה
+const players = new Map();    // card id → {p, card, ready, failed, wantPlay, t}
+let activeKey = null, apiPromise = null, scrollRaf = 0;
+function loadYT(){
+  if(apiPromise) return apiPromise;
+  apiPromise = new Promise(res=>{
+    let done=false; const fin=v=>{ if(!done){ done=true; res(v); } };
+    if(window.YT && YT.Player){ fin(true); return; }
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = ()=>{ try{ prev && prev(); }catch(e){} fin(true); };
+    const sc=document.createElement("script"); sc.src="https://www.youtube.com/iframe_api"; sc.async=true; sc.onerror=()=>fin(false);
+    document.head.appendChild(sc);
+    setTimeout(()=>fin(!!(window.YT && YT.Player)), 7000);
+  });
+  return apiPromise;
+}
+const idxOf = card => Array.prototype.indexOf.call(feed.children, card);
+function safeState(r){ try{ return r.p.getPlayerState(); }catch(e){ return -2; } }
+function syncMute(r){ let m=true; try{ m=r.p.isMuted(); }catch(e){} r.card.classList.toggle("yt-muted", !!m); }
+function ensurePlayer(card){
+  if(!EMBED || !card) return null;
+  if(players.has(card.id)) return players.get(card.id);
+  const host=document.createElement("div"); card.querySelector(".yt-slot").appendChild(host);
+  const r={card, ready:false, failed:false, wantPlay:false, p:null, t:0};
+  players.set(card.id, r); card.classList.add("yt-on","yt-muted");
+  r.p = new YT.Player(host, { videoId: card.dataset.yt, host:"https://www.youtube-nocookie.com",
+    playerVars:{ playsinline:1, rel:0, modestbranding:1, controls:1, origin:location.origin },
+    events:{
+      onReady:()=>{ r.ready=true; card.classList.add("yt-ready"); syncMute(r); if(r.wantPlay) startRec(r); },
+      onStateChange:e=>onState(r, e.data),
+      onError:()=>{ r.failed=true; clearTimeout(r.t); card.classList.add("yt-fail"); }
+    }});
+  return r;
+}
+function destroyRec(id){
+  const r=players.get(id); if(!r) return;
+  clearTimeout(r.t); try{ r.p.destroy(); }catch(e){}
+  r.card.querySelector(".yt-slot").innerHTML="";
+  r.card.classList.remove("yt-on","yt-ready","yt-muted","yt-blocked","yt-fail");
+  players.delete(id);
+}
+function destroyAll(){ [...players.keys()].forEach(destroyRec); activeKey=null; }
+function startRec(r){
+  if(!r || r.failed) return;
+  if(!r.ready){ r.wantPlay=true; return; }          // ה-API או הנגן עוד לא מוכנים: ננגן ב-onReady
+  r.wantPlay=false;
+  try{ if(soundOn){ r.p.unMute(); r.p.setVolume(100); } else r.p.mute(); r.p.playVideo(); }catch(e){}
+  const h=$("#hint"); if(h) h.style.opacity=0;
+  clearTimeout(r.t);
+  r.t=setTimeout(()=>{                                // בדיקה: האם הניגון האוטומטי באמת התחיל?
+    if(activeKey!==r.card.id) return;
+    const st=safeState(r); if(st===1||st===3) return;
+    if(soundOn){ soundOn=false; try{ r.p.mute(); r.p.playVideo(); }catch(e){}   // הקול נחסם? ממשיכים מושתק ומציגים שוב את כפתור הקול
+      r.t=setTimeout(()=>{ const s2=safeState(r); syncMute(r); if(s2!==1&&s2!==3) r.card.classList.add("yt-blocked"); },1800); }
+    else r.card.classList.add("yt-blocked");
+  },2600);
+}
+function pauseRec(r){ if(!r) return; r.wantPlay=false; clearTimeout(r.t); if(r.ready){ try{ r.p.pauseVideo(); }catch(e){} } }
+function onState(r, st){
+  if(st===1){
+    r.card.classList.remove("yt-blocked");
+    if(activeKey!==r.card.id){ activeKey=r.card.id; }
+    players.forEach((o,id)=>{ if(id!==r.card.id && safeState(o)===1) pauseRec(o); });   // תמיד נגן אחד
+  }
+  syncMute(r);
+}
+function turnSoundOn(card){
+  const r=players.get(card.id); if(!r||!r.ready) return;
+  soundOn=true;
+  try{ r.p.unMute(); r.p.setVolume(100); if(safeState(r)!==1) r.p.playVideo(); }catch(e){}
+  setTimeout(()=>syncMute(r),250);
+}
+const canPlayNow = () => !document.hidden && !overlayOn();
+function updateActive(){
+  if(!feed.clientHeight) return;
+  const idx=Math.min(feed.children.length-1, Math.round(feed.scrollTop/feed.clientHeight)), card=feed.children[idx];
+  if(wRun && wRun.card!==card) stopWorkout(false);
+  trackPassive(idx);
+  if(card && card.id==="end"){ const sb=$("#sumBox"); if(sb) sb.innerHTML=summaryHTML(); }
+  const id = card && card.classList.contains("v") ? card.id : null;
+  if(EMBED){   // נגנים רק לסרטון הנוכחי ולשכנים (±1); רחוקים (3+) משתחררים מהזיכרון
+    document.querySelectorAll(".card.v").forEach(c=>{ const d=Math.abs(idxOf(c)-idx); if(d<=1) ensurePlayer(c); else if(d>=3) destroyRec(c.id); });
+  }
+  if(id===activeKey) return;
+  if(activeKey) pauseRec(players.get(activeKey));
+  activeKey=id;
+  if(id && EMBED && canPlayNow()) startRec(players.get(id));
+}
+function playActive(){ if(activeKey && EMBED && canPlayNow()) startRec(players.get(activeKey) || ensurePlayer(document.getElementById(activeKey))); }
+function pauseActive(){ players.forEach(pauseRec); }
+feed.addEventListener("scroll",()=>{ if(scrollRaf) return; scrollRaf=requestAnimationFrame(()=>{ scrollRaf=0; updateActive(); }); },{passive:true});
+document.addEventListener("visibilitychange",()=>{ document.hidden ? pauseActive() : playActive(); });
+window.addEventListener("pagehide", pauseActive);
+window.addEventListener("resize", ()=>updateActive());
+feed.addEventListener("click",e=>{
+  const ra=e.target.closest(".ra"); if(ra){ const it=byKey(ra.dataset.k); ({take:sheetTake,do:sheetDo,with:sheetWith})[ra.dataset.a](it); return; }
+  const snd=e.target.closest(".snd"); if(snd){ turnSoundOn(snd.closest(".card")); return; }
+  const gop=e.target.closest(".gopt"); if(gop){ answerGut(gop.dataset.g,{i:+gop.dataset.i}); return; }
+  const ga=e.target.closest("[data-gact]"); if(ga){ gutAction(ga.dataset.gact, byKey(ga.dataset.g)); return; }
+  const wg=e.target.closest(".wgo"); if(wg){ toggleWorkout(wg.dataset.w); return; }
+  const op=e.target.closest(".opt"); if(op){ answerPoll(op.dataset.poll, +op.dataset.i); return; }
+  const go=e.target.closest(".go"); if(go){ document.getElementById(go.dataset.go).scrollIntoView({behavior:"smooth"}); return; }
+});
+feed.addEventListener("submit",e=>{
+  const gf=e.target.closest(".gin"); if(gf){ e.preventDefault(); const v=gf.querySelector("textarea").value.trim(); if(v.length<2){ gf.querySelector("textarea").focus(); return; } gf.querySelector("textarea").blur(); answerGut(gf.dataset.g,{text:v}); return; }
+  const f=e.target.closest(".cin"); if(!f) return; e.preventDefault();
+  const v=f.querySelector("input").value.trim(); if(v.length<2){ f.querySelector("input").focus(); return; }
+  const key=f.dataset.ch, prev=insights.find(x=>x.key===key);
+  if(prev){ prev.text=v; prev.at=Date.now(); } else insights.push({id:Date.now().toString(36), key, text:v, at:Date.now(), seen:0, reviews:0});
+  LS.set("insights",insights); f.querySelector("input").blur();
+  const card=document.getElementById(key); card.querySelector(".cdone").firstChild.textContent=`״${v}״ 🌱`; card.classList.add("saved");
+  refreshRail(key); drawGrow(true);
+});
+function answerGut(key,a){
+  const it=byKey(key); a.at=Date.now(); guts[key]=a; LS.set("guts",guts);
+  if(a.text){ const prev=insights.find(x=>x.key===key); if(prev){ prev.text=a.text; prev.at=Date.now(); } else insights.push({id:Date.now().toString(36), key, text:a.text, at:Date.now(), seen:0, reviews:0}); LS.set("insights",insights); }
+  const card=document.getElementById(key); card.classList.add("answered");
+  card.querySelectorAll(".gopt").forEach((o,j)=>o.classList.toggle("pick",j===a.i));
+  $("#gres-"+key).innerHTML=gutRes(it,a); refreshRail(key); drawGrow(true); passive=0;
+}
+function gutAction(kind,it){
+  const a=guts[it.key]||{}, o=it.opts?it.opts[a.i]:it;
+  if(kind==="do") sheetDo(it, (o.pre||"")+(a.text||""));
+  else if(kind==="take") sheetTake(it);
+  else if(kind==="msg") sheetWith(it, `היי ${a.text||""}, חשבתי עלייך היום.\nרציתי לשאול מה שלומך באמת, ואם בא לך שנתפוס שיחה השבוע.`);
+  else if(kind==="move"){ const nx=FEED.slice(FEED.indexOf(it)+1).find(f=>f.type==="w"); if(nx) document.getElementById(nx.key).scrollIntoView({behavior:"smooth"}); }
+}
+/* ---------- workouts ---------- */
+let wRun=null;
+function toggleWorkout(key){
+  if(wRun && wRun.key===key){ stopWorkout(false); return; }
+  if(wRun) stopWorkout(false);
+  const it=byKey(key), card=document.getElementById(key);
+  const total=it.ph.reduce((a,p)=>a+p[0],0);
+  wRun={key, it, card, t0:performance.now(), last:-1, iv:0};
+  card.classList.add("run"); card.querySelector(".wgo").textContent="עצירה";
+  const prog=card.querySelector(".wprog"), sec=card.querySelector(".wsec"), cue=card.querySelector(".wcue");
+  wRun.iv=setInterval(()=>{
+    const el=(performance.now()-wRun.t0)/1000, left=Math.max(0,it.secs-el);
+    sec.textContent=Math.ceil(left); prog.style.strokeDashoffset=553*(left/it.secs);
+    let m=el%total, ph=0; while(m>=it.ph[ph][0]){ m-=it.ph[ph][0]; ph=(ph+1)%it.ph.length; }
+    if(ph!==wRun.last){ wRun.last=ph; cue.textContent=it.ph[ph][1]; cue.style.animation="none"; void cue.offsetWidth; cue.style.animation=""; }
+    if(left<=0) stopWorkout(true);
+  },100);
+}
+function stopWorkout(done){
+  if(!wRun) return; const {key,it,card}=wRun; clearInterval(wRun.iv); wRun=null;
+  card.classList.remove("run");
+  card.querySelector(".wsec").textContent=it.secs; card.querySelector(".wprog").style.strokeDashoffset=553;
+  card.querySelector(".wgo").textContent= done?"עוד סבב":"יאללה, התחלתי";
+  card.querySelector(".wcue").textContent= done?"עשית את זה 🔥":"מוכנה?";
+  if(done){
+    moves.push({key, at:Date.now()}); LS.set("moves",moves); drawGrow(true); passive=0;
+    const b=document.createElement("div"); b.className="burst"; b.textContent="🔥"; b.style.left="50%"; b.style.top="40%"; document.body.appendChild(b); setTimeout(()=>b.remove(),850);
+    setTimeout(()=>openSheet(`<h3>עשית את זה 🔥</h3><p class="lead">${it.secs} שניות שהגוף שלך זוכר. רוצה להפוך את זה להרגל קטן?</p>
+      <div class="stack"><button class="btn ink full" id="wHabit">כן, לקבוע ביומן</button><button class="btn line full" onclick="closeSheet()">לא עכשיו, ממשיכה לגלול</button></div>`),700);
+    setTimeout(()=>{ const h=$("#wHabit"); if(h) h.onclick=()=>sheetDo(it, it.habit+" כל יום"); },760);
+  }
+}
+/* ---------- עצירה כשהגלילה נהיית פסיבית ---------- */
+let passive=0, lastIdx=0, nudged=LS.get("nudged",0);
+function trackPassive(idx){
+  if(idx>lastIdx) passive+=1; lastIdx=idx;   // קפיצה (למשל מכפתור) נספרת כצעד אחד
+  const due = (passive>=6 && nudged<1) || (passive>=12 && nudged<2);
+  if(!due || $("#sheet").classList.contains("on") || overlayOn() || (feed.children[idx]&&feed.children[idx].id==="end")) return;
+  nudged++; LS.set("nudged",nudged);
+  const card=feed.children[idx], it=card&&byKey(card.dataset.k);
+  openSheet(`<h3>גללת ${passive} כרטיסים ברצף.</h3><p class="lead">בלי לעצור על אף אחד. זה בסדר גמור, רק שתדעי.</p>
+    <div class="stack">
+      <button class="btn ink full" id="nuDo">בואי נעשה משהו עם מה שעל המסך</button>
+      <button class="btn line full" id="nuQ">תני לי שאלה ישר לבטן</button>
+      <button class="btn line full" id="nuJust">אני רק מסתכלת, תודה</button></div>`);
+  passive=0;
+  $("#nuDo").onclick=()=>{ if(it&&card.id!=="end") sheetDo(it); else closeSheet(); };
+  $("#nuQ").onclick=()=>{ closeSheet(); const nx=FEED.slice(idx).find(f=>f.type==="g"&&!guts[f.key])||FEED.find(f=>f.type==="g"); if(nx) setTimeout(()=>document.getElementById(nx.key).scrollIntoView({behavior:"smooth"}),300); };
+  $("#nuJust").onclick=()=>{ closeSheet(); toast("בסדר. הזמן ממשיך לרוץ ⏱"); };
+}
+function answerPoll(key,i){
+  const it=byKey(key); polls[key]=i; LS.set("polls",polls);
+  if(it.pref) LS.set("peak", i===0?"morning":"evening");
+  const card=document.getElementById(key); card.classList.add("answered");
+  card.querySelectorAll(".opt").forEach((o,j)=>o.classList.toggle("pick",j===i));
+  $("#res-"+key).innerHTML=resHTML(it,i);
+}
+/* double-tap = לקחתי */
+let lastTap=0;
+feed.addEventListener("pointerup",e=>{
+  if(e.target.closest("button,a,input,textarea,.ra,.slides .inner h3")) { lastTap=0; return; }
+  const card=e.target.closest(".card"); if(!card||card.id==="end") return;
+  const now=Date.now();
+  if(now-lastTap<320){
+    lastTap=0; const b=document.createElement("div"); b.className="burst"; b.textContent="🌱"; b.style.left=e.clientX+"px"; b.style.top=e.clientY+"px";
+    document.body.appendChild(b); setTimeout(()=>b.remove(),850);
+    setTimeout(()=>sheetTake(byKey(card.dataset.k)),380);
+  } else lastTap=now;
+});
+
+/* ---------- sheet ---------- */
+function openSheet(html){ const s=$("#sheet"); s.innerHTML=`<div class="grab"></div>`+html; s.scrollTop=0; $("#scrim").classList.add("on"); s.classList.add("on"); }
+function closeSheet(){ $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); setTimeout(playActive,350); }
+$("#scrim").onclick=closeSheet;
+const ctxHTML = it => `<div class="ctx">${it.type==="v"?"🎬":"✦"}<div>על: <b>${esc(it.type==="v"?it.he:plain(label(it)).replace(/[״]/g,""))}</b>${it.type==="v"?` · ${esc(it.who)}`:""}</div></div>`;
+
+/* 1. לקחתי */
+function sheetTake(it){
+  const prev = insights.find(x=>x.key===it.key);
+  openSheet(`<h3>מה לקחת מזה?</h3>
+    <p class="lead">משפט אחד, במילים שלך. בפעם הבאה שתיכנסי נבקש ממך לשלוף אותו מהזיכרון.</p>
+    ${ctxHTML(it)}
+    <textarea id="tkTxt" maxlength="220" placeholder="לדוגמה: לא לחכות להרגיש מוכנה, להתחיל בחמש דקות.">${prev?esc(prev.text):""}</textarea>
+    <div class="stack"><button class="btn ink full" id="tkSave">שמירה 🌱</button><button class="btn line full" id="tkCancel">ביטול</button></div>
+    <p class="note">${storageOK?"נשמר רק במכשיר ובדפדפן הזה. לא נשלח לשום שרת. ניקוי נתוני הדפדפן ימחק את זה.":"הדפדפן הזה לא מאפשר שמירה מקומית, כך שהתובנה לא תישמר לפעם הבאה."}</p>`);
+  const ta=$("#tkTxt"); setTimeout(()=>ta.focus(),350);
+  $("#tkCancel").onclick=closeSheet;
+  $("#tkSave").onclick=()=>{
+    const t=ta.value.trim(); if(t.length<3){ ta.focus(); toast("כתבי לפחות כמה מילים"); return; }
+    if(prev){ prev.text=t; prev.at=Date.now(); } else insights.push({id:Date.now().toString(36), key:it.key, text:t, at:Date.now(), seen:0, reviews:0});
+    LS.set("insights",insights); closeSheet(); refreshRail(it.key); drawGrow(true); toast("נשמר. נשאל אותך עליו בפעם הבאה");
+  };
+}
+
+/* 2. אני עושה */
+function defaultWhen(kind){
+  const d=new Date(), peak=LS.get("peak","morning");
+  if(kind==="soon"){ if(peak==="evening"){ d.setHours(20,0,0,0); if(d<new Date()) d.setDate(d.getDate()+1); } else { d.setDate(d.getDate()+1); d.setHours(8,0,0,0); } }
+  else if(kind==="tonight"){ d.setHours(20,0,0,0); if(d<new Date()) d.setDate(d.getDate()+1); }
+  else if(kind==="tomorrow"){ d.setDate(d.getDate()+1); d.setHours(8,0,0,0); }
+  else if(kind==="week"){ d.setDate(d.getDate()+7); d.setHours(peak==="evening"?20:9,0,0,0); }
+  return d;
+}
+const toDateInput = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const toTimeInput = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const gcalFmt = d => d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+"00Z";
+const icsEsc = s => s.replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
+function buildICS(title, desc, start, mins){
+  const end=new Date(start.getTime()+mins*60000);
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//GoGram//HE","CALSCALE:GREGORIAN","METHOD:PUBLISH","BEGIN:VEVENT","UID:"+Date.now()+"@gogram","DTSTAMP:"+gcalFmt(new Date()),"DTSTART:"+gcalFmt(start),"DTEND:"+gcalFmt(end),"SUMMARY:"+icsEsc(title),"DESCRIPTION:"+icsEsc(desc),"BEGIN:VALARM","TRIGGER:-PT10M","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(title),"END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+}
+function sheetDo(it, prefill){
+  const prev = actions.find(x=>x.key===it.key), peak=LS.get("peak","morning");
+  let when = prev ? new Date(prev.when) : defaultWhen("soon"); let mins=prev?prev.mins||20:20;
+  openSheet(`<h3>מה את עושה עם זה?</h3>
+    <p class="lead">פעולה אחת, קטנה וברורה. משהו שאפשר לסמן עליו ״עשיתי״.</p>
+    ${ctxHTML(it)}
+    <textarea id="doTxt" maxlength="120" placeholder="לדוגמה: לשלוח הודעה ללקוחה אחת שלא שמעתי ממנה חודש" style="min-height:76px">${prefill?esc(prefill):prev?esc(prev.text):""}</textarea>
+    <label class="f">מתי?</label>
+    <div class="chs" id="doChips">${peak==="evening"
+      ?`<button class="ch on" data-w="tonight">הערב</button><button class="ch" data-w="tomorrow">מחר בבוקר</button>`
+      :`<button class="ch on" data-w="tomorrow">מחר בבוקר</button><button class="ch" data-w="tonight">הערב</button>`}<button class="ch" data-w="week">בעוד שבוע</button></div>
+    <div class="row" style="margin-top:10px"><input type="date" id="doDate"><input type="time" id="doTime"></div>
+    <label class="f">כמה זמן?</label>
+    <div class="chs" id="doMins">${[10,20,45].map(m=>`<button class="ch ${m===mins?"on":""}" data-m="${m}">${m} דק׳</button>`).join("")}</div>
+    <div class="preview" id="doPrev"></div>
+    <div class="stack" id="doBtns"></div>
+    <p class="note">הכפתורים פותחים את היומן שלך עם האירוע ממולא מראש. האירוע נוסף רק אחרי שתאשרי אותו שם. אנחנו לא רואים את היומן שלך.</p>`);
+  const ta=$("#doTxt"), dI=$("#doDate"), tI=$("#doTime");
+  const sync=()=>{ dI.value=toDateInput(when); tI.value=toTimeInput(when); draw(); };
+  const title=()=> "GoGram · " + (ta.value.trim()||"…");
+  const desc=()=> `הפעולה שבחרתי אחרי ${label(it)}.` + (it.type==="v"?`\nמקור: ${ytUrl(it.id)}`:"") + `\n\nפחות לגלול. יותר לגדול.`;
+  function draw(){
+    $("#doPrev").innerHTML = `<div class="k">כך זה ייראה ביומן</div><div class="t">${esc(title())}</div><div class="wh">${fmtWhen(when)} · ${mins} דקות · תזכורת 10 דק׳ לפני</div>`;
+    const ok = ta.value.trim().length>=3, end=new Date(when.getTime()+mins*60000);
+    const g = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title())}&dates=${gcalFmt(when)}/${gcalFmt(end)}&details=${encodeURIComponent(desc())}`;
+    $("#doBtns").innerHTML = ok ? `<a class="btn ink full" id="doG" href="${g}" target="_blank" rel="noopener">הוספה ליומן Google ↗</a>
+      ${DL?`<button class="btn line full" id="doIcs">קובץ אירוע לאייפון / Outlook (.ics)</button>`:""}
+      <button class="btn line full" id="doOnly">רק לשמור כאן, בלי יומן</button>`
+      : `<button class="btn ink full" disabled style="opacity:.35">כתבי קודם מה הפעולה</button>`;
+    if(!ok) return;
+    $("#doG").onclick=()=>{ save("google"); setTimeout(()=>doneMsg("נפתח Google Calendar עם האירוע. הוא ייכנס ליומן רק אחרי שתלחצי ״שמירה״ שם."),300); };
+    $("#doOnly").onclick=()=>{ save("local"); closeSheet(); toast("נשמר כאן. לא נוסף ליומן"); };
+    const ib=$("#doIcs"); if(ib) ib.onclick=async()=>{
+      try{ await DL.save({filename:"gogram-action.ics", data: buildICS(title(), desc(), when, mins), mimeType:"text/calendar"}); save("ics"); doneMsg("הקובץ נשמר. פתחי אותו, והיומן ישאל אם להוסיף את האירוע. רק אז הוא נוסף."); }
+      catch(e){ toast("ההורדה בוטלה או לא נתמכת כאן"); }
+    };
+  }
+  function save(via){
+    const rec={id:Date.now().toString(36), key:it.key, text:ta.value.trim(), when:when.getTime(), mins, via, at:Date.now()};
+    const i=actions.findIndex(x=>x.key===it.key); if(i>=0) actions[i]=rec; else actions.push(rec);
+    LS.set("actions",actions); refreshRail(it.key); drawGrow(true);
+  }
+  function doneMsg(t){ const b=$("#doBtns"); if(!b.querySelector(".ok")) b.insertAdjacentHTML("beforeend",`<div class="ok">✓<div>${t}</div></div><button class="btn ink full" onclick="closeSheet()">סגירה</button>`); }
+  ta.oninput=draw;
+  $("#doChips").onclick=e=>{ const b=e.target.closest(".ch"); if(!b) return; document.querySelectorAll("#doChips .ch").forEach(c=>c.classList.toggle("on",c===b)); when=defaultWhen(b.dataset.w); sync(); };
+  $("#doMins").onclick=e=>{ const b=e.target.closest(".ch"); if(!b) return; document.querySelectorAll("#doMins .ch").forEach(c=>c.classList.toggle("on",c===b)); mins=+b.dataset.m; draw(); };
+  const manual=()=>{ const [y,m,d]=dI.value.split("-").map(Number); const [h,mi]=tI.value.split(":").map(Number); if(y&&m&&d){ when=new Date(y,m-1,d,h||0,mi||0); document.querySelectorAll("#doChips .ch").forEach(c=>c.classList.remove("on")); draw(); } };
+  dI.onchange=manual; tI.onchange=manual;
+  sync(); if(!prev) setTimeout(()=>ta.focus(),350);
+}
+
+/* 3. בואי איתי */
+function sheetWith(it, override){
+  const mine = insights.find(x=>x.key===it.key);
+  const link = it.type==="v" ? ytUrl(it.id) : APP_URL+"#"+it.key;
+  const base = override ? override : it.type==="v"
+    ? `ראיתי עכשיו את ${label(it)} וחשבתי עלייך.${mine?`\nמה שלקחתי ממנו: ${mine.text}`:""}\nבא לך לראות ולדבר על זה השבוע? אולי ננסה את זה יחד ונעדכן אחת את השנייה.\n${link}\n\n(מצאתי את זה ב־GoGram: ${APP_URL})`
+    : `נתקלתי בזה: ${plain(label(it)).replace(/[״]/g,"")}\n${mine?`מה שלקחתי: ${mine.text}\n`:""}בא לך שנבחר כל אחת צעד אחד ונבדוק יחד בעוד שבוע?\n${link}`;
+  openSheet(`<h3>להזמין מישהי לשיחה</h3>
+    <p class="lead">לא סתם שיתוף. הזמנה לדבר על זה או לעשות משהו יחד. אפשר לערוך את ההודעה.</p>
+    ${ctxHTML(it)}
+    <textarea id="wTxt" style="min-height:150px">${esc(base)}</textarea>
+    <div class="stack"><button class="btn ink full" id="wShare" hidden>שיתוף…</button>
+      <a class="btn tomato full" id="wWa" target="_blank" rel="noopener">שליחה בוואטסאפ ↗</a>
+      <button class="btn line full" id="wCopy">העתקת ההודעה</button></div>
+    <p class="note">שום דבר לא נשלח בלי שתבחרי נמען ותלחצי ״שליחה״ באפליקציה שנפתחת.</p>`);
+  const ta=$("#wTxt"), wa=()=>{ $("#wWa").href="https://wa.me/?text="+encodeURIComponent(ta.value); };
+  ta.oninput=wa; wa();
+  const mark=()=>{ const st=LS.get("sharesToday",[]); st.push(Date.now()); LS.set("sharesToday",st.slice(-50)); if(!shares.includes(it.key)){ shares.push(it.key); LS.set("shares",shares); refreshRail(it.key); drawGrow(true);} };
+  if(navigator.share){ const b=$("#wShare"); b.hidden=false; b.onclick=async()=>{ try{ await navigator.share({text:ta.value}); mark(); }catch(e){ if(e&&e.name!=="AbortError"){ b.hidden=true; toast("תפריט השיתוף לא זמין כאן. נסי וואטסאפ או העתקה"); } } }; }
+  $("#wWa").onclick=()=>mark();
+  $("#wCopy").onclick=async()=>{ let ok=false; try{ await navigator.clipboard.writeText(ta.value); ok=true; }catch(e){ try{ ta.select(); ok=document.execCommand("copy"); }catch(_){} }
+    if(ok){ mark(); toast("ההודעה הועתקה"); } else { ta.focus(); ta.select(); toast("סמני והעתיקי ידנית"); } };
+}
+
+/* ---------- recall ---------- */
+const RECALL_GAP = 30*60*1000, RECALL_MIN_AGE = 20*60*1000;
+function pickInsight(force){
+  const now=Date.now();
+  const pool = insights.filter(x=> byKey(x.key) && (force || (now-x.at>RECALL_MIN_AGE && now-(x.seen||0)>12*3600*1000)));
+  if(!pool.length) return null;
+  pool.sort((a,b)=>(a.reviews-b.reviews)||((a.seen||0)-(b.seen||0))||(a.at-b.at));
+  return pool[0];
+}
+function showRecall(ins){
+  const it=byKey(ins.key); if(!it) return;
+  const el=$("#recall");
+  const h = it.type==="v" ? `מה לקחת מהסרטון ״${esc(it.he)}״?` : it.type==="c" ? "איזו מילה בחרת לעצמך?" : it.type==="g" ? `מה ענית על ״${esc(plain(it.q))}״?` : `מה לקחת מ${esc(label(it))}?`;
+  const p = it.type==="v" ? `צפית בו ${ago(ins.at)} (${esc(it.who)}).` : it.type==="c" ? `${ago(ins.at)} ענית על השאלה: ״${esc(plain(it.q))}״` : `ראית את זה ${ago(ins.at)}.`;
+  el.innerHTML = `<div class="eyebrow">לפני שגוללים · שאלה אחת</div><h2>${h}</h2>
+    <p>${p} נסי להיזכר לפני שאנחנו מראות לך.</p>
+    <textarea id="rcTry" placeholder="מה שעולה לך עכשיו… (לא חובה)" style="min-height:84px"></textarea>
+    <div id="rcOut"></div><div class="spacer"></div>
+    <div class="stack" id="rcBtns"><button class="btn ink full" id="rcShow">הראי לי מה כתבתי</button><button class="btn line full" id="rcSkip">דילוג לפיד</button></div>`;
+  el.classList.add("on"); pauseActive();
+  const finish=()=>{ ins.seen=Date.now(); ins.reviews=(ins.reviews||0)+1; LS.set("insights",insights); el.classList.remove("on"); playActive(); };
+  $("#rcSkip").onclick=()=>{ ins.seen=Date.now(); LS.set("insights",insights); el.classList.remove("on"); playActive(); };
+  $("#rcShow").onclick=()=>{
+    $("#rcOut").innerHTML=`<div class="reveal"><small>כתבת ${ago(ins.at)}:</small>${esc(ins.text)}</div>`;
+    $("#rcBtns").innerHTML=`<button class="btn ink full" id="rcGood">זכרתי ✓</button><button class="btn line full" id="rcAlmost">חלקית / לא זכרתי</button>`;
+    $("#rcGood").onclick=()=>{ finish(); toast("יפה. ככה זה נשאר"); };
+    $("#rcAlmost").onclick=()=>{ ins.reviews=Math.max(0,(ins.reviews||0)-1); finish(); ins.seen=Date.now()-11*3600*1000; LS.set("insights",insights); toast("נחזור לזה בקרוב"); };
+  };
+}
+
+/* ---------- time limit ---------- */
+let limitMin = LS.get("limit",10), session = LS.get("session",null), lastTick=Date.now();
+function newSession(){ session={start:Date.now(), used:0, extra:0, ended:false}; LS.set("session",session); try{ localStorage.removeItem("gg_nudged"); }catch(e){} if(typeof nudged!=="undefined") nudged=0; }
+const remaining = () => !limitMin ? Infinity : (limitMin+session.extra)*60 - session.used;
+function drawTimer(){
+  const r=remaining();
+  if(r===Infinity){ $("#timerTxt").textContent="ללא"; $("#timeFill").style.transform="scaleX(1)"; return; }
+  const s=Math.max(0,Math.ceil(r)); $("#timerTxt").textContent=`${Math.floor(s/60)}:${pad(s%60)}`;
+  const f=$("#timeFill"); f.style.transform=`scaleX(${Math.max(0,r/((limitMin+session.extra)*60))})`; f.style.background = r<60?"var(--tomato)":"var(--paper)";
+}
+const overlayOn = () => $("#recall").classList.contains("on") || $("#timeup").classList.contains("on");
+function tick(){
+  const now=Date.now(), dt=(now-lastTick)/1000; lastTick=now;
+  if(document.hidden || session.ended || overlayOn()) return;
+  session.used += Math.min(dt,2);
+  if(Math.floor(session.used)%5===0) LS.set("session",session);
+  drawTimer();
+  if(remaining()<=0){ session.ended=true; LS.set("session",session); closeSheet(); showTimeUp(false); }
+}
+function showTimeUp(byChoice){
+  pauseActive();
+  const el=$("#timeup"), up=actions.slice().sort((a,b)=>a.when-b.when).slice(0,3);
+  el.innerHTML = `<div class="eyebrow">${byChoice?"סיימת את הפיד":`עברו ${limitMin+session.extra} הדקות שבחרת`}</div>
+    <h2>מספיק לגלול.<br>הזמן ליישם.</h2>
+    <div class="tu-sum">${summaryHTML()}</div>
+    <p>${up.length?"מה שהחלטת לעשות:":"עוד לא בחרת פעולה. מה הדבר האחד שאת לוקחת מכאן לשעה הקרובה?"}</p>
+    ${up.map(a=>`<div class="todo">${esc(a.text)}<small>${fmtWhen(new Date(a.when))}</small></div>`).join("")}
+    <div class="spacer"></div>
+    <div class="bye" id="bye"><h2 style="font-size:34px">לכי לגדול 🌱</h2><p>אפשר לסגור את הלשונית. נתראה בפעם הבאה, עם שאלה אחת.</p></div>
+    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="btn line full" id="tuMore">בחירה מודעת: עוד 5 דקות</button></div>
+    <p class="note" style="color:#fff;opacity:.85">זו לא חסימה. זו עצירה שבחרת בעצמך, ואפשר להמשיך אם זה באמת מה שאת רוצה.</p>`;
+  el.classList.add("on");
+  $("#tuGo").onclick=()=>{ $("#bye").classList.add("on"); $("#tuBtns").style.display="none"; };
+  $("#tuMore").onclick=()=>{ if(!limitMin){ el.classList.remove("on"); return; } session.extra+=5; session.ended=false; LS.set("session",session); el.classList.remove("on"); drawTimer(); toast("עוד 5 דקות. בהצלחה"); };
+}
+$("#timerPill").onclick=()=>{
+  openSheet(`<h3>כמה זמן לתת לזה?</h3><p class="lead">כשהזמן נגמר הפיד נעצר ומזמין אותך לצאת ליישם. תמיד אפשר לבחור להמשיך.</p>
+   <div class="chs" id="lim">${[5,10,15,0].map(m=>`<button class="ch ${m===limitMin?"on":""}" data-m="${m}">${m?m+" דק׳":"בלי מגבלה"}</button>`).join("")}</div>
+   <p class="note">נספר רק כשהאפליקציה פתוחה מולך. נשארו: ${remaining()===Infinity?"ללא הגבלה":Math.max(0,Math.ceil(remaining()/60))+" דק׳"}.</p>
+   <div class="stack"><button class="btn line full" id="rs">איפוס הזמן ופתיחת סשן חדש</button></div>`);
+  $("#rs").onclick=()=>{ newSession(); drawTimer(); closeSheet(); toast("סשן חדש התחיל"); };
+  $("#lim").onclick=e=>{ const b=e.target.closest(".ch"); if(!b) return; limitMin=+b.dataset.m; LS.set("limit",limitMin); if(remaining()>0) session.ended=false; LS.set("session",session); drawTimer(); closeSheet(); toast(limitMin?`מגבלה: ${limitMin} דקות`:"בלי מגבלת זמן"); };
+};
+
+/* ---------- info ---------- */
+$("#infoBtn").onclick=()=>{
+  openSheet(`<h3>GoGram · גרסת ניסוי</h3>
+   <p class="lead">פחות לגלול. יותר לגדול. רשת להתפתחות אישית ועסקית שעוזרת לזכור, לפעול ולהתחבר.</p>
+   <label class="f">🌱 המונה למעלה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">סופר רק מה שעשית: תובנות, פעולות, הזמנות ואימונים. לא כמה גללת.</p>
+   <label class="f">מה באמת עובד</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">שלושת הכפתורים, הקשה כפולה לשמירה, שאלות לבטן, אימונים קצרים עם טיימר, סקרים ואתגרים שנשמרים אצלך, ניגון אוטומטי של סרטונים, שאלת שליפה בכניסה הבאה (אחרי הפסקה של חצי שעה לפחות), הוספה ליומן, שיתוף בוואטסאפ או בהעתקה, ומגבלת זמן.</p>
+   <label class="f">מה עדיין הדגמה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">התוכן נבחר ידנית לגרסה הזו. אין סינון אוטומטי, אין אלגוריתם ואין משתמשים אחרים. הסרטונים נבדקו כקיימים ביוטיוב ב־${VERIFIED_ON}. הכותרות בעברית הן ניסוח שלנו לרעיון של כל הרצאה, לא ציטוט. כרטיסי המסר, השאלות והאימונים מקוריים. האימונים קצרים וכלליים, לא תוכנית אישית: אם יש כאב או מגבלה רפואית, מדלגים. זה לא מוצר רפואי ואין כאן הבטחה לשינוי.</p>
+   <label class="f">הפרטיות שלך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">אין חשבון. כל מה שכתבת נשמר רק בדפדפן הזה, במכשיר הזה, ועלול להימחק אם ינוקו נתוני הגלישה. כרגע שמורים: ${insights.length} תובנות, ${actions.length} פעולות.</p>
+   <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
+  $("#infoA2hs").onclick=sheetInstall;
+  $("#demoRecall").onclick=()=>{ const ins=pickInsight(true); closeSheet(); if(!ins){ toast("קודם לחצי ״לקחתי״ על תוכן כלשהו"); return; } showRecall(ins); };
+  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
+};
+
+/* ---------- boot ---------- */
+let DL=null;
+(async function boot(){
+  const last = LS.get("last",0), now=Date.now();
+  if(!session || now-last>RECALL_GAP) newSession();
+  LS.set("last",now); setInterval(()=>LS.set("last",Date.now()),15000);
+  document.addEventListener("visibilitychange",()=>{ lastTick=Date.now(); if(!document.hidden) LS.set("last",Date.now()); else LS.set("session",session); });
+  renderFeed(); drawTimer(); drawGrow(); setInterval(tick,1000);
+  if(now-last>RECALL_GAP){ const ins=pickInsight(false); if(ins) showRecall(ins); }
+  if(session.ended) showTimeUp(false);
+  const h=location.hash.slice(1); if(h && document.getElementById(h)) setTimeout(()=>document.getElementById(h).scrollIntoView(),50);
+  const hint=$("#hint"); if(LS.get("seenhint",0)>2) hint.remove(); else { LS.set("seenhint",LS.get("seenhint",0)+1); feed.addEventListener("scroll",()=>hint.style.opacity=0,{once:true}); setTimeout(()=>hint.style.opacity=0,6000); }
+  loadYT().then(ok=>{ EMBED=ok; setPlayLabels(); if(ok) updateActive(); });
+  try{ if(window.claude && claude.use){ DL = await claude.use("downloads"); } }catch(e){ DL=null; }
+})();
+window.__gg = { players:()=>players, active:()=>activeKey, fast(){ session.used=(limitMin+session.extra)*60-3; }, back(){ LS.set("last",Date.now()-3600e3); insights.forEach(i=>{i.at-=3600e3;i.seen=0;}); LS.set("insights",insights);} };
+</script>
+</body>
+</html>
