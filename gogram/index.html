@@ -1633,8 +1633,7 @@ function applyCC(r){
   if(!r || !r.ready || !r.p) return;
   try{
     if(ccOn){ r.p.loadModule && r.p.loadModule("captions"); r.p.setOption && r.p.setOption("captions","track",CC_TRACK); r.p.setOption && r.p.setOption("captions","fontSize",3);
-      // המודול נטען אחרי רגע, ואז ההגדרה נקלטת. מנסים שוב כמה פעמים
-      [500,1500,3000].forEach(t=>setTimeout(()=>{ try{ if(ccOn){ r.p.setOption("captions","track",CC_TRACK); r.p.setOption("captions","fontSize",3); } }catch(e){} },t)); }
+      setTimeout(()=>{ try{ ccOn && r.p.setOption("captions","fontSize",3); }catch(e){} },1200); }
     else { r.p.unloadModule && r.p.unloadModule("captions"); }
   }catch(e){}
 }
@@ -1650,7 +1649,7 @@ function plainPlayer(r){
   let st=-1, muted=true;
   const cmd=(func,args=[])=>{ try{ f.contentWindow.postMessage(JSON.stringify({event:"command",func,args}),"*"); }catch(e){} };
   const isActive = activeKey===r.card.id;
-  f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=${isActive?1:0}&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=${id}${ccOn?"&cc_load_policy=1&cc_lang_pref=iw&hl=iw":""}&origin=${encodeURIComponent(location.origin)}`;
+  f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=${isActive?1:0}&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=${id}&origin=${encodeURIComponent(location.origin)}`;
   f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen=true; f.title="YouTube";
   f.onload=()=>{ try{ f.contentWindow.postMessage(JSON.stringify({event:"listening",id:r.card.id,channel:"widget"}),"*"); }catch(e){}
     r.ready=true; r.card.classList.add("yt-ready"); if(r.wantPlay) startRec(r); if(ccOn) setTimeout(()=>applyCC(r),800); };
@@ -1668,7 +1667,7 @@ function ensurePlayer(card){
   if(EMBED==="plain" || !(window.YT && YT.Player)){ plainPlayer(r); return r; }
   r.rt=setTimeout(()=>{ if(!r.ready && players.get(card.id)===r){ try{ r.p.destroy(); }catch(e){} plainPlayer(r); } },4000);
   r.p = new YT.Player(host, { videoId: card.dataset.yt, host:"https://www.youtube-nocookie.com",
-    playerVars:{ playsinline:1, rel:0, modestbranding:1, controls:1, origin:location.origin, hl:"iw", cc_lang_pref:"iw", ...(ccOn?{cc_load_policy:1}:{}) },
+    playerVars:{ playsinline:1, rel:0, modestbranding:1, controls:1, origin:location.origin, hl:"iw", cc_lang_pref:"iw" },
     events:{
       onReady:()=>{ clearTimeout(r.rt); if(r.plain) return; r.ready=true; card.classList.add("yt-ready"); syncMute(r); if(ccOn) applyCC(r); if(r.wantPlay) startRec(r); else if(r.wantWarm) warm(r); },
       onStateChange:e=>onState(r, e.data),
@@ -1713,7 +1712,8 @@ function onState(r, st){
     r.warming=false; try{ r.p.pauseVideo(); r.p.seekTo(0,true); }catch(e){} return;
   }
   if(st===1) r.warming=false;
-  if(st===1 && ccOn){ applyCC(r); }
+  if(st===0) r.ccDone=false;
+  if(st===1 && ccOn && !r.ccDone){ r.ccDone=true; applyCC(r); }
   if(st===0 && activeKey===r.card.id){ try{ r.p.seekTo(0,true); r.p.playVideo(); }catch(e){} }   // לופ, כמו ברילס
   if(st===1){
     r.card.classList.remove("yt-blocked");
