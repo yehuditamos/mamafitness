@@ -288,6 +288,7 @@ a{color:inherit}
 .sbook{display:block;color:var(--acc);margin-top:2px}
 .ccb{border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.35);color:#fff;font:inherit;font-weight:800;font-size:13px;height:36px;padding:0 11px;border-radius:999px;margin-left:6px}.ccb.on{background:#F3EEE4;color:#16130F;border-color:#F3EEE4}
 .msrc a{color:inherit;text-decoration:underline}.msrc .mk{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.18);margin-left:4px}.msrc{margin-top:12px;font-size:13.5px;font-weight:700;opacity:.85;color:var(--acc)}.card.m.light .msrc{color:inherit;opacity:.7}
+.batxt{display:block;width:calc(100% - 64px);margin:0 0 12px 64px;box-sizing:border-box;border-radius:16px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:17px;line-height:1.5;padding:12px 14px;resize:none;min-height:96px}.batxt:focus{outline:none;border-color:#F6D86B;background:rgba(255,255,255,.16)}.batxt::placeholder{color:rgba(255,255,255,.55)}a.btn[data-wa]{display:flex;align-items:center;justify-content:center;text-decoration:none}
 .bkin{display:flex;gap:8px;margin:2px 0 0 64px}.bkin textarea{flex:1;border-radius:14px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:16px;padding:10px 12px;resize:none}.bkin textarea::placeholder{color:rgba(255,255,255,.6)}.bkin button{flex:0 0 auto;border:0;border-radius:14px;background:#F3EEE4;color:#16130F;font:inherit;font-weight:800;padding:0 14px}.bksaved{font-size:12.5px;opacity:.8;margin:6px 0 0 64px}.bkc .babtns:empty{display:none}.bkc .babtns+.babtns{margin-top:10px}
 @media (max-height:760px){.bkc .content{top:calc(var(--safeT) + 74px)}.bkcover{width:58px;height:82px;padding:6px}.bkcover b{font-size:10.5px}.bkrow{margin:10px 0 8px}.bkt{font-size:26px}.bkidea,.bkact{font-size:14.5px;padding:8px 11px;margin-bottom:7px}.bkc .btn{height:46px}.bknote{display:none}}
 @media (max-height:600px){.bkcover{display:none}.bkidea,.bkact{font-size:13.5px;line-height:1.4}}
@@ -838,6 +839,20 @@ Object.assign(BA, {
   clean: {t:"לסגור 5 לשוניות פתוחות", why:"הראש מרגיש את זה מיד."}
 });
 
+/* צעדים שכותבים בהם: תיבה ישר בכרטיס. צעדים שהם הודעה ללקוחה: טיוטה + שליחה בוואטסאפ */
+const BA_W = new Set(["heads","best3","pitch","one","faq","offer","win","price2","lastp","money2","bio"]);
+const BA_MSG = {
+  ping:"היי, חשבתי עלייך היום. איך הולך עם ",
+  thanks:"היי, רציתי רק להגיד תודה שבחרת לעבוד איתי. היה לי כיף ",
+  rev:"היי, יש לך דקה לכתוב לי שורה או שתיים על החוויה שלך איתי? זה ממש יעזור לי 🙏",
+  past:"היי, מזמן לא דיברנו! רציתי לספר שיש אצלי משהו חדש: ",
+  net:"היי, אני חושבת שהלקוחות שלנו משלימות אחת את השנייה. בא לך לשבת על קפה ולחשוב על שיתוף פעולה?",
+  reply:"",
+  ask3:"היי, שאלה קצרה: מה הכי עזר לך בעבודה שלנו?",
+  inv:"היי, מצרפת את החשבונית על ",
+  call:""
+};
+const BA_PH = {heads:"1.\n2.\n3.", best3:"1.\n2.\n3.\nמה משותף להן?", pitch:"אני עוזרת ל___ ל___ בלי ___", one:"הדבר האחד:", faq:"1.\n2.\n3.", offer:"למי:\nמה היא מקבלת:\nכמה זה עולה:", win:"הניצחון שלי השבוע:", price2:"המחיר בלי פחד:", lastp:"מתי העליתי בפעם האחרונה:", money2:"נכנס החודש עד עכשיו:", bio:"מה שהבנתי מהביו בעיניים של לקוחה:", call:"פתק מהשיחה (לא חובה)"};
 /* ---------- 100 הספרים ----------
    [מפתח, שם בעברית, שם מקורי, מחבר/ת, קטגוריה, הרעיון בשורה (בניסוח שלנו), פעולה של 2 דקות] */
 const BOOKS = [
@@ -1195,7 +1210,12 @@ function cardHTML(it){
         <h2 class="hook" style="margin-top:14px">${kin(it.t)}</h2>
         <div class="sub fade">${esc(it.why)}</div>
         <div class="bat" id="bat-${it.key}"></div>
-        <div class="babtns"><button class="btn paper" data-ba="go" data-k="${it.key}">⏱ 2 דקות, מתחילה</button><button class="btn line" style="color:#fff" data-ba="done" data-k="${it.key}">עשיתי ✓</button></div>
+        ${(()=>{ const k=it.key.slice(3), saved=(()=>{ try{ return localStorage.getItem("gg_ba_"+it.key)||""; }catch(e){ return ""; } })();
+          const isMsg = k in BA_MSG, isW = BA_W.has(k) || k==="call";
+          if(!isMsg && !isW) return `<div class="babtns"><button class="btn paper" data-ba="go" data-k="${it.key}">⏱ 2 דקות, מתחילה</button><button class="btn line" style="color:#fff" data-ba="done" data-k="${it.key}">עשיתי ✓</button></div>`;
+          const val = saved || (isMsg ? BA_MSG[k] : "");
+          return `<textarea class="batxt" data-bat="${it.key}" rows="${isMsg?3:4}" placeholder="${esc(isMsg?"כתבי כאן את ההודעה":(BA_PH[k]||"כתבי כאן"))}">${esc(val)}</textarea>
+            <div class="babtns">${isMsg?`<a class="btn paper" data-wa="${it.key}" href="https://wa.me/?text=${encodeURIComponent(val)}" target="_blank" rel="noopener">📲 לשלוח בוואטסאפ</a>`:""}<button class="btn ${isMsg?"line":"paper"}" ${isMsg?'style="color:#fff"':""} data-ba="done" data-k="${it.key}">${isMsg?"שלחתי ✓":"שמירה, עשיתי ✓"}</button></div>`; })()}
         <div class="badone">עשית צעד לעסק היום 🔥 <button class="go" data-story="done" data-pre="${esc(it.t)}">לשתף כסטורי</button></div>
       </div>${railHTML(it)}</article>`;
   }
@@ -1578,6 +1598,13 @@ document.addEventListener("click",e=>{
   const card=document.getElementById(activeKey); if(card && card.classList.contains("yt-ready")) turnSoundOn(card);
 },true);
 window.addEventListener("resize", ()=>updateActive());
+feed.addEventListener("input",e=>{
+  const ta=e.target.closest("[data-bat]"); if(!ta) return; const key=ta.dataset.bat;
+  try{ localStorage.setItem("gg_ba_"+key, ta.value); }catch(err){}
+  const wa=document.querySelector(`[data-wa="${key}"]`); if(wa) wa.href="https://wa.me/?text="+encodeURIComponent(ta.value);
+  if(!baRun || baRun.key!==key){ const card=document.getElementById(key), el=$("#bat-"+key), t0=Date.now(); if(baRun) clearInterval(baRun.iv);
+    baRun={key, iv:setInterval(()=>{ const left=Math.max(0,120-(Date.now()-t0)/1000); el.textContent=`${Math.floor(left/60)}:${pad(Math.ceil(left)%60)}`; if(left<=0){ clearInterval(baRun.iv); el.textContent="⏰"; } },250)}; }
+});
 feed.addEventListener("submit",e=>{
   const f=e.target.closest("[data-bkw]"); if(!f) return; e.preventDefault();
   const k=f.dataset.bkw, t=f.querySelector("textarea").value.trim(); if(t.length<2){ toast("כתבי כמה מילים"); return; }
@@ -1647,7 +1674,7 @@ function baAction(kind,key){
   const card=document.getElementById(key);
   const finish=()=>{ if(baRun){ clearInterval(baRun.iv); baRun=null; } moves.push({key, at:Date.now()}); LS.set("moves",moves); drawGrow(true); card.classList.add("did"); $("#bat-"+key).textContent="";
     const b=document.createElement("div"); b.className="burst"; b.textContent="🔥"; b.style.left="50%"; b.style.top="40%"; document.body.appendChild(b); setTimeout(()=>b.remove(),850); };
-  if(kind==="done") return finish();
+  if(kind==="done"){ const ta=card.querySelector(".batxt"); if(ta && ta.value.trim().length>2){ const t=ta.value.trim().slice(0,400), prev=insights.find(x=>x.key===key); if(prev){ prev.text=t; prev.at=Date.now(); } else insights.push({id:Date.now().toString(36), key, text:t, at:Date.now(), seen:0, reviews:0}); LS.set("insights",insights); } return finish(); }
   if(baRun){ clearInterval(baRun.iv); }
   const t0=Date.now(), el=$("#bat-"+key); card.querySelector('[data-ba="go"]').textContent="רצה... לחצי ״עשיתי״ כשסיימת";
   baRun={key, iv:setInterval(()=>{ const left=Math.max(0,120-(Date.now()-t0)/1000); el.textContent=`${Math.floor(left/60)}:${pad(Math.ceil(left)%60)}`; if(left<=0){ clearInterval(baRun.iv); el.textContent="⏰"; toast("2 דקות. עשית?"); } },250)};
