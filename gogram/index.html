@@ -301,6 +301,12 @@ a{color:inherit}
 .stbeats li::before,.tlsteps li::before{content:counter(b);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#16130F;font-weight:900;font-size:13px;margin-left:8px}
 .stbeats li.on,.tlsteps li.on{display:block;animation:pop .35s}
 .stnext{margin-left:64px;width:calc(100% - 64px)}
+.rail{left:auto;right:16px;bottom:calc(var(--safeB) + 18px)}
+.act1{border:0;border-radius:999px;background:rgba(243,238,228,.94);color:#16130F;font:inherit;font-weight:900;font-size:15px;height:46px;padding:0 18px;box-shadow:0 6px 20px rgba(0,0,0,.28);white-space:nowrap}
+.act1:active{transform:scale(.94)}
+.content{padding-left:20px!important;padding-bottom:calc(var(--safeB) + 84px)!important}
+.tgo{left:16px!important;bottom:calc(var(--safeB) + 18px)!important;height:46px}
+
 .ghost{transition:transform .08s linear}.ghost *{opacity:.6}
 .card.tg svg.art .float{animation:none!important}
 .card.locked .ghost *{stroke:var(--acc);stroke-dasharray:none;stroke-width:5;opacity:1}
@@ -1232,7 +1238,7 @@ function artRaw(kind, ac, fg){
 }
 /* משחק הטיה: צורת מתאר צפה, מטים את האייפון עד שהיא ננעלת על הצורה המלאה */
 function art(kind, ac, fg){
-  const raw=artRaw(kind,ac,fg), m=raw.match(/<g class="float">([\s\S]*?)<\/g>(?=[^]*<\/svg>)/);
+  const raw=artRaw(kind,ac,fg), m=kind==="grid"?null:raw.match(/<g class="float">([\s\S]*?)<\/g>(?=[^]*<\/svg>)/);
   if(!m) return raw;
   const ghost=m[1].replace(/fill="[^"]*"/g,'fill="none"').replace(/opacity="[^"]*"/g,"").replace(/<(path|circle|rect|text)\b/g,`<$1 stroke="${fg}" stroke-width="3" stroke-dasharray="7 6" vector-effect="non-scaling-stroke"`);
   return raw.replace("</svg>",`<g class="ghost" style="transform:translate(-150px,-90px)">${ghost}</g></svg>`);
@@ -1246,12 +1252,38 @@ const IC = {
   with:`<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5"/><path d="M17 8v6M14 11h6"/></svg>`,
   play:`<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`
 };
+/* כפתור אחד לכל כרטיס, ליד האגודל, משתנה לפי סוג הכרטיס */
+const ACT_LBL={v:"עוד ממנה ▶",st:"💰 עוד סיפור כזה",gs:"🎯 עוד ניחוש",tl:"🧠 עוד כלי",bk:"📚 עוד ספר כזה",g:"🔥 עוד שאלה",p:"➡️ עוד בחירה",k:"➡️ עוד כזה",q:"➡️ עוד כזה",nw:"📰 עוד ידיעה",ba:"➡️ עוד צעד"};
 function railHTML(it){
-  const t=insights.some(x=>x.key===it.key), d=actions.some(x=>x.key===it.key), s=shares.includes(it.key);
-  return `<div class="rail">
-    <button class="ra ${t?"done":""}" data-a="take" data-k="${it.key}"><span class="b">${IC.take}</span>לקחתי</button>
-    <button class="ra ${d?"done":""}" data-a="do" data-k="${it.key}"><span class="b">${IC.do}</span>אני עושה</button>
-    <button class="ra ${s?"done":""}" data-a="with" data-k="${it.key}"><span class="b">${IC.with}</span>בואי איתי</button></div>`;
+  if(!it) return `<div class="rail"></div>`;
+  let lbl, kind="more";
+  if(it.type==="m" && it.url){ kind="url"; lbl = it.kind==="study"?"🔬 תוכיחו לי":it.kind==="video"?"🎬 לסרטון":"📖 מתוך הספר"; }
+  else if(it.type==="nm" && it.url){ kind="url"; lbl="😮 מאיפה המספר"; }
+  else if(it.type==="v" && it.who) lbl=`עוד ${it.who.split(",")[0]} ▶`;
+  else lbl = ACT_LBL[it.type] || "➡️ עוד כזה";
+  return `<div class="rail"><button class="act1" data-act="${kind}" data-k="${it.key}">${lbl}</button></div>`;
+}
+function likePred(it){
+  if(it.type==="v") return f=>f.type==="v" && f.who===it.who;
+  if(it.type==="bk") return f=>f.type==="bk" && f.cat===it.cat;
+  return f=>f.type===it.type;
+}
+function poolFor(it, have){
+  const out=[];
+  if(it.type==="v") Object.keys(S).forEach(k=>{ if(S[k].who===it.who && !have.has("v-"+k)) out.push({type:"v", key:"v-"+k, sk:k, ...S[k]}); });
+  else if(SRC[it.type]) Object.keys(SRC[it.type]).forEach(k=>{ const key=it.type+"-"+k; if(have.has(key)) return; const o=mk(it.type,k); if(it.type!=="bk"||o.cat===it.cat) out.push(o); });
+  return shuffle(out);
+}
+function moreLike(key){
+  const cur=FEED.findIndex(f=>f.key===key), it=FEED[cur]; if(!it) return;
+  const pred=likePred(it), card=document.getElementById(key);
+  let j=FEED.findIndex((f,i)=>i>cur && pred(f)), o, el;
+  if(j===cur+1){ el=document.getElementById(FEED[j].key); }
+  else if(j>cur){ o=FEED.splice(j,1)[0]; FEED.splice(cur+1,0,o); el=document.getElementById(o.key); card.after(el); }
+  else { o=poolFor(it,new Set(FEED.map(f=>f.key)))[0];
+    if(!o){ toast("זה מה שיש כרגע מהסוג הזה"); return; }
+    FEED.splice(cur+1,0,o); card.insertAdjacentHTML("afterend",cardHTML(o)); el=card.nextElementSibling; addLessButtons(); io && io.observe(el); }
+  $("#feed").scrollTo({top:el.offsetTop, behavior:"smooth"});
 }
 const blobs = (a,b,c) => `<div class="bg" style="background:${b}">
   <div class="blob" style="width:90vw;height:90vw;max-width:520px;max-height:520px;background:${a};top:-8%;right:-25%"></div>
@@ -1285,7 +1317,7 @@ function cardHTML(it){
   if(it.type==="m") return `<article class="card m ${it.light?"light":""}" id="${it.key}" data-k="${it.key}" style="--acc:${it.ac};color:${it.fg}">
       <div class="bg" style="background:${it.bg}"></div>${art(it.art,it.ac,it.fg)}
       <div class="content"><h2 class="hook">${kin(it.q)}</h2><div class="sub fade">${esc(it.sub)}</div>${it.src?`<div class="msrc fade"><span class="mk">${it.kind==="study"?"🔬 מחקר":it.kind==="video"?"🎬 בסרטון":"📖 מתוך ספר"}</span> ${esc(it.src)}${it.url?` · <a href="${it.url}" target="_blank" rel="noopener">${it.kind==="study"?"למחקר":"לצפייה"} ↗</a>`:""}</div>`:""}</div>
-      ${it.art?`<button class="tgo" data-tilt="${it.key}">📱 הטי את הטלפון ונעלי את הצורה</button>`:""}<div class="tagline">GoGram · מסר</div>${railHTML(it)}</article>`;
+      ${it.art&&it.art!=="grid"?`<button class="tgo" data-tilt="${it.key}">📱 הטי ונעלי</button>`:""}<div class="tagline">GoGram · מסר</div>${railHTML(it)}</article>`;
   if(it.type==="p"){
     const ans=polls[it.key];
     return `<article class="card p ${ans!=null?"answered":""}" id="${it.key}" data-k="${it.key}">
@@ -1618,6 +1650,9 @@ function refreshRail(key){ const c=document.getElementById(key); if(!c) return; 
 
 /* ---------- interactions in feed ---------- */
 const feed=$("#feed");
+feed.addEventListener("click",e=>{ const b=e.target.closest(".act1"); if(!b) return; e.stopPropagation();
+  const it=byKey(b.dataset.k); if(!it) return;
+  if(b.dataset.act==="url") window.open(it.url,"_blank","noopener"); else moreLike(it.key); },true);
 
 /* ---------- YouTube: ניגון אוטומטי בנגן הרשמי (IFrame Player API) ----------
    סרטון אחד בלבד מתנגן: זה שבמרכז המסך. מתחיל מושתק (mute → playVideo), נעצר כשגוללים הלאה,
