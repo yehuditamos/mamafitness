@@ -50,6 +50,16 @@ a{color:inherit}
 .flex{flex:1}
 .pill{height:36px;padding:0 12px;border-radius:99px;background:rgba(22,19,15,.82);backdrop-filter:blur(10px);color:var(--paper);display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums;box-shadow:0 4px 18px rgba(0,0,0,.12)}
 .pill.i{width:36px;padding:0;justify-content:center;font-family:var(--serif);font-size:18px}
+.pill.inb{width:40px;padding:0;justify-content:center;position:relative}
+.badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:#FF3B30;color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;border:2px solid var(--ink);animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+.ibx{display:grid;gap:10px;margin-top:6px}
+.ib{background:#fff;border:1.5px solid var(--ink);border-radius:18px;padding:14px}
+.ib .k{font-size:12.5px;font-weight:800;color:var(--mute);margin-bottom:4px}
+.ib .t{font-weight:900;font-size:17px;line-height:1.35}
+.ib .row{margin-top:10px}
+.ib .btn{height:44px;font-size:14.5px}
+.ib.letter{background:var(--sky)}
+.ib-empty{text-align:center;padding:26px 10px;color:var(--ink2);font-size:15px;line-height:1.6}
 .timebar{position:fixed;z-index:21;top:calc(var(--safeT) + 52px);right:14px;left:14px;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden;pointer-events:none}
 .timebar i{display:block;height:100%;width:100%;background:var(--paper);transform-origin:right;transition:transform 1s linear,background .4s}
 
@@ -298,6 +308,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 <header class="top">
   <div class="brand"><b>Go<i>Gram</i></b><span class="grow" id="grow" title="תובנות, פעולות והזמנות שלך">🌱 <span id="growN">0</span></span></div>
   <div class="flex"></div>
+  <button class="pill inb" id="inboxBtn" aria-label="הודעות"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><b class="badge" id="inboxN" hidden>0</b></button>
   <button class="pill" id="timerPill" aria-label="משך שימוש"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">10:00</span></button>
   <button class="pill i" id="infoBtn" aria-label="על הגרסה">i</button>
 </header>
@@ -880,7 +891,7 @@ feed.addEventListener("pointerup",e=>{
 
 /* ---------- sheet ---------- */
 function openSheet(html){ const s=$("#sheet"); s.innerHTML=`<div class="grab"></div>`+html; s.scrollTop=0; $("#scrim").classList.add("on"); s.classList.add("on"); }
-function closeSheet(){ $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); setTimeout(playActive,350); }
+function closeSheet(){ $("#sheet").onclick=null; $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); setTimeout(playActive,350); }
 $("#scrim").onclick=closeSheet;
 const ctxHTML = it => `<div class="ctx">${it.type==="v"?"🎬":"✦"}<div>על: <b>${esc(it.type==="v"?it.he:plain(label(it)).replace(/[״]/g,""))}</b>${it.type==="v"?` · ${esc(it.who)}`:""}</div></div>`;
 
@@ -959,7 +970,7 @@ function sheetDo(it, prefill){
   function save(via){
     const rec={id:Date.now().toString(36), key:it.key, text:ta.value.trim(), when:when.getTime(), mins, via, at:Date.now()};
     const i=actions.findIndex(x=>x.key===it.key); if(i>=0) actions[i]=rec; else actions.push(rec);
-    LS.set("actions",actions); refreshRail(it.key); drawGrow(true);
+    LS.set("actions",actions); refreshRail(it.key); drawGrow(true); drawInbox();
   }
   function doneMsg(t){ const b=$("#doBtns"); if(!b.querySelector(".ok")) b.insertAdjacentHTML("beforeend",`<div class="ok">✓<div>${t}</div></div><button class="btn ink full" onclick="closeSheet()">סגירה</button>`); }
   ta.oninput=draw;
@@ -996,6 +1007,42 @@ function sheetWith(it, override){
 
 /* ---------- recall ---------- */
 const RECALL_GAP = 30*60*1000, RECALL_MIN_AGE = 20*60*1000;
+/* ---------- תיבת הודעות: רק דברים אמיתיים שמחכים לך ----------
+   1. פעולה שקבעת והגיע הזמן שלה.  2. ״הודעה ממך״: תובנה שכתבת לפני יותר מיום, ששולפים מהזיכרון.
+   אין כאן הודעות מומצאות. */
+function inboxItems(){
+  const now=Date.now(), out=[];
+  actions.filter(a=>!a.done && a.when<=now && (!a.snooze || a.snooze<=now)).sort((a,b)=>a.when-b.when)
+    .forEach(a=>out.push({kind:"due", a}));
+  const letter = insights.filter(x=>byKey(x.key) && now-x.at>24*3600e3 && now-(x.seen||0)>3*24*3600e3).sort((a,b)=>(a.seen||0)-(b.seen||0))[0];
+  if(letter) out.push({kind:"letter", ins:letter});
+  return out;
+}
+function drawInbox(pop){
+  const n=inboxItems().length, b=$("#inboxN");
+  b.hidden=!n; b.textContent=n;
+  if(pop&&n){ b.style.animation="none"; void b.offsetWidth; b.style.animation=""; }
+  try{ if(navigator.setAppBadge){ n ? navigator.setAppBadge(n) : navigator.clearAppBadge(); } }catch(e){}   // המספר האדום על האייקון במסך הבית
+}
+function sheetInbox(){
+  const items=inboxItems();
+  openSheet(`<h3>מה מחכה לך</h3><p class="lead">רק דברים אמיתיים: מה שקבעת לעצמך, ומה שכתבת לעצמך.</p>
+    <div class="ibx">${items.length? items.map((x,i)=> x.kind==="due" ? `<div class="ib"><div class="k">⏰ הגיע הזמן · קבעת ${ago(x.a.at)}</div><div class="t">${esc(x.a.text)}</div>
+        <div class="row"><button class="btn ink" data-ib="done" data-i="${x.a.id}">עשיתי ✓</button><button class="btn line" data-ib="snooze" data-i="${x.a.id}">עוד לא, מחר</button></div></div>`
+      : `<div class="ib letter"><div class="k">💌 הודעה ממך · נכתבה ${ago(x.ins.at)}</div><div class="t">משהו שכתבת לעצמך מחכה. נבדוק קודם אם את זוכרת?</div>
+        <div class="row"><button class="btn ink" data-ib="letter" data-i="${x.ins.id}">לפתוח</button></div></div>`).join("")
+      : `<div class="ib-empty">אין כרגע כלום. 🌱<br>כשתקבעי פעולה ב״אני עושה״, היא תחכה לך כאן בזמן שבחרת.</div>`}</div>`);
+  $("#sheet").onclick=e=>{
+    const b=e.target.closest("[data-ib]"); if(!b) return;
+    if(b.dataset.ib==="letter"){ const ins=insights.find(x=>x.id===b.dataset.i); closeSheet(); if(ins) setTimeout(()=>{ showRecall(ins); },300); drawInbox(); return; }
+    const a=actions.find(x=>x.id===b.dataset.i); if(!a) return;
+    if(b.dataset.ib==="done"){ a.done=Date.now(); LS.set("actions",actions); drawInbox(); drawGrow(true);
+      const fx=document.createElement("div"); fx.className="burst"; fx.textContent="🔥"; fx.style.left="50%"; fx.style.top="45%"; document.body.appendChild(fx); setTimeout(()=>fx.remove(),850);
+      toast("עשית את זה. זה מה שבאמת סופר"); }
+    else { const d=new Date(); d.setDate(d.getDate()+1); d.setHours(new Date(a.when).getHours(), new Date(a.when).getMinutes(),0,0); a.snooze=d.getTime(); LS.set("actions",actions); drawInbox(); toast("נזכיר לך מחר"); }
+    sheetInbox();
+  };
+}
 function pickInsight(force){
   const now=Date.now();
   const pool = insights.filter(x=> byKey(x.key) && (force || (now-x.at>RECALL_MIN_AGE && now-(x.seen||0)>12*3600*1000)));
@@ -1014,7 +1061,7 @@ function showRecall(ins){
     <div id="rcOut"></div><div class="spacer"></div>
     <div class="stack" id="rcBtns"><button class="btn ink full" id="rcShow">הראי לי מה כתבתי</button><button class="btn line full" id="rcSkip">דילוג לפיד</button></div>`;
   el.classList.add("on"); pauseActive();
-  const finish=()=>{ ins.seen=Date.now(); ins.reviews=(ins.reviews||0)+1; LS.set("insights",insights); el.classList.remove("on"); playActive(); };
+  const finish=()=>{ ins.seen=Date.now(); ins.reviews=(ins.reviews||0)+1; LS.set("insights",insights); el.classList.remove("on"); playActive(); drawInbox(); };
   $("#rcSkip").onclick=()=>{ ins.seen=Date.now(); LS.set("insights",insights); el.classList.remove("on"); playActive(); };
   $("#rcShow").onclick=()=>{
     $("#rcOut").innerHTML=`<div class="reveal"><small>כתבת ${ago(ins.at)}:</small>${esc(ins.text)}</div>`;
@@ -1059,6 +1106,7 @@ function showTimeUp(byChoice){
   $("#tuGo").onclick=()=>{ $("#bye").classList.add("on"); $("#tuBtns").style.display="none"; };
   $("#tuMore").onclick=()=>{ if(!limitMin){ el.classList.remove("on"); return; } session.extra+=5; session.ended=false; LS.set("session",session); el.classList.remove("on"); drawTimer(); toast("עוד 5 דקות. בהצלחה"); };
 }
+$("#inboxBtn").onclick=sheetInbox;
 $("#timerPill").onclick=()=>{
   openSheet(`<h3>כמה זמן לתת לזה?</h3><p class="lead">כשהזמן נגמר הפיד נעצר ומזמין אותך לצאת ליישם. תמיד אפשר לבחור להמשיך.</p>
    <div class="chs" id="lim">${[5,10,15,0].map(m=>`<button class="ch ${m===limitMin?"on":""}" data-m="${m}">${m?m+" דק׳":"בלי מגבלה"}</button>`).join("")}</div>
@@ -1090,6 +1138,8 @@ let DL=null;
   LS.set("last",now); setInterval(()=>LS.set("last",Date.now()),15000);
   document.addEventListener("visibilitychange",()=>{ lastTick=Date.now(); if(!document.hidden) LS.set("last",Date.now()); else LS.set("session",session); });
   renderFeed(); drawTimer(); drawGrow(); setInterval(tick,1000);
+  drawInbox(); setInterval(drawInbox, 60000);
+  { const n=inboxItems().length; if(n) setTimeout(()=>{ if(!overlayOn()) toast(n===1?"📬 משהו מחכה לך":`📬 ${n} דברים מחכים לך`); drawInbox(true); },1400); }
   if(now-last>RECALL_GAP){ const ins=pickInsight(false); if(ins) showRecall(ins); }
   if(session.ended) showTimeUp(false);
   const h=location.hash.slice(1); if(h && document.getElementById(h)) setTimeout(()=>document.getElementById(h).scrollIntoView(),50);
