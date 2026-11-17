@@ -803,9 +803,9 @@ function cardHTML(it){
       ${blobs(night?"#283593":"#FF4D2E", night?"#0A0D2B":"#3B2347", "#F6D86B")}
       <div class="content" style="color:#fff"><span class="chip">✍️ פריפלואו</span>
         <h2 class="hook" style="margin-top:14px">${kin(night?"הרבה בראש לפני *השינה?*":"יש לך הרבה *בראש?*")}</h2>
-        <div class="sub fade">${night?"5 דקות לשפוך הכל לדף. נעביר את זה למחר, ואת הולכת לישון עם ראש נקי.":"לשפוך הכל לדף, בלי לעצור ובלי לתקן. אף אחד לא רואה, אפילו לא אנחנו."}</div>
-        <button class="btn paper" data-ff="${night?"night":"free"}">${night?"🌙 ראש נקי לפני שינה":"✍️ 5 דקות לשפוך"}</button>
-        ${night?`<button class="btn line" style="color:#fff" data-ff="free">שפיכה חופשית</button>`:""}
+        <div class="sub fade">${night?"5 דקות לכתוב הכל. נעביר את זה למחר, ואת הולכת לישון עם ראש נקי.":"לכתוב הכל, בלי לעצור ובלי לתקן. אף אחד לא רואה, אפילו לא אנחנו."}</div>
+        <button class="btn paper" data-ff="${night?"night":"free"}">${night?"🌙 ראש נקי לפני שינה":"✍️ 5 דקות כתיבה"}</button>
+        ${night?`<button class="btn line" style="color:#fff" data-ff="free">כתיבה חופשית</button>`:""}
       </div>${railHTML(it)}</article>`;
   }
   if(it.type==="nw"){
@@ -883,7 +883,7 @@ function endHTML(){
       <span class="gk" style="background:var(--paper);color:var(--moss)">סוף הפיד. בכוונה.</span>
       <h2>יצאת מפה<br>גדולה יותר.</h2>
       <div id="sumBox">${summaryHTML()}</div>
-      <div class="stack"><button class="btn paper full" id="endGo">יוצאת ליישם 🌱</button><button class="btn line full" style="color:var(--paper)" data-ff="auto">✍️ לפני שאת יוצאת: 3 דקות לשפוך</button></div>
+      <div class="stack"><button class="btn paper full" id="endGo">יוצאת ליישם 🌱</button><button class="btn line full" style="color:var(--paper)" data-ff="auto">✍️ לפני שאת יוצאת: 3 דקות כתיבה</button></div>
 
       ${installed?"":`<div class="endblock">
         <h3>שימי את GoGram ליד אינסטגרם</h3>
@@ -1480,14 +1480,14 @@ function showTimeUp(byChoice){
     ${up.map(a=>`<div class="todo">${esc(a.text)}<small>${fmtWhen(new Date(a.when))}</small></div>`).join("")}
     <div class="spacer"></div>
     <div class="bye" id="bye"><h2 style="font-size:34px">לכי לגדול 🌱</h2><p>אפשר לסגור את הלשונית. נתראה בפעם הבאה, עם שאלה אחת.</p></div>
-    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="btn line full" data-ff="auto">✍️ 3 דקות לשפוך את הראש</button><button class="btn line full" id="tuMore">בחירה מודעת: עוד 5 דקות</button></div>
+    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="btn line full" data-ff="auto">✍️ 3 דקות כתיבה לראש נקי</button><button class="btn line full" id="tuMore">בחירה מודעת: עוד 5 דקות</button></div>
     <p class="note" style="color:#fff;opacity:.85">זו לא חסימה. זו עצירה שבחרת בעצמך, ואפשר להמשיך אם זה באמת מה שאת רוצה.</p>`;
   el.classList.add("on");
   $("#tuGo").onclick=()=>{ $("#bye").classList.add("on"); $("#tuBtns").style.display="none"; };
   $("#tuMore").onclick=()=>{ if(!limitMin){ el.classList.remove("on"); return; } session.extra+=5; session.ended=false; LS.set("session",session); el.classList.remove("on"); drawTimer(); toast("עוד 5 דקות. בהצלחה"); };
 }
 $("#inboxBtn").onclick=sheetInbox;
-/* ---------- פריפלואו: לשפוך את הראש לדף ----------
+/* ---------- פריפלואו: כתיבה חופשית של כל מה שבראש ----------
    מבוסס על שלושה כלים מוכרים:
    1. Morning Pages (ג'וליה קמרון): כתיבה רציפה, בלי לעצור, בלי לתקן, בלי לקרוא אחורה, רק בשבילך. 3 עמודים ≈ 750 מילים.
    2. כתיבה רגשית (פנבייקר): 15-20 דקות על מחשבות ורגשות. החלק החשוב הוא להבין משהו, לא רק לפרוק.
@@ -1549,7 +1549,7 @@ function finishFF(){
   const sents = [...new Set(text.split(/[.!?\n]+/).map(x=>x.trim()).filter(x=>x.length>12))];
   const tasks = sents.filter(x=>TASKY.test(x)).slice(0,4);
   const gems = sents.filter(x=>!tasks.includes(x)).sort((a,b)=>b.length-a.length).slice(0,5);
-  el.innerHTML=`<div class="ffend"><h2>שפכת ${w} מילים.</h2><p>${w>=750?"3 עמודים שלמים. ":""}איך הראש עכשיו? עכשיו מחליטים מה לעשות עם זה.</p>
+  el.innerHTML=`<div class="ffend"><h2>כתבת ${w} מילים.</h2><p>${w>=750?"3 עמודים שלמים. ":""}איך הראש עכשיו? עכשיו מחליטים מה לעשות עם זה.</p>
     ${tasks.length?`<div class="lbl">⏰ נשמע כמו משימה. להעביר ליומן?</div>${tasks.map((t,i)=>`<button class="ffsent" data-task="${i}">${esc(t)}</button>`).join("")}`:""}
     ${gems.length?`<div class="lbl">💡 יש פה משפט שאת רוצה לזכור? (לא חובה)</div>${gems.map((t,i)=>`<button class="ffsent" data-gem="${i}">${esc(t)}</button>`).join("")}`:""}
     <div class="lbl">ומה עם הדף עצמו?</div>
@@ -1575,12 +1575,12 @@ function sheetDrawer(){
 }
 function sheetFFMenu(){
   const night=new Date().getHours()>=20 || new Date().getHours()<4, n=LS.get("pages",[]).length;
-  openSheet(`<h3>✍️ פריפלואו</h3><p class="lead">לשפוך את כל מה שבראש לדף. בלי לעצור, בלי לתקן, בלי שאף אחד יראה.</p>
+  openSheet(`<h3>✍️ פריפלואו</h3><p class="lead">לכתוב את כל מה שבראש. בלי לעצור, בלי לתקן, בלי שאף אחד יראה.</p>
     <div class="stack">
-      <button class="btn ${night?"line":"ink"} full" data-ff="free">שפיכה חופשית · 5 דקות</button>
+      <button class="btn ${night?"line":"ink"} full" data-ff="free">כתיבה חופשית · 5 דקות</button>
       <button class="btn ${night?"ink":"line"} full" data-ff="night">🌙 ראש נקי לפני שינה · 5 דקות</button>
       <button class="btn line full" id="ffDrawer">המגירה שלי${n?` (${n})`:""}</button></div>
-    <p class="note">בשפיכה החופשית הטקסט הישן מיטשטש למעלה, כדי שלא תחזרי לקרוא ולתקן. אם תעצרי, תופיע שאלה קטנה שתעזור להמשיך. בסוף בוחרים: לשמור, לשחרר, או להוציא ממנו משימה או משפט לזכור.</p>`);
+    <p class="note">בכתיבה החופשית הטקסט הישן מיטשטש למעלה, כדי שלא תחזרי לקרוא ולתקן. אם תעצרי, תופיע שאלה קטנה שתעזור להמשיך. בסוף בוחרים: לשמור, לשחרר, או להוציא ממנו משימה או משפט לזכור.</p>`);
   $("#ffDrawer").onclick=sheetDrawer;
 }
 /* כל כפתור עם data-ff, בכל מקום באפליקציה, פותח את הכתיבה */
@@ -1669,7 +1669,7 @@ $("#infoBtn").onclick=()=>{
    <label class="f">🌱 המונה למעלה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">סופר רק מה שעשית: תובנות, פעולות, הזמנות ואימונים. לא כמה גללת.</p>
    <label class="f">מה באמת עובד</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">שלושת הכפתורים, הקשה כפולה לשמירה, שאלות לבטן, אימונים קצרים עם טיימר, סקרים ואתגרים שנשמרים אצלך, ניגון אוטומטי של סרטונים, שאלת שליפה בכניסה הבאה (אחרי הפסקה של חצי שעה לפחות), הוספה ליומן, שיתוף בוואטסאפ או בהעתקה, ומגבלת זמן.</p>
    <label class="f">🎯 הפיד שמתכוונן אלייך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רוב הפיד כאן כדי שתיהני ותנקי את הראש. שאלה או משימה מגיעות רק מדי פעם, ותמיד אפשר פשוט לגלול הלאה. כשאת כותבת תשובה, הפיד מזהה את הנושא (אימונים, העסק, הבית, שקט בראש, ביטחון) ושוזר בין הסרטונים כרטיסים בשבילך. הכל קורה במכשיר שלך.${topics.length?` המסלולים שלך: ${topics.map(t=>TOPICS[t].name).join(", ")}.`:""}</p>
-   <label class="f">✍️ פריפלואו</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">כפתור העט למעלה: שפיכה חופשית של מחשבות, או ״ראש נקי לפני שינה״ שהופך את הרשימה לתזכורות של מחר. הדפים נשמרים רק במכשיר.</p>
+   <label class="f">✍️ פריפלואו</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">כפתור העט למעלה: כתיבה חופשית של מחשבות, או ״ראש נקי לפני שינה״ שהופך את הרשימה לתזכורות של מחר. הדפים נשמרים רק במכשיר.</p>
    <label class="f">📰 חדשות טובות</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רק חדשות טובות, מהארץ ומהעולם, בלי פוליטיקה. נבחרו ידנית, נוסחו מחדש בעברית, ולכל אחת יש קישור למקור. עודכן לאחרונה: ${CONTENT_UPDATED ? new Date(CONTENT_UPDATED).toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}) : NEWS_UPDATED}. מתרענן אוטומטית פעמיים ביום.</p>
    <label class="f">מה עדיין הדגמה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">התוכן נבחר ידנית לגרסה הזו. אין סינון אוטומטי, אין אלגוריתם ואין משתמשים אחרים. הסרטונים נבדקו כקיימים ביוטיוב ב־${VERIFIED_ON}. הכותרות בעברית הן ניסוח שלנו לרעיון של כל הרצאה, לא ציטוט. כרטיסי המסר, השאלות והאימונים מקוריים. האימונים קצרים וכלליים, לא תוכנית אישית: אם יש כאב או מגבלה רפואית, מדלגים. זה לא מוצר רפואי ואין כאן הבטחה לשינוי.</p>
    <label class="f">הפרטיות שלך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">אין חשבון. כל מה שכתבת נשמר רק בדפדפן הזה, במכשיר הזה, ועלול להימחק אם ינוקו נתוני הגלישה. כרגע שמורים: ${insights.length} תובנות, ${actions.length} פעולות.</p>
