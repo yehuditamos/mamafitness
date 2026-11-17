@@ -271,6 +271,23 @@ a{color:inherit}
 .fwc .hook{font-size:clamp(36px,10.5vw,50px)}
 .fwc .sub{margin:14px 64px 18px 0;font-size:16.5px;line-height:1.5;opacity:.9;margin-left:64px;margin-right:0}
 .fwc .btn{width:calc(100% - 64px);margin:0 0 10px 64px}
+/* business step */
+.bac .content{bottom:auto;top:calc(var(--safeT) + 100px);padding-left:20px}
+.bac .hook{font-size:clamp(32px,9.4vw,46px)}
+.bac .sub{margin:14px 64px 16px 0;margin-left:64px;margin-right:0;font-size:16.5px;line-height:1.5;opacity:.9}
+.babtns{display:grid;gap:10px;margin-left:64px}
+.bat{margin-left:64px;font-family:var(--serif);font-weight:900;font-size:54px;min-height:0;font-variant-numeric:tabular-nums}
+.badone{display:none;margin:16px 0 0 64px;font-weight:900;font-size:17px;line-height:1.6}
+.bac.did .babtns{display:none}.bac.did .badone{display:block;animation:pop .6s}
+/* story composer */
+.sring-wrap{position:relative;flex-shrink:0}
+.splus{position:absolute;bottom:-3px;left:-3px;width:20px;height:20px;border-radius:50%;background:var(--tomato);color:#fff;font-weight:900;font-size:15px;line-height:18px;text-align:center;border:2px solid var(--ink)}
+.tpls{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.tpls::-webkit-scrollbar{display:none}
+.tpl{flex:0 0 auto;height:40px;padding:0 14px;border-radius:99px;border:1.5px solid var(--ink);background:#fff;font-weight:800;font-size:14px}
+.tpl.on{background:var(--ink);color:var(--paper)}
+.sprev{width:min(62vw,240px);aspect-ratio:9/16;margin:12px auto 0;border-radius:18px;overflow:hidden;box-shadow:0 12px 34px rgba(0,0,0,.25);background:#000}
+.sprev canvas{width:100%;height:100%;display:block}
 /* quiet moment */
 .qc .qin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px 190px 28px;color:#fff;z-index:2}
 .qc .hook{font-size:clamp(34px,10vw,46px);margin-top:28px}
@@ -413,7 +430,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 
 <header class="top">
   <div class="brand" id="infoBtn" role="button" aria-label="על GoGram"><b>Go<i>Gram</i></b><span class="grow" id="grow" title="תובנות, פעולות והזמנות שלך">🌱 <span id="growN">0</span></span></div>
-  <button class="sring" id="storyBtn" aria-label="הסטורי של היום"><span>היום</span></button>
+  <div class="sring-wrap"><button class="sring" id="storyBtn" aria-label="הסטורי של היום"><span>היום</span></button><button class="splus" id="storyNew" aria-label="סטורי חדש">+</button></div>
   <div class="flex"></div>
   <button class="pill inb" id="inboxBtn" aria-label="הודעות"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><b class="badge" id="inboxN" hidden>0</b></button>
   <button class="pill" id="timerPill" aria-label="משך שימוש"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">10:00</span></button>
@@ -485,6 +502,10 @@ const NW = {
   goats: {e:"🐐", where:"העולם", h:"ילד בן 6 והעיזים שלו גייסו *15,800 דולר* לכלבים בלי בית", p:"אחרי שהכלב שלו מת, הוא ישב ליד הכביש עם העיזים ושלט שהכין בעצמו. אנשים זרים שלחו את השאר.", src:"Good News Dose", url:"https://goodnewsdose.com/good-news-this-week/", d:"12.11.2026", c:["#F9A825","#3B2A05","#FFF176"]}
 };
 const M = {
+  biz1:  {q:"לא צריך עוד עוקבים. צריך עוד *שיחות.*", sub:"הודעה אחת היום ללקוחה אמיתית שווה יותר ממאה לייקים.", bg:"#16130F", fg:"#F3EEE4", ac:"#F6D86B", art:"bubbles"},
+  biz2:  {q:"המחיר שלך הוא גם *הודעה* על מי שאת.", sub:"מחיר נמוך מדי לא מביא יותר לקוחות. הוא מביא את הלקוחות הלא נכונים.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", art:"count", light:true},
+  biz3:  {q:"השיווק הכי טוב שלך זה לקוחה *מרוצה* שמדברת.", sub:"מתי בפעם האחרונה ביקשת ממנה?", bg:"#2F5D46", fg:"#F3EEE4", ac:"#F6D86B", art:"bubbles"},
+  biz4:  {q:"עצמאית זה לא אומר *לבד לגמרי.*", sub:"בקרוב: שולחן העצמאים. מי שעושה היום משהו לעסק, מספרת, וכולן מפרגנות.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", art:"wave"},
   cal:   {q:"מה שלא נכנס *ליומן,* נשאר משאלה.", sub:"לחצי ״אני עושה״ על כל תוכן שנגע בך.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", art:"sun", light:true},
   move:  {q:"תנועה באה *לפני* מוטיבציה.", sub:"לא מחכים להרגיש. מתחילים, וההרגשה מצטרפת בדרך.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", art:"wave"},
   habit: {q:"הרגל נבנה ממה שעושים כשאין *חשק.*", sub:"הימים הטובים לא מלמדים כלום. הבינוניים בונים.", bg:"#F3EEE4", fg:"#16130F", ac:"#FF4D2E", art:"grid", light:true},
@@ -516,6 +537,13 @@ const C = {
 
 /* שאלות לבטן: מאגר שמתערבב בכל כניסה, כדי שזה תמיד יפתיע */
 const G = {
+  price: {q:"על מה את מורידה במחיר *כי לא נעים לך?*", input:"תכתבי בכנות. אף אחד לא רואה", r:"עכשיו זה כתוב. מה המחיר שהיית גובה אם לא היה לא נעים?", cta:"do", pre:"לעדכן מחיר: "},
+  fearc: {q:"איזה לקוח את שומרת *רק מפחד?*", input:"לקוח, פרויקט או שירות", r:"לפעמים הלקוח הכי יקר הוא זה שתופס את המקום של הלקוח הנכון.", cta:"take"},
+  away:  {q:"אם תיעדרי מהעסק שבוע, *מה ייפול?*", input:"הדבר הראשון שעולה", r:"זה הדבר הראשון לתעד, להעביר או לפשט. אפילו רק לכתוב איך עושים אותו.", cta:"do", pre:"לתעד או להעביר: "},
+  refer: {q:"מתי בפעם האחרונה *ביקשת המלצה?*", opts:[
+           {t:"השבוע", r:"יופי. תמשיכי, זה השיווק הכי זול שיש.", cta:"take"},
+           {t:"החודש", r:"אז הגיע הזמן לבקש שוב. מי הלקוחה הכי מרוצה שלך החודש?", cta:"do", pre:"לבקש המלצה מ"},
+           {t:"אף פעם", r:"זה כנראה הצעד הכי משתלם שתעשי השבוע. הודעה אחת, שתי שורות.", cta:"do", pre:"לבקש המלצה מ"}]},
   year:  {q:"אם תמשיכי בדיוק ככה עוד שנה, תהיי מרוצה?", opts:[
            {t:"כן", r:"יופי. אז מה הדבר האחד ששומר על זה? כדאי לתת לו מקום ביומן.", cta:"do", pre:"לשמור על "},
            {t:"לא", r:"אז משהו צריך לזוז. לא הכל. דבר אחד. מה הוא?", cta:"do", pre:""},
@@ -534,6 +562,17 @@ const G = {
            {t:"נמוכה", r:"אז לא אימון. דקה של נשימה. תמצאי אותה ממש בהמשך.", cta:"move"}]}
 };
 /* אימונים קצרים שעושים עכשיו, ליד הטלפון */
+/* צעדים של 2 דקות לעסק */
+const BA = {
+  ping:  {t:"הודעה אחת ללקוחה שלא שמעת ממנה חודש", why:"״היי, חשבתי עלייך. איך הולך עם...?״ זה כל מה שצריך."},
+  heads: {t:"לכתוב 3 כותרות לפוסט הבא", why:"לא פוסט. רק 3 כותרות. הפוסט יגיע מעצמו."},
+  lastp: {t:"לבדוק מתי העלית מחיר בפעם האחרונה", why:"אם התשובה היא ״לא זוכרת״, יש לך משימה."},
+  best3: {t:"לרשום 3 לקוחות שהכי כיף לעבוד איתם", why:"ומה משותף להם. זה הלקוח שאת מחפשת."},
+  reply: {t:"לענות להודעה אחת שדחית", why:"זאת שאת יודעת בדיוק איזו."},
+  pitch: {t:"משפט אחד: מה אני מוכרת, למי, ולמה עכשיו", why:"אם זה לא נכנס למשפט אחד, גם הלקוחה לא תבין."},
+  call:  {t:"להתקשר לליד אחד במקום לשלוח הודעה", why:"שיחה של דקה סוגרת יותר מעשר הודעות."},
+  one:   {t:"מה הדבר האחד שאם אעשה השבוע, כל השאר יהיה קל יותר?", why:"לכתוב אותו, ולשים ביומן."}
+};
 const W = {
   squat:  {t:"30 שניות. סקוואט. עכשיו.", secs:30, ph:[[2,"יורדת ↓"],[2,"עולה ↑"]], cue:"ברכיים בכיוון האצבעות, משקל על העקבים, חזה פתוח.", easy:"קל יותר: לשבת על כיסא ולקום.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", habit:"30 שניות סקוואט"},
   breath: {t:"דקה אחת. רק לנשום.", secs:60, ph:[[4,"שואפת"],[4,"נושפת"]], cue:"שאיפה מהאף, נשיפה ארוכה מהפה. כתפיים למטה.", easy:"אפשר לעצום עיניים.", bg:"#CFE3F0", fg:"#16130F", ac:"#2F5D46", habit:"דקה של נשימה"},
@@ -622,7 +661,7 @@ function mergeContent(c){
   return changed;
 }
 try{ mergeContent(JSON.parse(localStorage.getItem("gg_content")||"null")); }catch(e){}
-const KIND = {v:"n",m:"n",k:"n",q:"n",nw:"n",g:"r",p:"r",c:"r",fw:"r",w:"a"};
+const KIND = {v:"n",m:"n",k:"n",q:"n",nw:"n",g:"r",p:"r",c:"r",fw:"r",w:"a",ba:"a"};
 const trackItems = id => TOPICS[id].cards.map(c=>({...c, key:"t-"+c.k}));
 function detectTopic(text){ for(const id in TOPICS) if(TOPICS[id].re.test(text||"")) return id; return null; }
 let topics = (()=>{ try{
@@ -636,7 +675,7 @@ let topics = (()=>{ try{
    רוב הפיד מזין ומנקה את הראש (סרטונים, מסרים, רגעי שקט). שאלה או משימה מגיעות רק מדי פעם,
    אף פעם לא שתיים ברצף, והכל אפשר פשוט לגלול הלאה. */
 const FWC = {pages:{q:"פריפלואו"}};
-const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q,nw:NW,fw:FWC};
+const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q,nw:NW,fw:FWC,ba:BA};
 const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
 /* ---------- ״פחות מזה״: הפיד לומד ממה שמעצבן אותך ---------- */
@@ -657,12 +696,15 @@ function buildFeed(){
     .filter(x=>ok(x) && !(x.key in answered) && !seenWithin(x.key,3)).slice(0,reflMax);
   // אימונים: מעט כברירת מחדל, ופחות אם ביקשת או אם את מדלגת עליהם
   const actMax = Math.max(0, 3 - lessOf("w")*2 - Math.floor((PREF.skips.w||0)/2));
-  let act  = shuffle(Object.keys(W).map(k=>mk("w",k))).filter(x=>ok(x) && !seenWithin(x.key,1)).slice(0,actMax);
+  // לעצמאים: בעיקר צעדים קטנים לעסק, ואימון אחד
+  const bact = shuffle(Object.keys(BA).map(k=>mk("ba",k))).filter(x=>ok(x) && !seenWithin(x.key,1)).slice(0,3);
+  let act  = [...bact, ...shuffle(Object.keys(W).map(k=>mk("w",k))).filter(x=>ok(x) && !seenWithin(x.key,1)).slice(0,Math.min(1,actMax))];
+  shuffle(act);
   // המסלולים האישיים נשזרים לאורך הפיד, לסירוגין בין המטרות
   const tr = topics.filter(id=>TOPICS[id] && !lessOf("t:"+id)).map(id=>trackItems(id).filter(x=>!/-1$/.test(x.k) && ok(x) && !(x.key in answered) && !seenWithin(x.key,3) && !(x.type==="w" && actMax===0)));
   const trN=[], trR=[], trA=[];
   for(let i=0; tr.some(t=>t[i]); i++) tr.forEach(t=>{ const x=t[i]; if(x) (KIND[x.type]==="n"?trN:KIND[x.type]==="r"?trR:trA).push(x); });
-  const nq=[...interleave(trN, nour.filter(ok))], rq=[...trR, ...refl].slice(0,reflMax), aq=[...trA, ...act].slice(0,actMax);
+  const nq=[...interleave(trN, nour.filter(ok))], rq=[...trR, ...refl].slice(0,reflMax), aq=[...trA, ...act].slice(0,Math.max(actMax,3));
   const out=[]; const RHYTHM=["n","n","r","n","n","n","a"];   // בערך 70% להזין, 20% לחשוב, 10% לעשות
   out.push(nq.shift()); let i=0;
   while(nq.length){ const k=RHYTHM[i++%RHYTHM.length]; const q=k==="n"?nq:k==="r"?rq:aq; if(q.length) out.push(q.shift()); else if(k!=="n") continue; }
@@ -676,6 +718,7 @@ function label(it){
   if(it.type==="v") return `״${it.he}״ של ${it.who}`;
   if(it.type==="k") return `״${plain(it.t).split("·")[0].trim()}״`;
   if(it.type==="w") return `האימון ״${it.habit}״`;
+  if(it.type==="ba") return `הצעד ״${it.t}״`;
   if(it.type==="q") return `״${plain(it.q)}״`;
   if(it.type==="nw") return `החדשה ״${plain(it.h)}״`;
   if(it.type==="fw") return "הפריפלואו";
@@ -795,6 +838,18 @@ function cardHTML(it){
         ${it.opts?`<div class="opts gopts">${it.opts.map((o,i)=>`<button class="opt gopt ${a&&a.i===i?"pick":""}" data-g="${it.key}" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`
           :`<form class="gin" data-g="${it.key}"><textarea rows="2" maxlength="140" placeholder="${esc(it.input)}">${a&&a.text?esc(a.text):""}</textarea><button>זהו ←</button></form>`}
         <div class="gres" id="gres-${it.key}">${a?gutRes(it,a):""}</div>
+      </div>${railHTML(it)}</article>`;
+  }
+  if(it.type==="ba"){
+    const done=moves.some(m=>m.key===it.key && Date.now()-m.at<20*3600e3);
+    return `<article class="card bac ${done?"did":""}" id="${it.key}" data-k="${it.key}" style="--acc:#F6D86B">
+      ${blobs("#3B2347","#16130F","#F6D86B")}
+      <div class="content" style="color:#fff"><span class="chip">⚡ צעד של 2 דקות לעסק</span>
+        <h2 class="hook" style="margin-top:14px">${kin(it.t)}</h2>
+        <div class="sub fade">${esc(it.why)}</div>
+        <div class="bat" id="bat-${it.key}"></div>
+        <div class="babtns"><button class="btn paper" data-ba="go" data-k="${it.key}">⏱ 2 דקות, מתחילה</button><button class="btn line" style="color:#fff" data-ba="done" data-k="${it.key}">עשיתי ✓</button></div>
+        <div class="badone">עשית צעד לעסק היום 🔥 <button class="go" data-story="done" data-pre="${esc(it.t)}">לשתף כסטורי</button></div>
       </div>${railHTML(it)}</article>`;
   }
   if(it.type==="fw"){
@@ -1161,6 +1216,7 @@ window.addEventListener("resize", ()=>updateActive());
 feed.addEventListener("click",e=>{
   const ra=e.target.closest(".ra"); if(ra){ const it=byKey(ra.dataset.k); ({take:sheetTake,do:sheetDo,with:sheetWith})[ra.dataset.a](it); return; }
   const snd=e.target.closest(".snd"); if(snd){ turnSoundOn(snd.closest(".card")); return; }
+  const bab=e.target.closest("[data-ba]"); if(bab){ baAction(bab.dataset.ba, bab.dataset.k); return; }
   const lb=e.target.closest(".lessbtn"); if(lb){ sheetLess(lb.dataset.less); return; }
   const gop=e.target.closest(".gopt"); if(gop){ answerGut(gop.dataset.g,{i:+gop.dataset.i}); return; }
   const ga=e.target.closest("[data-gact]"); if(ga){ gutAction(ga.dataset.gact, byKey(ga.dataset.g)); return; }
@@ -1210,6 +1266,17 @@ function gutAction(kind,it){
   else if(kind==="take") sheetTake(it);
   else if(kind==="msg") sheetWith(it, `היי ${a.text||""}, חשבתי עלייך היום.\nרציתי לשאול מה שלומך באמת, ואם בא לך שנתפוס שיחה השבוע.`);
   else if(kind==="move"){ const nx=FEED.slice(FEED.indexOf(it)+1).find(f=>f.type==="w"); if(nx) document.getElementById(nx.key).scrollIntoView({behavior:"smooth"}); }
+}
+/* ---------- צעד לעסק ---------- */
+let baRun=null;
+function baAction(kind,key){
+  const card=document.getElementById(key);
+  const finish=()=>{ if(baRun){ clearInterval(baRun.iv); baRun=null; } moves.push({key, at:Date.now()}); LS.set("moves",moves); drawGrow(true); card.classList.add("did"); $("#bat-"+key).textContent="";
+    const b=document.createElement("div"); b.className="burst"; b.textContent="🔥"; b.style.left="50%"; b.style.top="40%"; document.body.appendChild(b); setTimeout(()=>b.remove(),850); };
+  if(kind==="done") return finish();
+  if(baRun){ clearInterval(baRun.iv); }
+  const t0=Date.now(), el=$("#bat-"+key); card.querySelector('[data-ba="go"]').textContent="רצה... לחצי ״עשיתי״ כשסיימת";
+  baRun={key, iv:setInterval(()=>{ const left=Math.max(0,120-(Date.now()-t0)/1000); el.textContent=`${Math.floor(left/60)}:${pad(Math.ceil(left)%60)}`; if(left<=0){ clearInterval(baRun.iv); el.textContent="⏰"; toast("2 דקות. עשית?"); } },250)};
 }
 /* ---------- workouts ---------- */
 let wRun=null;
@@ -1587,6 +1654,79 @@ function sheetFFMenu(){
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-ff]"); if(!b) return; e.preventDefault(); e.stopPropagation();
   $("#timeup").classList.remove("on"); openFF(b.dataset.ff); },true);
 $("#ffBtn").onclick=sheetFFMenu;
+/* ---------- יוצר סטורי בתבניות ----------
+   כל סטורי יוצא מתבנית, כדי שיהיה ברור, נקי ותמיד ייראה טוב. ״משהו אחר״ פתוח לטקסט חופשי או תמונה.
+   עכשיו: יוצא כתמונה לשיתוף. כשהקבוצה תחובר: עולה גם לשולחן העצמאים. */
+const STPL = {
+  done:  {n:"✅ עשיתי היום בעסק", ph:"מה עשית היום לעסק?", pal:["#2F5D46","#0E2A20","#9FD3A8"]},
+  win:   {n:"🏆 ניצחון של היום", ph:"מה הלך טוב? גם קטן נחשב", pal:["#E8A33D","#3A2208","#FFE08A"]},
+  idea:  {n:"💡 תובנה", ph:"משפט אחד שלמדת היום", pal:["#6B4BD6","#170E36","#C6B6FF"]},
+  ask:   {n:"🙋 שאלה לקהילה", ph:"במה היית רוצה עזרה או דעה?", pal:["#2B6CB0","#0B1E36","#7FD1FF"]},
+  goal:  {n:"🎯 המטרה שלי השבוע", ph:"דבר אחד שיקרה עד סוף השבוע", pal:["#FF4D2E","#3B2347","#F6D86B"]},
+  free:  {n:"✨ משהו אחר", ph:"מה שבא לך", pal:["#16130F","#000000","#F3EEE4"]}
+};
+let SC=null;
+function openComposer(tpl, pre){
+  tpl = STPL[tpl] ? tpl : "done";
+  const name=LS.get("myName","");
+  openSheet(`<h3>סטורי חדש</h3><p class="lead">בוחרים תבנית, כותבים שורה, וזהו.</p>
+    <div class="tpls" id="tpls">${Object.entries(STPL).map(([k,v])=>`<button class="tpl ${k===tpl?"on":""}" data-t="${k}">${v.n}</button>`).join("")}</div>
+    <textarea id="scText" maxlength="140" style="min-height:76px;margin-top:12px" placeholder="${esc(STPL[tpl].ph)}">${esc(pre||"")}</textarea>
+    <div class="row" style="margin-top:8px"><input id="scName" placeholder="השם שלך (לא חובה)" maxlength="24" value="${esc(name)}" style="width:100%;border:1.5px solid var(--ink);border-radius:14px;padding:10px 14px;font-size:16px;background:#fff">
+      <label class="btn line" id="scPhotoL" style="height:46px;flex:0 0 auto;display:${tpl==="free"?"inline-flex":"none"}">📷 תמונה<input type="file" accept="image/*" id="scPhoto" hidden></label></div>
+    <div class="sprev"><canvas id="scCanvas" width="1080" height="1920"></canvas></div>
+    <div class="stack">
+      <button class="btn ink full" id="scShare">שיתוף לאינסטגרם / וואטסאפ</button>
+      <button class="btn line full" id="scGroup">לפרסם בשולחן העצמאים · בקרוב</button></div>
+    <p class="note">הסטורי נוצר כאן בטלפון. כרגע הוא יוצא כתמונה לשיתוף. כשהקבוצה תחובר, הוא יעלה גם לשם, ל־24 שעות.</p>`);
+  SC={tpl, img:null};
+  const draw=()=>drawStory($("#scCanvas"), SC.tpl, $("#scText").value, $("#scName").value, SC.img);
+  $("#tpls").onclick=e=>{ const b=e.target.closest(".tpl"); if(!b) return; SC.tpl=b.dataset.t; document.querySelectorAll(".tpl").forEach(x=>x.classList.toggle("on",x===b)); $("#scText").placeholder=STPL[SC.tpl].ph; $("#scPhotoL").style.display=SC.tpl==="free"?"inline-flex":"none"; draw(); };
+  $("#scText").oninput=draw; $("#scName").oninput=()=>{ LS.set("myName",$("#scName").value.trim()); draw(); };
+  $("#scPhoto").onchange=e=>{ const f=e.target.files[0]; if(!f) return; const im=new Image(); im.onload=()=>{ SC.img=im; draw(); }; im.src=URL.createObjectURL(f); };
+  $("#scGroup").onclick=()=>toast("ייפתח ברגע שנחבר את הקבוצה 🔜");
+  $("#scShare").onclick=async()=>{
+    if($("#scText").value.trim().length<2 && !SC.img){ $("#scText").focus(); toast("כתבי שורה אחת"); return; }
+    draw(); const c=$("#scCanvas");
+    const blob=await new Promise(r=>c.toBlob(r,"image/png"));
+    const file=new File([blob],"gogram-story.png",{type:"image/png"});
+    try{ if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], text:"GoGram · פחות לגלול. יותר לגדול. "+APP_URL}); drawGrow(true); return; } }catch(e){ if(e && e.name==="AbortError") return; }
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="gogram-story.png"; document.body.appendChild(a); a.click(); a.remove(); toast("התמונה נשמרה. אפשר להעלות אותה לסטורי");
+  };
+  (document.fonts?document.fonts.ready:Promise.resolve()).then(draw);
+}
+function wrapLines(ctx, text, maxW){
+  const words=text.trim().split(/\s+/), lines=[]; let line="";
+  words.forEach(w=>{ const t=line?line+" "+w:w; if(ctx.measureText(t).width>maxW && line){ lines.push(line); line=w; } else line=t; });
+  if(line) lines.push(line); return lines;
+}
+function drawStory(c, tpl, text, name, img){
+  const ctx=c.getContext("2d"), W_=c.width, H_=c.height, t=STPL[tpl], [c1,c2,c3]=t.pal;
+  ctx.direction="rtl"; ctx.textAlign="right";
+  // רקע
+  const g=ctx.createLinearGradient(0,0,W_,H_); g.addColorStop(0,c1); g.addColorStop(1,c2); ctx.fillStyle=g; ctx.fillRect(0,0,W_,H_);
+  if(img){ const r=Math.max(W_/img.width,H_/img.height), w=img.width*r, h=img.height*r; ctx.drawImage(img,(W_-w)/2,(H_-h)/2,w,h);
+    const sh=ctx.createLinearGradient(0,0,0,H_); sh.addColorStop(0,"rgba(0,0,0,.15)"); sh.addColorStop(.5,"rgba(0,0,0,.35)"); sh.addColorStop(1,"rgba(0,0,0,.75)"); ctx.fillStyle=sh; ctx.fillRect(0,0,W_,H_); }
+  else { ctx.globalAlpha=.35; ctx.fillStyle=c3; ctx.beginPath(); ctx.arc(W_*.85,H_*.18,360,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=.18; ctx.beginPath(); ctx.arc(W_*.1,H_*.82,420,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1; }
+  const R=W_-90;
+  // תווית התבנית
+  ctx.font="800 46px Heebo, sans-serif"; const lbl=t.n; const lw=ctx.measureText(lbl).width+70;
+  ctx.fillStyle="rgba(255,255,255,.18)"; roundRect(ctx,R-lw,250,lw,92,46); ctx.fill();
+  ctx.fillStyle="#fff"; ctx.fillText(lbl,R-35,312);
+  // הטקסט
+  const body=(text||"").trim()||t.ph; ctx.fillStyle=(text||"").trim()?"#fff":"rgba(255,255,255,.45)";
+  let size=110; ctx.font=`900 ${size}px "Frank Ruhl Libre", serif`; let lines=wrapLines(ctx,body,W_-180);
+  while(lines.length>6 && size>64){ size-=8; ctx.font=`900 ${size}px "Frank Ruhl Libre", serif`; lines=wrapLines(ctx,body,W_-180); }
+  const lh=size*1.15, top=Math.max(560, H_/2 - (lines.length*lh)/2);
+  lines.forEach((l,i)=>ctx.fillText(l,R,top+i*lh));
+  if(name && name.trim()){ ctx.font="700 50px Heebo, sans-serif"; ctx.fillStyle=c3; ctx.fillText("· "+name.trim(), R, top+lines.length*lh+40); }
+  // חתימה
+  ctx.font='900 64px "Frank Ruhl Libre", serif'; ctx.fillStyle="#fff"; ctx.textAlign="left"; ctx.direction="ltr"; ctx.fillText("Go",90,H_-170); const gw=ctx.measureText("Go").width; ctx.fillStyle="#FF4D2E"; ctx.fillText("Gram",90+gw,H_-170);
+  ctx.font="600 38px Heebo, sans-serif"; ctx.fillStyle="rgba(255,255,255,.8)"; ctx.direction="rtl"; ctx.textAlign="right"; ctx.fillText("פחות לגלול. יותר לגדול.", R, H_-172);
+}
+function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+$("#storyNew").onclick=e=>{ e.stopPropagation(); openComposer("done"); };
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-story]"); if(!b) return; e.preventDefault(); e.stopPropagation(); openComposer(b.dataset.story, b.dataset.pre||""); },true);
 /* ---------- סטורי יומי: מתחלף כל יום, 5 שקופיות, דקה אחת ----------
    הקשה בצד שמאל = הבא, ימין = הקודם, החזקה = עצירה. הטבעת למעלה צבעונית עד שצפית היום. */
 const DAILY = {
