@@ -178,6 +178,30 @@ a{color:inherit}
 .cdone{display:none;margin:18px 0 0 64px;font-family:var(--serif);font-size:30px;font-weight:900;line-height:1.15}
 .c.saved .cin{display:none}.c.saved .cdone{display:block;animation:pop .6s}
 
+/* vertical Shorts: נגן אנכי גדול, בלי שום דבר מעליו */
+.vert .yt-wrap{top:calc(var(--safeT) + 62px);bottom:calc(var(--safeB) + 150px);display:none;justify-content:center}
+.card.vert.yt-on .yt-wrap{display:flex}
+.vert .yt-slot{height:100%;max-width:100%;aspect-ratio:9/16;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.vert .play{top:45%}
+.card.vert.yt-on .play{display:none}
+.vert .vbg{opacity:1}
+.sbar{position:absolute;left:0;right:0;bottom:0;height:calc(var(--safeB) + 150px);padding:10px 16px calc(var(--safeB) + 10px);z-index:3;color:#fff;display:flex;flex-direction:column;gap:6px}
+.srow{display:flex;align-items:center;gap:10px}
+.srow .av{width:34px;height:34px;font-size:14px}
+.swho{flex:1;min-width:0;font-weight:800;font-size:14.5px;line-height:1.2}
+.swho small{display:block;font-weight:500;font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swho a{color:#fff}
+.vert .yt-bar{padding:0;min-height:0}
+.vert .snd{height:32px;font-size:13px;padding:0 12px}
+.shook{font-family:var(--serif);font-weight:900;font-size:19px;line-height:1.2}
+.shook em{font-style:normal;color:var(--acc)}
+.vert .yt-note{font-size:12px}
+.vert .rail{position:static;flex-direction:row;gap:8px;margin-top:auto}
+.vert .ra{flex-direction:row;width:auto;flex:1;height:38px;border-radius:99px;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.3);justify-content:center;gap:6px;font-size:13px}
+.vert .ra .b{width:auto;height:auto;background:none;border:0;backdrop-filter:none}
+.vert .ra svg{width:18px;height:18px}
+.vert .ra.done{background:var(--tomato);border-color:var(--tomato)}
+.vert .ra.done .b{background:none}
 /* quiet moment */
 .qc .qin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px 190px 28px;color:#fff;z-index:2}
 .qc .hook{font-size:clamp(34px,10vw,46px);margin-top:28px}
@@ -358,6 +382,22 @@ const V = {
   stjohn: {id:"Y6bbMQXQ180", c:"TED", who:"Richard St. John", role:"חוקר הצלחה", title:"Secrets of success in 8 words, 3 minutes", he:"סודות ההצלחה ב־8 מילים", hook:"מאות ראיונות. *8 מילים.* 3 דקות.", short:true, c1:"#AD1457", c2:"#2B0616", c3:"#F48FB1"},
   tony3:  {id:"zi_22RoSklI", c:"Tony Robbins", who:"Tony Robbins", role:"מאמן ואסטרטג לחיים ולעסקים", title:"This ONE Mental Shift Will Rewrite Your Entire Future...", he:"שינוי מחשבתי אחד", hook:"על מה את *מתמקדת?* משם מגיע כל השאר.", c1:"#283593", c2:"#0A0D2B", c3:"#FF7043"}
 };
+/* Shorts אנכיים אמיתיים, מהערוצים של הדוברים או של מי שהפיק את הראיון. נבדקו ב־oEmbed: קיימים, ניתנים להטמעה, 9:16 */
+const S = {
+  tdec:  {id:"I78Lq_7CDCE", c:"Tony Robbins", who:"Tony Robbins", role:"מאמן ואסטרטג", title:"How Tony Robbins Makes Impossible Decisions Simple", he:"איך הופכים החלטה קשה לפשוטה", hook:"איך הופכים החלטה בלתי אפשרית *לפשוטה?*", c1:"#FF4D2E", c2:"#3B2347", c3:"#F6D86B"},
+  mel52: {id:"3O40KZfNTbE", c:"Mel Robbins", who:"Mel Robbins", role:"מאמנת וסופרת", title:"You need to hear this | Mel Robbins #Shorts", he:"להתחיל מחדש בגיל 52", hook:"בגיל 52 היא *התחילה מחדש.*", c1:"#C2185B", c2:"#2A0F1E", c3:"#FF8A65"},
+  meldec:{id:"njZtqUek6mU", c:"Mel Robbins", who:"Mel Robbins", role:"מאמנת וסופרת", title:"If You Are Struggling To Make A Decision", he:"כשקשה להחליט", hook:"את כבר יודעת מה את רוצה. השאלה אם *תסמכי על עצמך.*", c1:"#C2185B", c2:"#2A0F1E", c3:"#FFD25C"},
+  meltool:{id:"yuHsjvqotO4", c:"Mel Robbins", who:"Mel Robbins", role:"מאמנת וסופרת", title:"A Tool for Making Big Life Changes", he:"כלי לשינויים גדולים", hook:"כלי אחד *לשינויים גדולים* בחיים.", c1:"#AD1457", c2:"#2B0616", c3:"#F48FB1"},
+  motiv: {id:"vrgNuEsFdkI", c:"TEDx Talks", who:"TEDx", role:"קטע מהרצאת TEDx", title:"The science of getting motivated", he:"המדע של מוטיבציה", hook:"מה המדע יודע על *מוטיבציה?*", c1:"#E62B1E", c2:"#1A0505", c3:"#FFB74D"},
+  three: {id:"Ge1Oqde0RlA", c:"TEDx Talks", who:"TEDx", role:"קטע מהרצאת TEDx", title:"3 reasons you're not doing what you say you will", he:"3 סיבות שלא עושים את מה שאמרנו", hook:"3 סיבות שאת *לא עושה* את מה שאמרת שתעשי.", c1:"#E62B1E", c2:"#1A0505", c3:"#F6D86B"},
+  procr: {id:"OON6IJBXUKk", c:"TEDx Talks", who:"TEDx", role:"קטע מהרצאת TEDx", title:"The real reason you procrastinate", he:"הסיבה האמיתית לדחיינות", hook:"הסיבה *האמיתית* שאת דוחה דברים.", c1:"#E62B1E", c2:"#1A0505", c3:"#7FD1FF"},
+  urban: {id:"AUL2pMTLIZc", c:"TED", who:"Tim Urban", role:"כותב, Wait But Why", title:"Watching this instead of doing something else? This may be WHY.", he:"צופה בזה במקום לעשות משהו אחר?", hook:"צופה בזה במקום לעשות משהו אחר? *הנה למה.*", c1:"#E62B1E", c2:"#1A0505", c3:"#C6B6FF"},
+  sinek: {id:"8-p0tYCn1Mo", c:"Simon Sinek", who:"Simon Sinek", role:"סופר ויועץ מנהיגות", title:"ANYONE Can Be a Leader | Simon Sinek", he:"כל אחת יכולה להוביל", hook:"כל אחת יכולה להוביל. השאלה אם *תיקחי אחריות.*", c1:"#E8A33D", c2:"#3A2208", c3:"#FFE08A"},
+  sinek2:{id:"r0EFZvIxoPg", c:"FranklinCovey", who:"Simon Sinek", role:"בראיון ל־FranklinCovey", title:"On Leadership | Simon Sinek", he:"על מנהיגות", hook:"מנהיגות היא לא תפקיד. היא *אמון.*", c1:"#E8A33D", c2:"#3A2208", c3:"#9FD3A8"},
+  tfor:  {id:"1hPouO58OKc", c:"Peter H. Diamandis", who:"Tony Robbins", role:"בפודקאסט Moonshots", title:"What Does Tony Robbins Know That Nobody Else Does?", he:"החיים קורים בשבילך", hook:"החיים קורים *בשבילך,* לא לך.", c1:"#283593", c2:"#0A0D2B", c3:"#FF7043"},
+  tvar:  {id:"ZMdDTn-s1z8", c:"The Skinny Confidential", who:"Tony Robbins", role:"בפודקאסט The Skinny Confidential", title:"Tony Robbins on The Need For Variety And Uncertainty in Life", he:"למה צריך גיוון וחוסר ודאות", hook:"למה את צריכה גם *חוסר ודאות?*", c1:"#D84315", c2:"#1E0B05", c3:"#FFB74D"}
+};
+Object.values(S).forEach(x=>x.vert=true);
 const M = {
   cal:   {q:"מה שלא נכנס *ליומן,* נשאר משאלה.", sub:"לחצי ״אני עושה״ על כל תוכן שנגע בך.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", art:"sun", light:true},
   move:  {q:"תנועה באה *לפני* מוטיבציה.", sub:"לא מחכים להרגיש. מתחילים, וההרגשה מצטרפת בדרך.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", art:"wave"},
@@ -368,8 +408,8 @@ const M = {
 };
 const P = {
   stuck: {q:"מה יותר קשה לך עכשיו?", bg:["#FF4D2E","#3B2347"], opts:[
-    {t:"להתחיל", e:"🚪", r:"אז אל תחכי לרגע שתרגישי מוכנה. הוא כנראה לא יגיע לבד. מל רובינס מדברת בדיוק על זה.", go:"v-mel"},
-    {t:"להתמיד", e:"🔁", r:"התמדה היא מיומנות שאפשר לבנות, לא תכונה שנולדים איתה. אנג׳לה דאקוורת׳ חקרה את זה שנים.", go:"v-duck"}]},
+    {t:"להתחיל", e:"🚪", r:"אז אל תחכי לרגע שתרגישי מוכנה. הוא כנראה לא יגיע לבד. מל רובינס התחילה מחדש בגיל 52.", go:"v-mel52"},
+    {t:"להתמיד", e:"🔁", r:"התמדה היא מיומנות שאפשר לבנות, לא תכונה שנולדים איתה. ב־TEDx יש על זה קטע של דקה.", go:"v-three"}]},
   peak:  {q:"מתי הראש שלך הכי צלול?", bg:["#2B6CB0","#0B1E36"], pref:true, opts:[
     {t:"בבוקר", e:"🌅", r:"רשמתי. מעכשיו, כשתלחצי ״אני עושה״, נציע קודם שעה של בוקר."},
     {t:"בערב", e:"🌙", r:"רשמתי. מעכשיו, כשתלחצי ״אני עושה״, נציע קודם שעה של ערב."}]}
@@ -493,7 +533,7 @@ const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q};
 const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
 function buildFeed(){
-  const vids = Object.keys(V).map(k=>mk("v",k));
+  const vids = shuffle(Object.keys(S).map(k=>({type:"v", key:"v-"+k, ...S[k]})));
   const light = shuffle([...Object.keys(M).map(k=>mk("m",k)), ...Object.keys(K).map(k=>mk("k",k)), ...Object.keys(Q).map(k=>mk("q",k))]);
   const nour=[]; vids.forEach((v,i)=>{ nour.push(v); if(light[i]) nour.push(light[i]); }); nour.push(...light.slice(vids.length));
   let refl = shuffle([...Object.keys(G).map(k=>mk("g",k)), ...Object.keys(P).map(k=>mk("p",k)), mk("c","word")]).slice(0,7);
@@ -519,7 +559,7 @@ function label(it){
   if(it.type==="q") return `״${plain(it.q)}״`;
   return `״${plain(it.q)}״`;
 }
-const ytUrl = id => "https://www.youtube.com/watch?v="+id;
+const ytUrl = id => (Object.values(S).some(x=>x.id===id) ? "https://www.youtube.com/shorts/" : "https://www.youtube.com/watch?v=")+id;
 
 /* ---------- storage ---------- */
 const LS = {
@@ -581,6 +621,17 @@ const blobs = (a,b,c) => `<div class="bg" style="background:${b}">
 function cardHTML(it){
   if(it.type==="v"){
     const ini = it.who.split(" ").map(w=>w[0]).join("").slice(0,2);
+    if(it.vert) return `<article class="card v vert" id="${it.key}" data-k="${it.key}" data-yt="${it.id}" style="--acc:${it.c3}">
+      ${blobs(it.c1,it.c2,it.c3)}<div class="vbg" style="background-image:url(https://i.ytimg.com/vi/${it.id}/hqdefault.jpg)"></div>
+      <a class="play" href="${ytUrl(it.id)}" target="_blank" rel="noopener" data-yt="${it.id}"><span class="ring">${IC.play}</span><span class="pl">צפי ביוטיוב</span></a>
+      <div class="yt-wrap"><div class="yt-slot" style="background-image:url(https://i.ytimg.com/vi/${it.id}/hqdefault.jpg)"></div></div>
+      <div class="sbar">
+        <div class="srow"><span class="av">${esc(ini)}</span><div class="swho">${esc(it.who)}<small>${esc(it.role)} · <a href="${ytUrl(it.id)}" target="_blank" rel="noopener">מקור ↗</a></small></div>
+          <div class="yt-bar"><button class="snd">🔊 קול</button></div></div>
+        <div class="shook">${kin(it.hook)}</div>
+        <span class="yt-note">הניגון האוטומטי לא התאפשר. הקישי על הסרטון ▶</span>
+        ${railHTML(it)}
+      </div></article>`;
     return `<article class="card v" id="${it.key}" data-k="${it.key}" data-yt="${it.id}" style="--acc:${it.c3}">
       ${blobs(it.c1,it.c2,it.c3)}<div class="vbg" style="background-image:url(https://i.ytimg.com/vi/${it.id}/hqdefault.jpg)"></div><div class="mono">${esc(ini)}</div><div class="shade"></div>
       <div class="chips-top"><span class="chip"><span class="d"></span>וידאו</span>${it.short?`<span class="chip">⚡ 3 דקות</span>`:""}</div>
