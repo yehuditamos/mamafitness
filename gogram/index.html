@@ -430,7 +430,12 @@ const TOPICS = {
 };
 const trackItems = id => TOPICS[id].cards.map(c=>({...c, key:"t-"+c.k}));
 function detectTopic(text){ for(const id in TOPICS) if(TOPICS[id].re.test(text||"")) return id; return null; }
-let topics = (()=>{ try{ return JSON.parse(localStorage.getItem("gg_topics"))||[]; }catch(e){ return []; } })();
+let topics = (()=>{ try{
+  const t=JSON.parse(localStorage.getItem("gg_topics"))||[];
+  const g=JSON.parse(localStorage.getItem("gg_guts"))||{};          // תשובות שנכתבו לפני שהמסלולים קיימו
+  Object.values(g).forEach(a=>{ const id=a&&a.text&&detectTopic(a.text); if(id && !t.includes(id)) t.push(id); });
+  localStorage.setItem("gg_topics", JSON.stringify(t)); return t;
+}catch(e){ return []; } })();
 /* order: rhythm of formats, so the next card is always a small surprise */
 const ORDER = ["v:tony","g:?","v:sivers","w:squat","p:stuck","v:mel","m:cal","g:?","k:biz","v:sinek","w:breath","c:word","v:cutts","g:?","m:move","v:duck","w:plank","p:peak","v:kelly","g:?","m:habit","v:tony2","w:wall","k:thirty","v:dweck","g:?","m:talk","v:achor","w:march","m:day3","v:stjohn","g:?","v:tony3","m:ask"];
 const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W};
