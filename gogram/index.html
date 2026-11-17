@@ -51,6 +51,7 @@ a{color:inherit}
 .pill{height:36px;padding:0 12px;border-radius:99px;background:rgba(22,19,15,.82);backdrop-filter:blur(10px);color:var(--paper);display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums;box-shadow:0 4px 18px rgba(0,0,0,.12)}
 .pill.i{width:36px;padding:0;justify-content:center;font-family:var(--serif);font-size:18px}
 .pill.inb{width:40px;padding:0;justify-content:center;position:relative}
+.badge[hidden]{display:none!important}
 .badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:#FF3B30;color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;border:2px solid var(--ink);animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
 .ibx{display:grid;gap:10px;margin-top:6px}
 .ib{background:#fff;border:1.5px solid var(--ink);border-radius:18px;padding:14px}
@@ -192,6 +193,8 @@ a{color:inherit}
 .gres{margin:16px 64px 0 0;margin-left:64px;margin-right:0}
 .gres p{margin:0 0 12px;font-size:17.5px;line-height:1.5;font-weight:700;animation:ovIn .4s}
 .gres .go{height:46px;padding:0 18px;border-radius:99px;background:var(--paper);color:var(--ink);font-weight:900;font-size:15px}
+.tune{background:rgba(255,77,46,.18);border:1.5px solid var(--tomato);border-radius:16px;padding:10px 12px;font-size:15.5px!important;animation:pop .6s}
+.tune .go{height:36px;font-size:13.5px;margin-right:6px;padding:0 12px}
 .gres small{display:block;margin-top:10px;font-size:12px;opacity:.65}
 /* workout */
 .wk{background:rgba(0,0,0,.14);color:inherit;animation:none}
@@ -403,12 +406,38 @@ const W = {
   march:  {t:"30 שניות. ריצה במקום.", secs:30, ph:[[1,"ימין"],[1,"שמאל"]], cue:"להרים ברכיים, הידיים עובדות.", easy:"קל יותר: הליכה במקום.", bg:"#3B2347", fg:"#F3EEE4", ac:"#FF8F6B", habit:"30 שניות ריצה במקום"}
 };
 const GSLOTS = 6;
+/* ---------- מסלולים אישיים: הפיד מתכוונן לפי מה שכתבת (רק במכשיר שלך) ---------- */
+const TOPICS = {
+  fit: { name:"אימונים", re:/אימון|אימונים|להתאמן|מתאמנת|ספורט|כושר|ריצה|לרוץ|הליכה|ללכת|חדר כושר|פילאטיס|יוגה|תזוזה|לזוז|הגוף|משקל|שחייה|אופניים|סטודיו/,
+    cards: [
+      {type:"m", k:"fit-1", q:"שמעתי: *אימונים.* מעכשיו הפיד עובד בשבילך.", sub:"הכרטיסים הבאים נבנו לרגע הזה בדיוק, הרגע שבו את מוותרת. גללי.", bg:"#FF4D2E", fg:"#fff", ac:"#16130F", art:"wave"},
+      {type:"m", k:"fit-2", q:"את לא מתחייבת לאימון. את מתחייבת *לנעליים.*", sub:"כלל שתי הדקות: ההתחייבות היא רק להתחיל. לנעול נעליים ולזוז דקה. ברוב הפעמים, ברגע שהתחלת, את ממשיכה.", bg:"#F6D86B", fg:"#16130F", ac:"#FF4D2E", art:"grid", light:true},
+      {type:"g", k:"fit-3", q:"מה הכי מוריד אותך *מהאימון?*", opts:[
+        {t:"עייפות", r:"הרבה פעמים זו עייפות של הראש, לא של השרירים. הכלל: 5 דקות. אם אחרי 5 דקות עדיין רע, מותר להפסיק. ברוב הפעמים לא תפסיקי.", cta:"move"},
+        {t:"אין זמן", r:"אין זמן לשעה. יש זמן ל־10 דקות. אימון קצר שקרה שווה יותר מאימון ארוך שלא קרה.", cta:"do", pre:"10 דקות אימון"},
+        {t:"הילדים / הבית", r:"לא מחכים שכולם יירדמו. 10 דקות לפני שכולם קמים, או אימון שהם חלק ממנו.", cta:"do", pre:"10 דקות אימון לפני שכולם קמים"},
+        {t:"אין לי חשק", r:"החשק מגיע אחרי שמתחילים, לא לפני. בגלל זה הכרטיס הבא הוא אימון. עכשיו.", cta:"move"}]},
+      {type:"w", k:"fit-4", t:"45 שניות. גרסת המינימום.", secs:45, ph:[[2,"יורדת ↓"],[2,"עולה ↑"]], cue:"סקוואט. ברכיים בכיוון האצבעות, חזה פתוח.", easy:"יום רע? גם 45 שניות נחשבות.", bg:"#2F5D46", fg:"#F3EEE4", ac:"#F6D86B", habit:"אימון מינימום של 5 דקות"},
+      {type:"m", k:"fit-5", q:"לעולם לא *פעמיים* ברצף.", sub:"פספסת אימון? קורה. הכלל היחיד: לא לפספס את הבא. פעם אחת זה מקרה. פעמיים זו כבר התחלה של הרגל חדש.", bg:"#16130F", fg:"#F3EEE4", ac:"#FF4D2E", art:"count"},
+      {type:"g", k:"fit-6", q:"תשלימי: *אם* ___, *אז* אני בנעליים.", input:"למשל: השעה 7:00 ביום שני", r:"ככה ההחלטה כבר מתקבלת מראש, ולא צריך לנהל משא ומתן עם עצמך ברגע האמת. עכשיו נכניס את זה ליומן.", cta:"do", pre:"אם ", post:", אז אני בנעליים"},
+      {type:"m", k:"fit-7", q:"לא ״אני מנסה להתאמן״. *״אני מתאמנת.״*", sub:"כל אימון קטן הוא הצבעה בעד מי שאת רוצה להיות. לא צריך את כל הקולות. רק את הרוב.", bg:"#CFE3F0", fg:"#16130F", ac:"#3B2347", art:"sun", light:true},
+      {type:"g", k:"fit-8", q:"על כמה אימונים את *לא מוותרת* השבוע?", opts:[
+        {t:"2", r:"שניים שקורים באמת שווים יותר מחמישה על הנייר. ניתן להם מקום ביומן.", cta:"do", pre:"אימון (2 השבוע, לא מוותרת)"},
+        {t:"3", r:"שלושה. עכשיו ניתן להם מקום ביומן, כי מה שלא נכנס ליומן נשאר משאלה.", cta:"do", pre:"אימון (3 השבוע, לא מוותרת)"},
+        {t:"4", r:"ארבעה. רק תזכרי את הכלל: לא פעמיים ברצף. נתחיל מהראשון ביומן.", cta:"do", pre:"אימון (4 השבוע, לא מוותרת)"}]},
+      {type:"m", k:"fit-9", q:"זה לא עניין של כוח רצון. זה עניין של *תכנון.*", sub:"ובפעם הבאה שתיכנסי, נשאל מה עשית עם זה.", bg:"#FF4D2E", fg:"#fff", ac:"#F6D86B", art:"q"}
+    ]}
+};
+const trackItems = id => TOPICS[id].cards.map(c=>({...c, key:"t-"+c.k}));
+function detectTopic(text){ for(const id in TOPICS) if(TOPICS[id].re.test(text||"")) return id; return null; }
+let topics = (()=>{ try{ return JSON.parse(localStorage.getItem("gg_topics"))||[]; }catch(e){ return []; } })();
 /* order: rhythm of formats, so the next card is always a small surprise */
 const ORDER = ["v:tony","g:?","v:sivers","w:squat","p:stuck","v:mel","m:cal","g:?","k:biz","v:sinek","w:breath","c:word","v:cutts","g:?","m:move","v:duck","w:plank","p:peak","v:kelly","g:?","m:habit","v:tony2","w:wall","k:thirty","v:dweck","g:?","m:talk","v:achor","w:march","m:day3","v:stjohn","g:?","v:tony3","m:ask"];
 const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W};
 const gPool = (()=>{ const ks=Object.keys(G); for(let i=ks.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [ks[i],ks[j]]=[ks[j],ks[i]]; } return ks; })();
 let gi=0;
 const FEED = ORDER.map(s=>{ let [t,k]=s.split(":"); if(k==="?") k=gPool[gi++ % gPool.length]; const o=SRC[t][k]; return {type:t, key:t+"-"+k, ...o}; });
+topics.forEach(id=>{ if(TOPICS[id]) FEED.splice(1,0,...trackItems(id).filter(x=>x.k!==id+"-1")); });   // בכניסות הבאות: המסלול שלך מופיע מיד אחרי הכרטיס הראשון
 const byKey = k => FEED.find(f=>f.key===k);
 const plain = s => s.replace(/\*/g,"");
 function label(it){
@@ -690,24 +719,43 @@ function loadYT(){
 const idxOf = card => Array.prototype.indexOf.call(feed.children, card);
 function safeState(r){ try{ return r.p.getPlayerState(); }catch(e){ return -2; } }
 function syncMute(r){ let m=true; try{ m=r.p.isMuted(); }catch(e){} r.card.classList.toggle("yt-muted", !!m); }
+/* נגן גיבוי: iframe רגיל של YouTube עם ניגון אוטומטי מושתק, נשלט בהודעות. נכנס לפעולה אם ה-API לא מוכן בזמן */
+function plainPlayer(r){
+  const slot=r.card.querySelector(".yt-slot"); slot.innerHTML="";
+  const f=document.createElement("iframe"), id=r.card.dataset.yt;
+  let st=-1, muted=true;
+  const cmd=(func,args=[])=>{ try{ f.contentWindow.postMessage(JSON.stringify({event:"command",func,args}),"*"); }catch(e){} };
+  const isActive = activeKey===r.card.id;
+  f.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=${isActive?1:0}&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=${id}&origin=${encodeURIComponent(location.origin)}`;
+  f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen=true; f.title="YouTube";
+  f.onload=()=>{ try{ f.contentWindow.postMessage(JSON.stringify({event:"listening",id:r.card.id,channel:"widget"}),"*"); }catch(e){}
+    r.ready=true; r.card.classList.add("yt-ready"); if(r.wantPlay) startRec(r); };
+  slot.appendChild(f);
+  r.plain=true; if(isActive) st=1;
+  r.p={ playVideo(){ cmd("playVideo"); st=1; }, pauseVideo(){ cmd("pauseVideo"); st=2; }, mute(){ cmd("mute"); muted=true; }, unMute(){ cmd("unMute"); muted=false; },
+        setVolume(v){ cmd("setVolume",[v]); }, isMuted(){ return muted; }, getPlayerState(){ return st; }, seekTo(t){ cmd("seekTo",[t,true]); }, destroy(){ f.remove(); } };
+}
 function ensurePlayer(card){
   if(!EMBED || !card) return null;
   if(players.has(card.id)) return players.get(card.id);
   const host=document.createElement("div"); card.querySelector(".yt-slot").appendChild(host);
   const r={card, ready:false, failed:false, wantPlay:false, p:null, t:0};
   players.set(card.id, r); card.classList.add("yt-on","yt-muted");
+  if(EMBED==="plain" || !(window.YT && YT.Player)){ plainPlayer(r); return r; }
+  r.rt=setTimeout(()=>{ if(!r.ready && players.get(card.id)===r){ try{ r.p.destroy(); }catch(e){} plainPlayer(r); } },4000);
   r.p = new YT.Player(host, { videoId: card.dataset.yt, host:"https://www.youtube-nocookie.com",
     playerVars:{ playsinline:1, rel:0, modestbranding:1, controls:1, origin:location.origin },
     events:{
-      onReady:()=>{ r.ready=true; card.classList.add("yt-ready"); syncMute(r); if(r.wantPlay) startRec(r); else if(r.wantWarm) warm(r); },
+      onReady:()=>{ clearTimeout(r.rt); if(r.plain) return; r.ready=true; card.classList.add("yt-ready"); syncMute(r); if(r.wantPlay) startRec(r); else if(r.wantWarm) warm(r); },
       onStateChange:e=>onState(r, e.data),
-      onError:()=>{ r.failed=true; clearTimeout(r.t); card.classList.add("yt-fail"); }
+      onError:e=>{ r.failed=true; clearTimeout(r.t); card.classList.add("yt-fail");
+        const n=card.querySelector(".yt-note"); if(n) n.insertAdjacentHTML("afterbegin",`<b>הסרטון לא נטען (קוד ${e&&e.data}).</b> `); }
     }});
   return r;
 }
 function destroyRec(id){
   const r=players.get(id); if(!r) return;
-  clearTimeout(r.t); try{ r.p.destroy(); }catch(e){}
+  clearTimeout(r.t); clearTimeout(r.rt); try{ r.p.destroy(); }catch(e){}
   r.card.querySelector(".yt-slot").innerHTML="";
   r.card.classList.remove("yt-on","yt-ready","yt-muted","yt-blocked","yt-fail");
   players.delete(id);
@@ -811,10 +859,24 @@ function answerGut(key,a){
   const card=document.getElementById(key); card.classList.add("answered");
   card.querySelectorAll(".gopt").forEach((o,j)=>o.classList.toggle("pick",j===a.i));
   $("#gres-"+key).innerHTML=gutRes(it,a); refreshRail(key); drawGrow(true); passive=0;
+  if(a.text) personalize(a.text, card);
+}
+function personalize(text, card){
+  const id=detectTopic(text); if(!id) return;
+  const first=document.getElementById("t-"+id+"-1")||document.getElementById("t-"+id+"-2");
+  const res=$("#gres-"+card.id);
+  if(first){ res.insertAdjacentHTML("afterbegin",`<p class="tune">🎯 המסלול שלך ל${TOPICS[id].name} כבר בפיד. <button class="go" data-go="${first.id}">קחי אותי לשם ↓</button></p>`); return; }
+  if(!topics.includes(id)){ topics.push(id); LS.set("topics",topics); }
+  const items=trackItems(id), at=FEED.findIndex(f=>f.key===card.id);
+  FEED.splice(at+1,0,...items);
+  card.insertAdjacentHTML("afterend", items.map(cardHTML).join(""));
+  items.forEach(x=>io.observe(document.getElementById(x.key)));
+  res.insertAdjacentHTML("afterbegin",`<p class="tune">🎯 הפיד מתכוונן עכשיו ל<b>${TOPICS[id].name}</b>. גללי למטה ↓</p>`);
+  setTimeout(()=>{ updateActive(); },50);
 }
 function gutAction(kind,it){
   const a=guts[it.key]||{}, o=it.opts?it.opts[a.i]:it;
-  if(kind==="do") sheetDo(it, (o.pre||"")+(a.text||""));
+  if(kind==="do") sheetDo(it, (o.pre||"")+(a.text||"")+(o.post||""));
   else if(kind==="take") sheetTake(it);
   else if(kind==="msg") sheetWith(it, `היי ${a.text||""}, חשבתי עלייך היום.\nרציתי לשאול מה שלומך באמת, ואם בא לך שנתפוס שיחה השבוע.`);
   else if(kind==="move"){ const nx=FEED.slice(FEED.indexOf(it)+1).find(f=>f.type==="w"); if(nx) document.getElementById(nx.key).scrollIntoView({behavior:"smooth"}); }
@@ -1122,12 +1184,13 @@ $("#infoBtn").onclick=()=>{
    <p class="lead">פחות לגלול. יותר לגדול. רשת להתפתחות אישית ועסקית שעוזרת לזכור, לפעול ולהתחבר.</p>
    <label class="f">🌱 המונה למעלה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">סופר רק מה שעשית: תובנות, פעולות, הזמנות ואימונים. לא כמה גללת.</p>
    <label class="f">מה באמת עובד</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">שלושת הכפתורים, הקשה כפולה לשמירה, שאלות לבטן, אימונים קצרים עם טיימר, סקרים ואתגרים שנשמרים אצלך, ניגון אוטומטי של סרטונים, שאלת שליפה בכניסה הבאה (אחרי הפסקה של חצי שעה לפחות), הוספה ליומן, שיתוף בוואטסאפ או בהעתקה, ומגבלת זמן.</p>
+   <label class="f">🎯 הפיד שמתכוונן אלייך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">כשאת כותבת תשובה, הפיד מזהה את הנושא ומוסיף מסלול כרטיסים בשבילך. כרגע יש מסלול מלא לאימונים, ובהמשך יתווספו עוד. הכל קורה במכשיר שלך.${topics.length?` המסלולים שלך: ${topics.map(t=>TOPICS[t].name).join(", ")}.`:""}</p>
    <label class="f">מה עדיין הדגמה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">התוכן נבחר ידנית לגרסה הזו. אין סינון אוטומטי, אין אלגוריתם ואין משתמשים אחרים. הסרטונים נבדקו כקיימים ביוטיוב ב־${VERIFIED_ON}. הכותרות בעברית הן ניסוח שלנו לרעיון של כל הרצאה, לא ציטוט. כרטיסי המסר, השאלות והאימונים מקוריים. האימונים קצרים וכלליים, לא תוכנית אישית: אם יש כאב או מגבלה רפואית, מדלגים. זה לא מוצר רפואי ואין כאן הבטחה לשינוי.</p>
    <label class="f">הפרטיות שלך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">אין חשבון. כל מה שכתבת נשמר רק בדפדפן הזה, במכשיר הזה, ועלול להימחק אם ינוקו נתוני הגלישה. כרגע שמורים: ${insights.length} תובנות, ${actions.length} פעולות.</p>
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
   $("#infoA2hs").onclick=sheetInstall;
   $("#demoRecall").onclick=()=>{ const ins=pickInsight(true); closeSheet(); if(!ins){ toast("קודם לחצי ״לקחתי״ על תוכן כלשהו"); return; } showRecall(ins); };
-  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
+  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
 };
 
 /* ---------- boot ---------- */
@@ -1144,7 +1207,7 @@ let DL=null;
   if(session.ended) showTimeUp(false);
   const h=location.hash.slice(1); if(h && document.getElementById(h)) setTimeout(()=>document.getElementById(h).scrollIntoView(),50);
   const hint=$("#hint"); if(LS.get("seenhint",0)>2) hint.remove(); else { LS.set("seenhint",LS.get("seenhint",0)+1); feed.addEventListener("scroll",()=>hint.style.opacity=0,{once:true}); setTimeout(()=>hint.style.opacity=0,6000); }
-  loadYT().then(ok=>{ EMBED=ok; setPlayLabels(); if(ok) updateActive(); });
+  loadYT().then(ok=>{ EMBED = ok ? true : (/github\.io$|^localhost$/.test(location.hostname) ? "plain" : false); setPlayLabels(); if(EMBED) updateActive(); });
   try{ if(window.claude && claude.use){ DL = await claude.use("downloads"); } }catch(e){ DL=null; }
 })();
 window.__gg = { players:()=>players, active:()=>activeKey, fast(){ session.used=(limitMin+session.extra)*60-3; }, back(){ LS.set("last",Date.now()-3600e3); insights.forEach(i=>{i.at-=3600e3;i.seen=0;}); LS.set("insights",insights);} };
