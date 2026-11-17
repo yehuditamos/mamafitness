@@ -567,6 +567,26 @@ const Q = {
   shoulders:{q:"לסדר את הנשימה. לשחרר את *הלסת.*", sub:"עוד רגע ממשיכים.", c1:"#9FD3A8", c2:"#0E2A20"},
   slow:   {q:"אף אחד לא *ממהר* פה.", sub:"גם לא את.", c1:"#F48FB1", c2:"#2B0616"}
 };
+/* ---------- תוכן מתעדכן: content.json (חדשות ו-Shorts חדשים) ----------
+   הרענון האוטומטי מעדכן רק את הקובץ הזה. האפליקציה טוענת את הגרסה האחרונה מהזיכרון מיד,
+   ומושכת ברקע גרסה טרייה. אם הקובץ חסר או שבור, נשאר התוכן המובנה. */
+let CONTENT_UPDATED = null;
+function mergeContent(c){
+  if(!c || typeof c!=="object") return false;
+  let changed=false;
+  if(Array.isArray(c.news) && c.news.length){
+    const fresh={}; c.news.forEach(n=>{ if(n && n.id && n.h && n.url && /^[a-z0-9]+$/i.test(n.id)) fresh[n.id]={...n, c: Array.isArray(n.c)&&n.c.length===3 ? n.c : ["#2F5D46","#0E2A20","#9FD3A8"]}; });
+    if(Object.keys(fresh).length){ Object.keys(NW).forEach(k=>delete NW[k]); Object.assign(NW,fresh); changed=true; }
+  }
+  if(Array.isArray(c.shorts)) c.shorts.forEach(v=>{
+    if(!v || !/^[A-Za-z0-9_-]{11}$/.test(v.id||"") || !v.hook) return;
+    const k="x"+v.id.replace(/[^A-Za-z0-9]/g,"");
+    if(!S[k] && !Object.values(S).some(x=>x.id===v.id)){ S[k]={c1:"#283593",c2:"#0A0D2B",c3:"#FFD25C", ...v, vert:true}; changed=true; }
+  });
+  if(c.updated) CONTENT_UPDATED=c.updated;
+  return changed;
+}
+try{ mergeContent(JSON.parse(localStorage.getItem("gg_content")||"null")); }catch(e){}
 const KIND = {v:"n",m:"n",k:"n",q:"n",nw:"n",g:"r",p:"r",c:"r",w:"a"};
 const trackItems = id => TOPICS[id].cards.map(c=>({...c, key:"t-"+c.k}));
 function detectTopic(text){ for(const id in TOPICS) if(TOPICS[id].re.test(text||"")) return id; return null; }
@@ -1501,7 +1521,7 @@ $("#infoBtn").onclick=()=>{
    <label class="f">🌱 המונה למעלה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">סופר רק מה שעשית: תובנות, פעולות, הזמנות ואימונים. לא כמה גללת.</p>
    <label class="f">מה באמת עובד</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">שלושת הכפתורים, הקשה כפולה לשמירה, שאלות לבטן, אימונים קצרים עם טיימר, סקרים ואתגרים שנשמרים אצלך, ניגון אוטומטי של סרטונים, שאלת שליפה בכניסה הבאה (אחרי הפסקה של חצי שעה לפחות), הוספה ליומן, שיתוף בוואטסאפ או בהעתקה, ומגבלת זמן.</p>
    <label class="f">🎯 הפיד שמתכוונן אלייך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רוב הפיד כאן כדי שתיהני ותנקי את הראש. שאלה או משימה מגיעות רק מדי פעם, ותמיד אפשר פשוט לגלול הלאה. כשאת כותבת תשובה, הפיד מזהה את הנושא (אימונים, העסק, הבית, שקט בראש, ביטחון) ושוזר בין הסרטונים כרטיסים בשבילך. הכל קורה במכשיר שלך.${topics.length?` המסלולים שלך: ${topics.map(t=>TOPICS[t].name).join(", ")}.`:""}</p>
-   <label class="f">📰 חדשות טובות</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רק חדשות טובות, מהארץ ומהעולם, בלי פוליטיקה. נבחרו ידנית, נוסחו מחדש בעברית, ולכל אחת יש קישור למקור. עודכן לאחרונה: ${NEWS_UPDATED}.</p>
+   <label class="f">📰 חדשות טובות</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">רק חדשות טובות, מהארץ ומהעולם, בלי פוליטיקה. נבחרו ידנית, נוסחו מחדש בעברית, ולכל אחת יש קישור למקור. עודכן לאחרונה: ${CONTENT_UPDATED ? new Date(CONTENT_UPDATED).toLocaleString("he-IL",{day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}) : NEWS_UPDATED}. מתרענן אוטומטית פעמיים ביום.</p>
    <label class="f">מה עדיין הדגמה</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">התוכן נבחר ידנית לגרסה הזו. אין סינון אוטומטי, אין אלגוריתם ואין משתמשים אחרים. הסרטונים נבדקו כקיימים ביוטיוב ב־${VERIFIED_ON}. הכותרות בעברית הן ניסוח שלנו לרעיון של כל הרצאה, לא ציטוט. כרטיסי המסר, השאלות והאימונים מקוריים. האימונים קצרים וכלליים, לא תוכנית אישית: אם יש כאב או מגבלה רפואית, מדלגים. זה לא מוצר רפואי ואין כאן הבטחה לשינוי.</p>
    <label class="f">הפרטיות שלך</label><p class="note" style="color:var(--ink2);font-size:14px;margin:0">אין חשבון. כל מה שכתבת נשמר רק בדפדפן הזה, במכשיר הזה, ועלול להימחק אם ינוקו נתוני הגלישה. כרגע שמורים: ${insights.length} תובנות, ${actions.length} פעולות.</p>
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
@@ -1524,6 +1544,15 @@ let DL=null;
   if(session.ended) showTimeUp(false);
   const h=location.hash.slice(1); if(h && document.getElementById(h)) setTimeout(()=>document.getElementById(h).scrollIntoView(),50);
   const hint=$("#hint"); if(LS.get("seenhint",0)>2) hint.remove(); else { LS.set("seenhint",LS.get("seenhint",0)+1); feed.addEventListener("scroll",()=>hint.style.opacity=0,{once:true}); setTimeout(()=>hint.style.opacity=0,6000); }
+  fetch("content.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(c=>{
+    if(!c) return; const before=JSON.stringify(NW)+Object.keys(S).length;
+    try{ localStorage.setItem("gg_content", JSON.stringify(c)); }catch(e){}
+    mergeContent(c);
+    const changed = before !== JSON.stringify(NW)+Object.keys(S).length;
+    if(changed && feed.scrollTop < feed.clientHeight*0.5 && !overlayOn() && !$("#sheet").classList.contains("on")){   // רק אם עוד לא התחלת לגלול
+      destroyAll(); FEED.length=0; FEED.push(...buildFeed()); renderFeed(); drawGrow();
+    }
+  }).catch(()=>{});
   loadYT().then(ok=>{ EMBED = ok ? true : (/github\.io$|^localhost$/.test(location.hostname) ? "plain" : false); setPlayLabels(); if(EMBED) updateActive(); });
   try{ if(window.claude && claude.use){ DL = await claude.use("downloads"); } }catch(e){ DL=null; }
 })();
