@@ -450,6 +450,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
 .stack{display:grid;gap:8px;margin-top:14px}
 .ok{display:flex;gap:10px;align-items:flex-start;background:#E3EEE6;color:#1f4231;border-radius:14px;padding:12px;font-size:14px;line-height:1.5}
 .toast{position:fixed;left:50%;top:calc(var(--safeT) + 64px);transform:translate(-50%,-10px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:99px;font-weight:800;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.tulink{background:none;border:0;color:#fff;opacity:.75;font:inherit;font-weight:700;font-size:15px;padding:12px;text-decoration:underline;text-underline-offset:4px}
 .toast.on{opacity:1;transform:translate(-50%,0)}.toast.act{pointer-events:auto;padding:6px 6px 6px 16px;display:flex;align-items:center;gap:10px}.tkeep{border:0;border-radius:99px;background:var(--lc,#FFD25C);color:#16130F;font:inherit;font-weight:900;font-size:13.5px;padding:8px 12px}
 
 /* overlays */
@@ -2124,15 +2125,13 @@ function tick(){
 function showTimeUp(byChoice){
   pauseActive();
   const el=$("#timeup"), up=actions.slice().sort((a,b)=>a.when-b.when).slice(0,3);
-  el.innerHTML = `<div class="eyebrow">${byChoice?"סיימת את הפיד":`עברו ${limitMin+session.extra} הדקות שבחרת`}</div>
+  const nx=up[0];
+  el.innerHTML = `<div class="eyebrow">${byChoice?"סיימת את הפיד":`עברו ${limitMin+session.extra} דקות`}</div>
     <h2>מספיק לגלול.<br>הזמן ליישם.</h2>
-    <div class="tu-sum">${summaryHTML()}</div>
-    <p>${up.length?"מה שהחלטת לעשות:":"עוד לא בחרת פעולה. מה הדבר האחד שאת לוקחת מכאן לשעה הקרובה?"}</p>
-    ${up.map(a=>`<div class="todo">${esc(a.text)}<small>${fmtWhen(new Date(a.when))}</small></div>`).join("")}
+    ${nx?`<div class="todo">${esc(nx.text)}<small>${fmtWhen(new Date(nx.when))}</small></div>`:""}
     <div class="spacer"></div>
-    <div class="bye" id="bye"><h2 style="font-size:34px">לכי לגדול 🌱</h2><p>אפשר לסגור את הלשונית. נתראה בפעם הבאה, עם שאלה אחת.</p></div>
-    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="btn line full" data-ff="auto">✍️ 3 דקות כתיבה לראש נקי</button><button class="btn line full" id="tuMore">בחירה מודעת: עוד 5 דקות</button></div>
-    <p class="note" style="color:#fff;opacity:.85">זו לא חסימה. זו עצירה שבחרת בעצמך, ואפשר להמשיך אם זה באמת מה שאת רוצה.</p>`;
+    <div class="bye" id="bye"><h2 style="font-size:34px">לכי לגדול 🌱</h2><p>נתראה בפעם הבאה.</p></div>
+    <div class="stack" id="tuBtns"><button class="btn paper full" id="tuGo">יוצאת ליישם</button><button class="tulink" id="tuMore">עוד 5 דקות</button></div>`;
   el.classList.add("on");
   $("#tuGo").onclick=()=>{ $("#bye").classList.add("on"); $("#tuBtns").style.display="none"; };
   $("#tuMore").onclick=()=>{ if(!limitMin){ el.classList.remove("on"); return; } session.extra+=5; session.ended=false; LS.set("session",session); el.classList.remove("on"); drawTimer(); toast("עוד 5 דקות. בהצלחה"); };
