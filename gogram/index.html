@@ -202,6 +202,9 @@ a{color:inherit}
 .vert .ra svg{width:18px;height:18px}
 .vert .ra.done{background:var(--tomato);border-color:var(--tomato)}
 .vert .ra.done .b{background:none}
+.lessbtn{position:absolute;top:calc(var(--safeT) + 64px);left:12px;z-index:4;height:30px;padding:0 11px;border-radius:99px;background:rgba(0,0,0,.18);color:inherit;font-size:12px;font-weight:800;opacity:.7;backdrop-filter:blur(6px)}
+.card.light .lessbtn,.card.m.light .lessbtn{background:rgba(22,19,15,.08)}
+.qc .lessbtn,.p .lessbtn,.g .lessbtn,.c .lessbtn,.k .lessbtn,.end .lessbtn{color:#fff}
 /* quiet moment */
 .qc .qin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px 190px 28px;color:#fff;z-index:2}
 .qc .hook{font-size:clamp(34px,10vw,46px);margin-top:28px}
@@ -532,17 +535,29 @@ let topics = (()=>{ try{
 const SRC = {v:V,m:M,p:P,k:K,c:C,g:G,w:W,q:Q};
 const shuffle = a => { for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
+/* ---------- ״פחות מזה״: הפיד לומד ממה שמעצבן אותך ---------- */
+const rl = (k,d) => { try{ const v=localStorage.getItem("gg_"+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
+const PREF = { hide: rl("hide",[]), less: rl("less",{}), seen: rl("seen",{}), skips: rl("skips",{}) };
+const DAY = 864e5;
+const seenWithin = (k,days) => PREF.seen[k] && Date.now()-PREF.seen[k] < days*DAY;
+const lessOf = k => PREF.less[k]||0;
 function buildFeed(){
+  const answered = {...rl("guts",{}), ...rl("polls",{})};
+  const ok = x => !PREF.hide.includes(x.key);
   const vids = shuffle(Object.keys(S).map(k=>({type:"v", key:"v-"+k, ...S[k]})));
   const light = shuffle([...Object.keys(M).map(k=>mk("m",k)), ...Object.keys(K).map(k=>mk("k",k)), ...Object.keys(Q).map(k=>mk("q",k))]);
   const nour=[]; vids.forEach((v,i)=>{ nour.push(v); if(light[i]) nour.push(light[i]); }); nour.push(...light.slice(vids.length));
-  let refl = shuffle([...Object.keys(G).map(k=>mk("g",k)), ...Object.keys(P).map(k=>mk("p",k)), mk("c","word")]).slice(0,7);
-  let act  = shuffle(Object.keys(W).map(k=>mk("w",k))).slice(0,4);
+  const reflMax = Math.max(0, 6 - lessOf("ask")*3);
+  let refl = shuffle([...Object.keys(G).map(k=>mk("g",k)), ...Object.keys(P).map(k=>mk("p",k)), mk("c","word")])
+    .filter(x=>ok(x) && !(x.key in answered) && !seenWithin(x.key,3)).slice(0,reflMax);
+  // אימונים: מעט כברירת מחדל, ופחות אם ביקשת או אם את מדלגת עליהם
+  const actMax = Math.max(0, 3 - lessOf("w")*2 - Math.floor((PREF.skips.w||0)/2));
+  let act  = shuffle(Object.keys(W).map(k=>mk("w",k))).filter(x=>ok(x) && !seenWithin(x.key,1)).slice(0,actMax);
   // המסלולים האישיים נשזרים לאורך הפיד, לסירוגין בין המטרות
-  const tr = topics.filter(id=>TOPICS[id]).map(id=>trackItems(id).filter(x=>!/-1$/.test(x.k)));
+  const tr = topics.filter(id=>TOPICS[id] && !lessOf("t:"+id)).map(id=>trackItems(id).filter(x=>!/-1$/.test(x.k) && ok(x) && !(x.key in answered) && !seenWithin(x.key,3) && !(x.type==="w" && actMax===0)));
   const trN=[], trR=[], trA=[];
   for(let i=0; tr.some(t=>t[i]); i++) tr.forEach(t=>{ const x=t[i]; if(x) (KIND[x.type]==="n"?trN:KIND[x.type]==="r"?trR:trA).push(x); });
-  const nq=[...interleave(trN, nour)], rq=[...trR, ...refl].slice(0,8), aq=[...trA, ...act].slice(0,5);
+  const nq=[...interleave(trN, nour.filter(ok))], rq=[...trR, ...refl].slice(0,reflMax), aq=[...trA, ...act].slice(0,actMax);
   const out=[]; const RHYTHM=["n","n","r","n","n","n","a"];   // בערך 70% להזין, 20% לחשוב, 10% לעשות
   out.push(nq.shift()); let i=0;
   while(nq.length){ const k=RHYTHM[i++%RHYTHM.length]; const q=k==="n"?nq:k==="r"?rq:aq; if(q.length) out.push(q.shift()); else if(k!=="n") continue; }
@@ -810,10 +825,11 @@ function sheetInstall(){
 let io;
 function renderFeed(){
   $("#feed").innerHTML = FEED.map(cardHTML).join("") + endHTML();
-  hookEnd();
+  hookEnd(); addLessButtons();
   destroyAll(); io && io.disconnect();
   io = new IntersectionObserver(es=>es.forEach(e=>{
     e.target.classList.toggle("in", e.isIntersecting);
+    seenTrack(e.target, e.isIntersecting);
   }),{root:$("#feed"),threshold:.6});
   document.querySelectorAll(".card").forEach(c=>io.observe(c));
   document.querySelectorAll(".slides").forEach(s=>s.addEventListener("scroll",()=>{
@@ -824,6 +840,55 @@ function renderFeed(){
   setTimeout(updateActive,0);
 }
 function setPlayLabels(){ document.querySelectorAll(".play .pl").forEach(p=>p.textContent = EMBED ? "צפי כאן" : "צפי ביוטיוב"); }
+function addLessButtons(root){
+  (root||document).querySelectorAll(".card:not(.v):not(.end)").forEach(c=>{ if(!c.querySelector(".lessbtn")) c.insertAdjacentHTML("beforeend",`<button class="lessbtn" data-less="${c.id}">פחות כאלה ✕</button>`); });
+}
+/* מה ראית, ועל מה דילגת. אחרי 2 אימונים שדילגת עליהם בכניסה אחת, השאר יורדים מהפיד */
+const seenT={}; let skipSession=0, skipToldW=false;
+function seenTrack(card, on){
+  const key=card.id; if(!key||key==="end") return;
+  if(on){ seenT[key]=Date.now(); return; }
+  const t0=seenT[key]; if(!t0) return; delete seenT[key];
+  if(Date.now()-t0>1500){ PREF.seen[key]=Date.now(); LS.set("seen",PREF.seen); }
+  if(card.classList.contains("wo") && !moves.some(m=>m.key===key && m.at>=t0) && !(wRun&&wRun.key===key)){
+    PREF.skips.w=(PREF.skips.w||0)+1; LS.set("skips",PREF.skips); skipSession++;
+    if(skipSession>=2 && !skipToldW){ skipToldW=true;
+      const cur=FEED.findIndex(f=>f.key===key);
+      const ahead=FEED.slice(cur+1).filter(f=>f.type==="w"); ahead.forEach(f=>removeCard(f.key));
+      toast("שמתי לב שאת מדלגת על אימונים. מורידה אותם להיום 👌"); }
+  }
+}
+function removeCard(key){
+  const i=FEED.findIndex(f=>f.key===key); if(i>=0) FEED.splice(i,1);
+  const el=document.getElementById(key); if(!el) return;
+  el.style.transition="opacity .3s, transform .3s"; el.style.opacity=0; el.style.transform="scale(.96)";
+  setTimeout(()=>{ el.remove(); updateActive(); },300);
+}
+function lessKeyOf(it){
+  const tr = it.key.startsWith("t-") ? it.k.split("-")[0] : null;
+  return { topic:tr, type: it.type==="w" ? "w" : (["g","p","c"].includes(it.type) ? "ask" : null) };
+}
+function sheetLess(key){
+  const it=byKey(key); if(!it) return; const L=lessKeyOf(it);
+  openSheet(`<h3>הבנתי. מה להוריד?</h3><p class="lead">הפיד לומד מזה. הכל נשמר רק אצלך.</p>
+    <div class="stack">
+      <button class="btn ink full" data-l="one">לא להראות לי את הכרטיס הזה שוב</button>
+      ${L.type==="w"?`<button class="btn line full" data-l="w">פחות אימונים בפיד</button>`:""}
+      ${L.type==="ask"?`<button class="btn line full" data-l="ask">פחות שאלות בפיד</button>`:""}
+      ${L.topic&&TOPICS[L.topic]?`<button class="btn line full" data-l="topic">פחות על ${TOPICS[L.topic].name}</button>`:""}
+      <button class="btn line full" onclick="closeSheet()">ביטול</button></div>`);
+  $("#sheet").onclick=e=>{
+    const b=e.target.closest("[data-l]"); if(!b) return; const k=b.dataset.l;
+    if(k==="one"){ PREF.hide.push(key); LS.set("hide",PREF.hide); removeCard(key); }
+    else {
+      const lk = k==="topic" ? "t:"+L.topic : k; PREF.less[lk]=(PREF.less[lk]||0)+1; LS.set("less",PREF.less);
+      if(k==="topic"){ topics=topics.filter(t=>t!==L.topic); LS.set("topics",topics); }
+      const cur=FEED.findIndex(f=>f.key===key);
+      FEED.slice(cur).filter(f=> k==="w" ? f.type==="w" : k==="ask" ? ["g","p","c"].includes(f.type) : (f.key.startsWith("t-"+L.topic+"-"))).forEach(f=>removeCard(f.key));
+    }
+    closeSheet(); toast("הבנתי. פחות מזה 👌");
+  };
+}
 function refreshRail(key){ const c=document.getElementById(key); if(!c) return; c.querySelector(".rail").outerHTML = railHTML(byKey(key)); }
 
 /* ---------- interactions in feed ---------- */
@@ -967,6 +1032,7 @@ window.addEventListener("resize", ()=>updateActive());
 feed.addEventListener("click",e=>{
   const ra=e.target.closest(".ra"); if(ra){ const it=byKey(ra.dataset.k); ({take:sheetTake,do:sheetDo,with:sheetWith})[ra.dataset.a](it); return; }
   const snd=e.target.closest(".snd"); if(snd){ turnSoundOn(snd.closest(".card")); return; }
+  const lb=e.target.closest(".lessbtn"); if(lb){ sheetLess(lb.dataset.less); return; }
   const gop=e.target.closest(".gopt"); if(gop){ answerGut(gop.dataset.g,{i:+gop.dataset.i}); return; }
   const ga=e.target.closest("[data-gact]"); if(ga){ gutAction(ga.dataset.gact, byKey(ga.dataset.g)); return; }
   const wg=e.target.closest(".wgo"); if(wg){ toggleWorkout(wg.dataset.w); return; }
@@ -1004,7 +1070,7 @@ function personalize(text, card){
     FEED.splice(pos,0,x);
     const ref=feed.children[pos]; const html=cardHTML(x);
     if(ref) ref.insertAdjacentHTML("beforebegin",html); else document.getElementById("end").insertAdjacentHTML("beforebegin",html);
-    io.observe(document.getElementById(x.key));
+    io.observe(document.getElementById(x.key)); addLessButtons();
   });
   res.insertAdjacentHTML("afterbegin",`<p class="tune">🎯 הפיד מתכוונן עכשיו ל<b>${TOPICS[id].name}</b>. גללי למטה ↓</p>`);
   setTimeout(()=>{ updateActive(); },50);
@@ -1313,7 +1379,7 @@ $("#infoBtn").onclick=()=>{
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
   $("#infoA2hs").onclick=sheetInstall;
   $("#demoRecall").onclick=()=>{ const ins=pickInsight(true); closeSheet(); if(!ins){ toast("קודם לחצי ״לקחתי״ על תוכן כלשהו"); return; } showRecall(ins); };
-  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
+  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
 };
 
 /* ---------- boot ---------- */
