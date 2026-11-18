@@ -1130,6 +1130,13 @@ function mergeContent(c){
     const k="x"+v.id.replace(/[^A-Za-z0-9]/g,"");
     if(!S[k] && !Object.values(S).some(x=>x.id===v.id)){ S[k]={c1:"#283593",c2:"#0A0D2B",c3:"#FFD25C", ...v, vert:true}; changed=true; }
   });
+  // כרטיסים אינטראקטיביים מהרענון: תנחשי, סיפור, מספר, קוטביות, כלי. רק עם מקור וקישור
+  const addI=(arr,obj,ok)=>{ if(Array.isArray(arr)) arr.forEach(x=>{ if(x && /^[a-z0-9]{3,40}$/i.test(x.id||"") && x.src && /^https:\/\//.test(x.url||"") && ok(x) && !obj[x.id]){ const {id,...rest}=x; obj[id]={...rest, c: Array.isArray(x.c)&&x.c.length===3 ? x.c : ["#283593","#0A0D2B","#FFD25C"], fresh:1}; changed=true; } }); };
+  addI(c.gs,GS,x=>x.q && Array.isArray(x.opts) && x.opts.length>=2 && Number.isInteger(x.a) && x.a>=0 && x.a<x.opts.length && x.r);
+  addI(c.st,STR,x=>x.tag && x.who && Array.isArray(x.beats) && x.beats.length>=2 && x.ask);
+  addI(c.nm,NM,x=>x.n && x.h);
+  addI(c.pl,PL,x=>x.a && x.b && x.aUp && x.aDown && x.bUp && x.bDown && x.fact);
+  addI(c.tl,TL,x=>x.name && Array.isArray(x.steps) && x.steps.length>=2 && x.proof);
   if(c.updated) CONTENT_UPDATED=c.updated;
   return changed;
 }
@@ -1167,6 +1174,8 @@ function buildFeed(){
   const answered = {...rl("guts",{}), ...rl("polls",{})};
   const ok = x => !PREF.hide.includes(x.key);
   let vids = shuffle(Object.keys(S).map(k=>({type:"v", key:"v-"+k, sk:k, ...S[k]})));
+  { const seen=rl("seenv",{}), cut=Date.now()-4*864e5, fresh=vids.filter(v=>!(seen[v.key]>cut)), old=vids.filter(v=>seen[v.key]>cut).sort((a,b)=>seen[a.key]-seen[b.key]);
+    vids = fresh.length>=20 ? fresh.slice(0,45) : [...fresh, ...old].slice(0,45); }
   // ספרים בתור: כל כניסה מושכת את 8 הבאים בתור, והסרטון של המחבר/ת נכנס מיד אחרי הספר
   let bq = rl("bookq", null); const allB = Object.keys(BK);
   if(!Array.isArray(bq) || bq.length!==allB.length || bq.some(k=>!BK[k])){ const rest=shuffle(allB.filter(k=>k!=="atomic"&&k!=="richdad")); bq=["atomic","richdad",...rest]; }
@@ -1851,6 +1860,7 @@ function onState(r, st){
   if(st===1){
     r.card.classList.remove("yt-blocked");
     if(activeKey!==r.card.id){ activeKey=r.card.id; }
+    { const sv=rl("seenv",{}); if(!sv[r.card.id] || Date.now()-sv[r.card.id]>36e5){ sv[r.card.id]=Date.now(); const ks=Object.keys(sv); if(ks.length>1500) ks.sort((x,y)=>sv[x]-sv[y]).slice(0,ks.length-1500).forEach(k=>delete sv[k]); try{ localStorage.setItem("gg_seenv",JSON.stringify(sv)); }catch(e){} } }
     players.forEach((o,id)=>{ if(id!==r.card.id && safeState(o)===1) pauseRec(o); });   // תמיד נגן אחד
   }
   syncMute(r);
