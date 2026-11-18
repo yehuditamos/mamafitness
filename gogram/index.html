@@ -390,6 +390,7 @@ a{color:inherit}
 .gin textarea{border:0;border-radius:18px;font-size:19px;font-family:var(--serif);font-weight:700;min-height:86px;background:#fff;color:var(--ink)}
 .gin button{height:52px;border-radius:16px;background:var(--tomato);color:#fff;font-weight:900;font-size:16px}
 .g.answered .gin button{display:none}
+.g.era .hook{font-size:30px;line-height:1.15}.g.era .gopts{padding-left:0;gap:8px}.g.era .gopt{min-height:48px;font-size:17px;padding:10px 14px}.g.era.answered .gopt:not(.pick){display:none}.gin.era{margin:8px 0 0;flex-direction:row;align-items:stretch}.gin.era textarea{flex:1}.gin.era button{width:auto;padding:0 14px;white-space:nowrap}.gin.era textarea{min-height:0;height:48px;font-size:16px;padding:12px 14px}.gin.era button{height:44px}.g.answered .gin.era{display:none}.eras{font-family:var(--serif);font-weight:800;font-size:20px;color:var(--acc)}
 .gres{margin:16px 64px 0 0;margin-left:64px;margin-right:0}
 .gres p{margin:0 0 12px;font-size:17.5px;line-height:1.5;font-weight:700;animation:ovIn .4s}
 .gres .go{height:46px;padding:0 18px;border-radius:99px;background:var(--paper);color:var(--ink);font-weight:900;font-size:15px}
@@ -1101,6 +1102,16 @@ const NM = {
 /* שאלות קשות: בחירה בלחיצה, בלי מקלדת */
 const O=(t,r,cta,pre)=>({t,r,cta:cta||"take",...(pre?{pre}:{})});
 Object.assign(G, {
+  e1: {era:true, q:"בעידן שהכל משתנה, מה הדבר *שלא תוותרי עליו* לעולם?", opts:[O("הספונטניות שבי","זה מה שאף אלגוריתם לא יתכנן במקומך."),O("האינטואיציה שלי","התחושה בבטן היא ניסיון של שנים שמדבר מהר."),O("הקשר האישי עם לקוחות","אנשים קונים מאנשים. גם בעוד עשר שנים."),O("החופש להחליט לבד","זה הלב של להיות עצמאית.")]},
+  e2: {era:true, q:"אם בינה מלאכותית תעשה חצי מהעבודה שלך, *מה תעשי* עם הזמן?", opts:[O("אגדיל את העסק","אז כדאי להתחיל להעביר לה משימה אחת כבר השבוע."),O("אהיה יותר עם המשפחה","זו אולי הסיבה הכי טובה ללמוד את הכלים."),O("אלמד משהו חדש","מי שלומדת עכשיו, מובילה אחר כך."),O("אנוח, סוף סוף","גם מנוחה היא החלטה עסקית.")]},
+  e3: {era:true, q:"מה בעסק שלך *אף מכונה* לא תוכל לעשות במקומך?", opts:[O("הלב שאני שמה","זה מה שהלקוחות מרגישות גם כשהן לא אומרות."),O("הסיפור האישי שלי","סיפור אמיתי אי אפשר להעתיק."),O("השיחה פנים מול פנים","שם נסגרות העסקאות החשובות."),O("הטעם וההחלטות שלי","מכונה מציעה. את בוחרת.")]},
+  e4: {era:true, q:"מה *הכי מפחיד* אותך בעידן הבינה המלאכותית?", opts:[O("שאהיה מיותרת","הפחד הזה אומר שאכפת לך. מה הדבר שרק את נותנת?"),O("שלא אספיק ללמוד","מספיק כלי אחד, רבע שעה ביום."),O("שהכל יהיה מזויף","אז האמת והאישיות שלך שוות יותר מתמיד."),O("לא מפחיד, מסקרן","סקרנות היא היתרון הכי גדול עכשיו.")]},
+  e5: {era:true, q:"איזו מיומנות *היית לומדת* אם היה לך חודש פנוי?", opts:[O("בינה מלאכותית","אפשר להתחיל בכלי אחד שחוסך לך שעה בשבוע."),O("מכירות","מיומנות שמשתלמת בכל עידן."),O("שפה חדשה","שפה פותחת שוק חדש."),O("וידאו ותוכן","מי שמדברת למצלמה, נשמעת.")]},
+  e6: {era:true, q:"במה את *הכי אנושית* בעבודה שלך?", opts:[O("בהקשבה","הקשבה אמיתית היא מצרך נדיר."),O("בהומור","צחוק בונה אמון מהר יותר מכל מצגת."),O("ביצירתיות","הרעיון המשוגע הוא שלך, לא של המכונה."),O("באכפתיות","לקוחות זוכרות איך גרמת להן להרגיש.")]},
+  e7: {era:true, q:"מה *לא ישתנה* אצלך גם בעוד 10 שנים?", opts:[O("הערכים שלי","ערכים הם המצפן כשהמפה משתנה."),O("האנשים שאני אוהבת","הם הסיבה שבשבילה הכל."),O("הסקרנות","סקרנות שומרת אותך צעירה בעסק."),O("הרצון לבנות משהו משלי","זה הדלק שלך.")]},
+  e8: {era:true, q:"כשהכל זז מהר, *מה מחזיר אותך* לעצמך?", opts:[O("שקט ונשימה","דקה של שקט היא גם החלטה."),O("המשפחה","העוגן הכי חזק."),O("תנועה","הגוף מסדר את הראש."),O("כתיבה","מה שנכתב, מתבהר.")]},
+  e9: {era:true, q:"אם לקוחה יכולה לשאול בינה מלאכותית, *למה שתבוא דווקא אלייך?*", opts:[O("בגלל האמון","אמון נבנה לאט ושווה הרבה."),O("בגלל הניסיון שלי","ניסיון הוא סיפורים שאי אפשר לחפש בגוגל."),O("בגלל היחס האישי","מכונה עונה. את מלווה."),O("עוד לא יודעת","זו השאלה הכי חשובה לעסק שלך השנה. שווה לשאול 3 לקוחות.")]},
+  e10: {era:true, q:"מה הדבר הראשון *שהיית מעבירה* לבינה מלאכותית מחר בבוקר?", opts:[O("חשבוניות וניירת","הזמן הזה חוזר אלייך כל חודש."),O("תשובות ללקוחות","טיוטה ממנה, החתימה ממך."),O("כתיבת פוסטים","רעיון שלך, ניסוח איתה."),O("תיאום פגישות","הכי קל להתחיל ממנו.")]},
   hmiss:  {hard:true, q:"אם העסק שלך נסגר מחר, *כמה לקוחות* באמת היו מתגעגעות?", opts:[O("הרבה","אז יש לך משהו אמיתי. כמה מהן יודעות כמה הן חשובות לך?"),O("כמה בודדות","אלה הלב של העסק. מה אם תבני הכל סביבן?"),O("לא בטוחה","זה הסימן הכי חשוב בפיד היום. שווה לשאול 3 לקוחות מה הן היו מפסידות.","do","לשאול 3 לקוחות מה הן היו מפסידות בלעדיי")]},
   hlie:   {hard:true, q:"על מה את הכי *משקרת לעצמך* בעסק?", opts:[O("שהמחיר בסדר","אם היית בטוחה בזה, לא היית מתלבטת. נסי לבדוק מה קורה כשמעלים ב־10%.","do","לבדוק העלאת מחיר של 10%"),O("שאין לי זמן","בדרך כלל יש זמן, אין עדיפות. מה היית מוותרת עליו בשביל זה?"),O("שזה זמני","מה שזמני כבר שנה הוא קבוע. מה הצעד שמשנה אותו?","do","לשנות את מה שכבר לא זמני"),O("שאני בסדר עם זה","לפעמים ״בסדר״ זה שם אחר לעייפות. מה היה טוב יותר מבסדר?")]},
   hrate:  {hard:true, q:"כשאת סופרת *את כל השעות,* כולל וואטסאפ ונסיעות, את מרוויחה לשעה...", opts:[O("יותר ממה שחשבתי","יופי. אז יש לך מרווח להשקיע בצמיחה."),O("בערך מה שחשבתי","מעולה שאת יודעת. זה הבסיס לכל החלטה על מחיר."),O("פחות ממה שחשבתי","רוב העצמאיות מגלות את זה. זה המספר שצריך להיות לנגד העיניים בפעם הבאה שמתמחרים.","do","לחשב את ההכנסה האמיתית לשעה"),O("אין לי מושג","10 דקות של חשבון ישנו לך את כל השיחות על מחיר.","do","לחשב את ההכנסה האמיתית לשעה")]},
@@ -1225,6 +1236,9 @@ function buildFeed(){
     { const pa=rl("pl",{}); let pls=units.filter(u=>u[0].type==="pl"); for(const u of pls) units.splice(units.indexOf(u),1);
       if(pls.length<3) pls.push(...shuffle(Object.keys(PL).filter(k=>!("pl-"+k in pa) && !pls.some(u=>u[0].key==="pl-"+k))).slice(0,3-pls.length).map(k=>[mk("pl",k)]));
       pls.slice(0,3).forEach((u,j)=>units.splice(Math.min(1+j*5,units.length),0,u)); }
+    { const ga=rl("guts",{}); let eras=units.filter(u=>u[0].type==="g"&&u[0].era); for(const u of eras) units.splice(units.indexOf(u),1);
+      if(eras.length<2) eras.push(...shuffle(Object.keys(G).filter(k=>G[k].era && !("g-"+k in ga) && !eras.some(u=>u[0].key==="g-"+k))).slice(0,2-eras.length).map(k=>[mk("g",k)]));
+      eras.slice(0,2).forEach((u,j)=>units.splice(Math.min(3+j*6,units.length),0,u)); }
     { const t=likeTaste(); if(Object.keys(t).length){
         const wr=x=>Math.random()/(1+tasteScore(x,t)*0.6);
         const vs=vq.map(v=>[wr(v),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]); vq.length=0; vq.push(...vs);
@@ -1409,11 +1423,11 @@ function cardHTML(it){
       </div>${railHTML(it)}</article>`;
   if(it.type==="g"){
     const a=guts[it.key];
-    return `<article class="card g ${a?"answered":""}" id="${it.key}" data-k="${it.key}" style="--acc:#FF4D2E">
+    return `<article class="card g ${it.era?"era":""} ${a?"answered":""}" id="${it.key}" data-k="${it.key}" style="--acc:#FF4D2E">
       <div class="bg" style="background:#0E0C0A"><div class="blob" style="width:80vw;height:80vw;max-width:460px;max-height:460px;background:#FF4D2E;top:-30%;left:-30%;opacity:.35"></div></div>
-      <div class="content" style="color:#F3EEE4"><span class="gk">${it.hard?"שאלה קשה. בלי לברוח.":"רגע. שאלה אחת."}</span>
+      <div class="content" style="color:#F3EEE4"><span class="gk">${it.era?"✨ שאלה לעידן החדש":it.hard?"שאלה קשה. בלי לברוח.":"רגע. שאלה אחת."}</span>
         <h2 class="hook">${kin(it.q)}</h2>
-        ${it.opts?`<div class="opts gopts">${it.opts.map((o,i)=>`<button class="opt gopt ${a&&a.i===i?"pick":""}" data-g="${it.key}" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`
+        ${it.opts?`<div class="opts gopts">${it.opts.map((o,i)=>`<button class="opt gopt ${a&&a.i===i?"pick":""}" data-g="${it.key}" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>${it.era?`<form class="gin era" data-g="${it.key}"><textarea rows="1" maxlength="80" placeholder="או במילים שלך…">${a&&a.text?esc(a.text):""}</textarea><button>זה שלי ←</button></form>`:""}`
           :`<form class="gin" data-g="${it.key}"><textarea rows="2" maxlength="140" placeholder="${esc(it.input)}">${a&&a.text?esc(a.text):""}</textarea><button>זהו ←</button></form>`}
         <div class="gres" id="gres-${it.key}">${a?gutRes(it,a):""}</div>
       </div>${railHTML(it)}</article>`;
@@ -1565,6 +1579,7 @@ function cardHTML(it){
   }
 }
 function gutRes(it,a){
+  if(it.era){ const o=a.i!=null?it.opts[a.i]:null; return `<p class="eras">✦ נשמר אצלך: «${esc(a.text||"")}»</p><p>${esc(o?o.r:"זה שלך. אף אחד לא ייקח את זה.")}</p><small>התשובה נשמרה רק אצלך.</small>`; }
   const o = it.opts ? it.opts[a.i] : it;
   const btn = {do:"להפוך את זה לפעולה ביומן", take:"לכתוב מה עולה לי", msg:"לנסח לה הודעה עכשיו", move:"לאימון ↓"}[o.cta];
   return `<p>${esc(o.r)}</p><button class="go" data-gact="${o.cta}" data-g="${it.key}">${btn}</button><small>התשובה נשמרה רק אצלך.</small>`;
@@ -1952,7 +1967,7 @@ feed.addEventListener("submit",e=>{
   refreshRail(key); drawGrow(true);
 });
 function answerGut(key,a){
-  const it=byKey(key); a.at=Date.now(); guts[key]=a; LS.set("guts",guts);
+  const it=byKey(key); a.at=Date.now(); if(it && it.era && a.i!=null && it.opts[a.i]) a.text=it.opts[a.i].t; guts[key]=a; LS.set("guts",guts);
   if(a.text){ const prev=insights.find(x=>x.key===key); if(prev){ prev.text=a.text; prev.at=Date.now(); } else insights.push({id:Date.now().toString(36), key, text:a.text, at:Date.now(), seen:0, reviews:0}); LS.set("insights",insights); }
   const card=document.getElementById(key); card.classList.add("answered");
   card.querySelectorAll(".gopt").forEach((o,j)=>o.classList.toggle("pick",j===a.i));
@@ -2575,7 +2590,7 @@ $("#infoBtn").onclick=()=>{
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
   $("#infoA2hs").onclick=sheetInstall;
   $("#demoRecall").onclick=()=>{ const ins=pickInsight(true); closeSheet(); if(!ins){ toast("קודם לחצי ״לקחתי״ על תוכן כלשהו"); return; } showRecall(ins); };
-  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips","pages","intent","storySeen"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
+  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips","pages","intent","storySeen","likes","keep","seenv","pl","gs","locks","ledi"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
 };
 
 /* ---------- boot ---------- */
