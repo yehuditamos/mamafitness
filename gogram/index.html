@@ -286,7 +286,7 @@ a{color:inherit}
 .bkc .babtns{margin-left:64px}
 .bknote{font-size:11px;opacity:.55;margin-top:8px}
 .sbook{display:block;color:var(--acc);margin-top:2px}
-.ccb{border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.35);color:#fff;font:inherit;font-weight:800;font-size:13px;height:36px;padding:0 11px;border-radius:999px;margin-left:6px}.ccb.on{background:#F3EEE4;color:#16130F;border-color:#F3EEE4}
+.ccb{border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.35);color:#fff;font:inherit;font-weight:800;font-size:13px;height:36px;padding:0 11px;border-radius:999px;margin-left:6px}.ccb.on{background:#F3EEE4;color:#16130F;border-color:#F3EEE4}.ccb.none{opacity:.6;background:rgba(0,0,0,.35);color:#fff;border-color:rgba(255,255,255,.3)}
 .msrc a{color:inherit;text-decoration:underline}.msrc .mk{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.18);margin-left:4px}.msrc{margin-top:12px;font-size:13.5px;font-weight:700;opacity:.85;color:var(--acc)}.card.m.light .msrc{color:inherit;opacity:.7}
 .batxt{display:block;width:calc(100% - 64px);margin:0 0 12px 64px;box-sizing:border-box;border-radius:16px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:17px;line-height:1.5;padding:12px 14px;resize:none;min-height:96px}.batxt:focus{outline:none;border-color:#F6D86B;background:rgba(255,255,255,.16)}.batxt::placeholder{color:rgba(255,255,255,.55)}a.btn[data-wa]{display:flex;align-items:center;justify-content:center;text-decoration:none}
 .gsc .content,.stc .content,.nmc .content,.tlc .content{bottom:auto;top:calc(var(--safeT) + 92px);padding-left:20px}
@@ -1758,7 +1758,11 @@ function applyCC(r){
   if(!r || !r.ready || !r.p) return;
   try{
     if(ccOn){ r.p.loadModule && r.p.loadModule("captions"); r.p.setOption && r.p.setOption("captions","track",CC_TRACK); r.p.setOption && r.p.setOption("captions","fontSize",3);
-      setTimeout(()=>{ try{ ccOn && r.p.setOption("captions","fontSize",3); }catch(e){} },1200); }
+      // לפעמים המודול עוד לא מוכן בפעם הראשונה: שולחים שוב את השפה והגודל
+      setTimeout(()=>{ try{ if(ccOn){ r.p.setOption("captions","track",CC_TRACK); r.p.setOption("captions","fontSize",3); } }catch(e){} },1200);
+      // אם לסרטון אין כתוביות בכלל, אומרים את זה על הכפתור במקום לשתוק
+      setTimeout(()=>{ try{ const tl=r.p.getOption && r.p.getOption("captions","tracklist"); const btn=r.card && r.card.querySelector(".ccb");
+        if(btn && Array.isArray(tl) && tl.length===0 && ccOn){ btn.textContent="🌐 אין כתוביות לסרטון הזה"; btn.classList.add("none"); } }catch(e){} },3500); }
     else { r.p.unloadModule && r.p.unloadModule("captions"); }
   }catch(e){}
 }
