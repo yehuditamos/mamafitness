@@ -230,6 +230,10 @@ a{color:inherit}
 .vert .ra svg{width:18px;height:18px}
 .vert .ra.done{background:var(--tomato);border-color:var(--tomato)}
 .vert .ra.done .b{background:none}
+.ra.sh1{width:58px!important;height:58px!important;flex:none!important;padding:0!important;border-radius:50%!important;border:2px solid rgba(255,255,255,.7)!important;background:rgba(0,0,0,.28)!important;backdrop-filter:blur(8px);justify-content:center;align-items:center;display:grid;place-items:center}
+.ra.sh1 .b{width:auto!important;height:auto!important;background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ra.sh1 svg{width:25px!important;height:25px!important}
+.ra.sh1.done{background:var(--tomato)!important;border-color:var(--tomato)!important}
+.vert .rail{justify-content:flex-start}
 .lessbtn{position:absolute;top:calc(var(--safeT) + 64px);left:12px;z-index:4;height:30px;padding:0 11px;border-radius:99px;background:rgba(0,0,0,.18);color:inherit;font-size:12px;font-weight:800;opacity:.7;backdrop-filter:blur(6px)}
 .card.light .lessbtn,.card.m.light .lessbtn{background:rgba(22,19,15,.08)}
 .qc .lessbtn,.p .lessbtn,.g .lessbtn,.c .lessbtn,.k .lessbtn,.end .lessbtn{color:#fff}
@@ -1312,7 +1316,7 @@ function railHTML(it){
   // ״אני עושה״ (ליומן) רק איפה שיש משהו לעשות, ״בואי איתי״ (שיתוף) רק איפה שיש מה לשלוח
   const DO=new Set(["bk","tl","ba","m","k"]), SH=new Set(["v","st","nm","gs","pl","nw","m","bk"]);
   const d=actions.some(x=>x.key===it.key), sh=shares.includes(it.key);
-  return `<div class="rail"><button class="like1 ${on?"on":""}" data-like="${it.key}" aria-label="אהבתי">${on?"♥":"♡"}</button>${DO.has(it.type)?`<button class="ra ${d?"done":""}" data-a="do" data-k="${it.key}"><span class="b">${IC.do}</span>אני עושה</button>`:""}${SH.has(it.type)?`<button class="ra ${sh?"done":""}" data-a="with" data-k="${it.key}"><span class="b">${IC.with}</span>בואי איתי</button>`:""}</div>`;
+  return `<div class="rail"><button class="like1 ${on?"on":""}" data-like="${it.key}" aria-label="אהבתי">${on?"♥":"♡"}</button>${DO.has(it.type)?`<button class="ra ${d?"done":""}" data-a="do" data-k="${it.key}"><span class="b">${IC.do}</span>אני עושה</button>`:""}${SH.has(it.type)?`<button class="ra sh1 ${sh?"done":""}" data-a="with" data-k="${it.key}" aria-label="להזמין חברה לשיחה"><span class="b">${IC.with}</span></button>`:""}</div>`;
 }
 /* מה אהבת מלמד את הפיד: סוג הכרטיס, הדוברת, תחום הספר */
 function likeTaste(){
