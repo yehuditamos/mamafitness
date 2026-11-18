@@ -1190,7 +1190,11 @@ function buildFeed(){
     vids = fresh.length>=20 ? fresh : [...fresh, ...old];
     // גיוון: לכל דובר/ת לכל היותר 4 סרטונים בפיד, ומסודרים בסבב כך שאף אחד לא משתלט
     const by={}; vids.forEach(v=>{ const w=v.who||"?"; (by[w]=by[w]||[]).push(v); });
-    const lanes=shuffle(Object.values(by).map(l=>l.slice(0,4))), out=[];
+    // דוברים שיהודית ביקשה במיוחד: עד 6 בפיד, והראשונים בסבב
+    const FAV=["עידן וולר"];
+    const lanes=shuffle(Object.entries(by).filter(([w])=>!FAV.includes(w)).map(([w,l])=>l.slice(0,4)));
+    FAV.forEach(w=>{ if(by[w]) lanes.unshift(by[w].slice(0,6)); });
+    const out=[];
     for(let r=0; out.length<45 && lanes.some(l=>l.length); r++) lanes.forEach(l=>{ if(l.length && out.length<45) out.push(l.shift()); });
     vids = out; }
   // ספרים בתור: כל כניסה מושכת את 8 הבאים בתור, והסרטון של המחבר/ת נכנס מיד אחרי הספר
