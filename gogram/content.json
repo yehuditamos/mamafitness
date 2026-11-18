@@ -1,6 +1,81 @@
 {
- "updated": "2026-11-17T18:55:33.234Z",
+ "updated": "2026-11-18T04:56:44.000Z",
  "news": [
+  {
+   "id": "newsbound1117",
+   "e": "📣",
+   "where": "ישראל",
+   "h": "סטארט־אפ ישראלי עוזר לחברות *לעשות יחסי ציבור לבד*",
+   "p": "Newsbound מתל אביב גייסה 3 מיליון דולר לפלטפורמת AI שמאתרת עיתונאים רלוונטיים ומנסחת עבורם פניות, כשהמנהלים שולחים אותן מהמייל שלהם. בחברה אומרים ש־70% מהלקוחות המשלמים כבר עזבו את משרד יחסי הציבור.",
+   "src": "Calcalist CTech",
+   "url": "https://www.calcalistech.com/ctechnews/article/hjvcityrfl",
+   "d": "17.11.2026",
+   "c": [
+    "#C2410C",
+    "#2A1206",
+    "#FDBA74"
+   ]
+  },
+  {
+   "id": "bridge1117",
+   "e": "🌉",
+   "where": "ישראל",
+   "h": "חברה ישראלית תבנה גשר בפנסילבניה *ב־1.29 מיליארד דולר*",
+   "p": "שיכון ובינוי זכתה במכרז להחלפת גשר ישן מעל נהר הסאסקהנה, עם ההצעה הנמוכה מבין המתחרים. העבודות צפויות להתחיל ב־2027 ולהימשך עד 2039.",
+   "src": "Ynetnews",
+   "url": "https://www.ynetnews.com/business/article/s1srm2u0me",
+   "d": "17.11.2026",
+   "c": [
+    "#1D4ED8",
+    "#0B1638",
+    "#93C5FD"
+   ]
+  },
+  {
+   "id": "nonnie1116",
+   "e": "🍧",
+   "where": "העולם",
+   "h": "סבתא בפנסיה פתחה משאית ברד, ובונה *עסק משפחתי לנכדים*",
+   "p": "תרזה דירמן, ספרית לשעבר ממיזורי, הקימה לפני ארבע שנים את Nonnie's Shaved Ice והנכדים עובדים איתה. השבוע היא נרשמה לסדנת צמיחה בשבוע היזמות העולמי כדי להגדיל את העסק.",
+   "src": "KSHB 41",
+   "url": "https://kshb.com/news/local-news/missouri/jackson-county/independence-small-business-owner-turns-to-global-entrepreneurship-week-to-build-a-legacy-for-her-grandkids",
+   "d": "16.11.2026",
+   "c": [
+    "#DB2777",
+    "#3B0A22",
+    "#F9A8D4"
+   ]
+  },
+  {
+   "id": "tokyobins1116",
+   "e": "🤖",
+   "where": "העולם",
+   "h": "בטוקיו פחי אשפה רובוטיים *נוסעים לבד* להתרוקן",
+   "p": "אחרי שרוב הפחים הציבוריים ביפן הוסרו, חברות מציעות פחים סולאריים שדוחסים פסולת ופחים רובוטיים שמזהים מתי הם מלאים. בתחנת שינג'וקו כבר עובדים רובוטים מנקים, והתגובות הראשונות חיוביות.",
+   "src": "Good News Network",
+   "url": "https://www.goodnewsnetwork.org/tokyo-tackles-trash-troubles-with-new-generation-of-robotic-street-waste-bins/",
+   "d": "16.11.2026",
+   "c": [
+    "#0F766E",
+    "#04211E",
+    "#5EEAD4"
+   ]
+  },
+  {
+   "id": "pfas1116",
+   "e": "🐟",
+   "where": "העולם",
+   "h": "\"הכימיקלים הנצחיים\" בנהרות אנגליה *ירדו בכ־30%*",
+   "p": "לפי סוכנות הסביבה הבריטית, ריכוזי PFOA ו־PFOS במים ירדו בכ־30%, ובדגים הירידה גדולה עוד יותר. זה קרה אחרי שהחומרים נאסרו בהדרגה.",
+   "src": "Good News Network",
+   "url": "https://www.goodnewsnetwork.org/30-drop-in-levels-of-forever-chemicals-in-englands-rivers-49-in-fish-brilliant-to-see/",
+   "d": "16.11.2026",
+   "c": [
+    "#4D7C0F",
+    "#16240A",
+    "#BEF264"
+   ]
+  },
   {
    "id": "xtosis1117",
    "e": "💊",
@@ -92,51 +167,6 @@
    ]
   },
   {
-   "id": "soil",
-   "e": "🌱",
-   "where": "ישראל",
-   "h": "חוקרים ישראלים פיתחו כלי שמגלה *חיידקים שלא הכרנו* באדמה",
-   "p": "כלי AI שמזהה DNA של חיידקים גם כשהם לא מופיעים באף מאגר. זה יכול לעזור למצוא חיידקים שמגנים על יבולים ועוזרים לצמחים לעמוד בבצורת.",
-   "src": "World Israel News",
-   "url": "https://worldisraelnews.com/israeli-ai-breakthrough-could-unlock-new-possibilities-for-agriculture/",
-   "d": "2.11.2026",
-   "c": [
-    "#2F5D46",
-    "#0E2A20",
-    "#9FD3A8"
-   ]
-  },
-  {
-   "id": "time",
-   "e": "🏆",
-   "where": "ישראל",
-   "h": "המצאות עם שורשים ישראליים *ברשימת ההמצאות הטובות* של TIME לשנת 2026",
-   "p": "ביניהן רובוט שמטפל בכוורות דבורים, מודל AI שמסמן לרופאים ממצאים דחופים בצילומים, וכיסא בטיחות לתינוק שהופך לעגלה.",
-   "src": "JNS / Heritage Florida Jewish News",
-   "url": "https://www.heritagefl.com/story/2026/11/06/news/made-in-israel-startup-nations-footprint-on-times-best-inventions-of-2026/24264.html",
-   "d": "6.11.2026",
-   "c": [
-    "#E8A33D",
-    "#3A2208",
-    "#FFE08A"
-   ]
-  },
-  {
-   "id": "swim",
-   "e": "🏊‍♀️",
-   "where": "ישראל",
-   "h": "אופיר שמחה זכתה *במדליית ארד* באולימפיאדת הנוער",
-   "p": "במשחה 200 מטר גב.",
-   "src": "הארץ",
-   "url": "https://www.haaretz.co.il/news/dailynews/2026-11-01/ty-article-live/000001a1-9403-d03f-aded-deff54250000?liveBlogItemId=1205348202",
-   "d": "1.11.2026",
-   "c": [
-    "#2B6CB0",
-    "#0B1E36",
-    "#7FD1FF"
-   ]
-  },
-  {
    "id": "beaver",
    "e": "🦫",
    "where": "העולם",
@@ -164,36 +194,6 @@
     "#00897B",
     "#062A26",
     "#7DF0D6"
-   ]
-  },
-  {
-   "id": "nature",
-   "e": "🌍",
-   "where": "העולם",
-   "h": "הטבע משתקם *בקצב הכי מהיר* שנמדד אי פעם",
-   "p": "לפי דוח של האו״ם, 252 מיליון הקטאר של יבשה, ים ומים מתוקים נמצאים בשיקום פעיל ב־149 מדינות. שטח בגודל קזחסטן.",
-   "src": "Positive News",
-   "url": "https://www.positive.news/society/good-news-stories-from-week-45-of-2026/",
-   "d": "6.11.2026",
-   "c": [
-    "#2F5D46",
-    "#0E2A20",
-    "#F6D86B"
-   ]
-  },
-  {
-   "id": "barb",
-   "e": "👶",
-   "where": "העולם",
-   "h": "בברבדוס כבר *לא נולדים תינוקות* עם HIV",
-   "p": "המדינה עצרה את ההעברה מאם לתינוק. הבדיקה והטיפול חינם לכל אישה בהריון.",
-   "src": "Positive News",
-   "url": "https://www.positive.news/society/good-news-stories-from-week-45-of-2026/",
-   "d": "6.11.2026",
-   "c": [
-    "#AD1457",
-    "#2B0616",
-    "#F48FB1"
    ]
   },
   {
