@@ -224,6 +224,16 @@ a{color:inherit}
 .shook{font-family:var(--serif);font-weight:900;font-size:19px;line-height:1.2}
 .shook em{font-style:normal;color:var(--acc)}
 .vert .yt-note{font-size:12px}
+/* מסך מלא לשורטים, כמו רילס */
+.bigb{height:32px;width:36px;border-radius:99px;border:1.5px solid rgba(255,255,255,.4);background:rgba(0,0,0,.35);color:#fff;font-size:17px;line-height:1;padding:0}
+body.bigv .vert .yt-wrap{top:0;bottom:0;z-index:1}body.bigv .vert .sbar{z-index:6}
+body.bigv .vert .yt-slot{height:100%;width:100%;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none;overflow:hidden;background-size:cover}
+body.bigv .vert .yt-slot iframe{inset:0 auto;left:50%;height:100%;width:auto;aspect-ratio:9/16;min-width:100%;transform:translateX(-50%)}
+body.bigv .vert .sbar{background:linear-gradient(180deg,transparent,rgba(0,0,0,.55) 35%,rgba(0,0,0,.75));pointer-events:none}
+body.bigv .vert .sbar *{pointer-events:auto}
+body.bigv .vert .sbar .shook,body.bigv .vert .swho small{display:none}
+body.bigv .vert .sbar{height:auto;padding-top:28px}
+
 .vert .rail{position:static;flex-direction:row;gap:8px;margin-top:auto}
 .vert .ra{flex-direction:row;width:auto;flex:1;height:38px;border-radius:99px;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.3);justify-content:center;gap:6px;font-size:13px}
 .vert .ra .b{width:auto;height:auto;background:none;border:0;backdrop-filter:none}
@@ -1173,7 +1183,8 @@ const mk = (t,k) => ({type:t, key:t+"-"+k, ...SRC[t][k]});
 /* ---------- ״פחות מזה״: הפיד לומד ממה שמעצבן אותך ---------- */
 const rl = (k,d) => { try{ const v=localStorage.getItem("gg_"+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } };
 const LIKES = rl("likes",{});
-const KEEP = rl("keep",[]);   // [{key,at,back,n}] שמירה בדאבל־טאפ, חוזרת אחרי 3 ואז 7 ימים
+const KEEP = rl("keep",[]);
+try{ if(localStorage.getItem("gg_bigv")) document.body.classList.add("bigv"); }catch(e){}   // [{key,at,back,n}] שמירה בדאבל־טאפ, חוזרת אחרי 3 ואז 7 ימים
 const saveKeep = () => { try{ localStorage.setItem("gg_keep",JSON.stringify(KEEP)); }catch(e){} };
 const LEDC=["#FF4D2E","#FFD25C","#7CF29A","#5CC8FF","#B98CFF","#FF6FD8","#FF9F1C","#00E5C3"];
 function keepObj(key){ const m=key.match(/^([a-z]+)-(.+)$/); if(!m) return null; const [,t,k]=m;
@@ -1395,7 +1406,7 @@ function cardHTML(it){
       <div class="yt-wrap"><div class="yt-slot" style="background-image:url(https://i.ytimg.com/vi/${it.id}/hqdefault.jpg)"></div></div>
       <div class="sbar">
         <div class="srow"><span class="av">${esc(ini)}</span><div class="swho">${esc(it.who)}<small>${esc(it.role)} · <a href="${ytUrl(it.id)}" target="_blank" rel="noopener">מקור ↗</a></small>${it.book&&BK[it.book]?`<small class="sbook">📚 מתוך העולם של ״${esc(BK[it.book].he)}״</small>`:""}</div>
-          <div class="yt-bar"><button class="ccb ${ccOn?"on":""}" aria-label="תרגום לעברית" aria-pressed="${ccOn}">${ccOn?"🌐 עברית ✓":"🌐 עברית"}</button><button class="snd">🔊 קול</button></div></div>
+          <div class="yt-bar"><button class="ccb ${ccOn?"on":""}" aria-label="תרגום לעברית" aria-pressed="${ccOn}">${ccOn?"🌐 עברית ✓":"🌐 עברית"}</button><button class="snd">🔊 קול</button><button class="bigb" aria-label="מסך מלא">⛶</button></div></div>
         <div class="shook">${kin(it.hook)}</div>
         <span class="yt-note">הניגון האוטומטי לא התאפשר. הקישי על הסרטון ▶</span>
         ${railHTML(it)}
@@ -1942,6 +1953,7 @@ feed.addEventListener("submit",e=>{
 });
 feed.addEventListener("click",e=>{
   const ra=e.target.closest(".ra"); if(ra){ const it=byKey(ra.dataset.k); ({take:sheetTake,do:sheetDo,with:sheetWith})[ra.dataset.a](it); return; }
+  const bb=e.target.closest(".bigb"); if(bb){ const on=document.body.classList.toggle("bigv"); try{ localStorage.setItem("gg_bigv",on?"1":""); }catch(err){} bb.textContent=on?"🗗":"⛶"; document.querySelectorAll(".bigb").forEach(x=>x.textContent=on?"🗗":"⛶"); toast(on?"מסך מלא. לחיצה נוספת מחזירה":"חזרה לגודל רגיל"); return; }
   const ccb=e.target.closest(".ccb"); if(ccb){ toggleCC(ccb.closest(".card")); return; }
   const snd=e.target.closest(".snd"); if(snd){ turnSoundOn(snd.closest(".card")); return; }
   const bab=e.target.closest("[data-ba]"); if(bab){ baAction(bab.dataset.ba, bab.dataset.k); return; }
