@@ -1784,7 +1784,11 @@ function syncLike(k){ document.querySelectorAll(`[data-like="${k}"]`).forEach(b=
    סרטון אחד בלבד מתנגן: זה שבמרכז המסך. מתחיל מושתק (mute → playVideo), נעצר כשגוללים הלאה,
    כשהטאב מוסתר או כשהאפליקציה עוברת לרקע. נגנים נבנים פעם אחת ונשמרים לסרטון הנוכחי ולשכנים שלו. */
 let EMBED = null;             // null: טוען, true: ה-API זמין, false: לא זמין → קישור ידני ליוטיוב
-let soundOn = false;          // המשתמשת הפעילה קול בסשן הזה
+let soundOn = false;          // הדפדפן כבר קיבל נגיעה, אז מותר לנגן עם קול
+/* קול תמיד: ברירת המחדל היא קול פועל. דפדפנים מרשים קול רק אחרי נגיעה ראשונה בדף,
+   אז עד הנגיעה הסרטון מתנגן מושתק, ומהנגיעה הראשונה כל הסרטונים מתנגנים עם קול */
+let soundWanted = true;
+const hasActivated = () => soundOn || !!(navigator.userActivation && navigator.userActivation.hasBeenActive);
 const players = new Map();    // card id → {p, card, ready, failed, wantPlay, t}
 let activeKey = null, apiPromise = null, scrollRaf = 0;
 function loadYT(){
@@ -1866,13 +1870,14 @@ function startRec(r){
   if(!r || r.failed) return;
   if(!r.ready){ r.wantPlay=true; return; }          // ה-API או הנגן עוד לא מוכנים: ננגן ב-onReady
   r.wantPlay=false;
-  try{ if(soundOn){ r.p.unMute(); r.p.setVolume(100); } else r.p.mute(); r.p.playVideo(); }catch(e){}
+  const withSound = soundWanted && hasActivated();
+  try{ if(withSound){ r.p.unMute(); r.p.setVolume(100); } else r.p.mute(); r.p.playVideo(); }catch(e){}
   const h=$("#hint"); if(h) h.style.opacity=0;
   clearTimeout(r.t);
   r.t=setTimeout(()=>{                                // בדיקה: האם הניגון האוטומטי באמת התחיל?
     if(activeKey!==r.card.id) return;
     const st=safeState(r); if(st===1||st===3) return;
-    if(soundOn){ soundOn=false; try{ r.p.mute(); r.p.playVideo(); }catch(e){}   // הקול נחסם? ממשיכים מושתק ומציגים שוב את כפתור הקול
+    if(withSound){ try{ r.p.mute(); r.p.playVideo(); }catch(e){}   // הקול נחסם? ממשיכים מושתק, והנגיעה הבאה תחזיר את הקול
       r.t=setTimeout(()=>{ const s2=safeState(r); syncMute(r); if(s2!==1&&s2!==3) r.card.classList.add("yt-blocked"); },1800); }
     else r.card.classList.add("yt-blocked");
   },2600);
@@ -1895,6 +1900,10 @@ function onState(r, st){
   if(st===0 && activeKey===r.card.id){ try{ r.p.seekTo(0,true); r.p.playVideo(); }catch(e){} }   // לופ, כמו ברילס
   if(st===1){
     r.card.classList.remove("yt-blocked");
+    if(activeKey===r.card.id && soundWanted && hasActivated() && !r.sndTry){   // התחיל מושתק? מנסים להחזיר קול פעם אחת
+      let m=true; try{ m=r.p.isMuted(); }catch(e){}
+      if(m){ r.sndTry=true; try{ r.p.unMute(); r.p.setVolume(100); }catch(e){} setTimeout(()=>{ r.sndTry=false; syncMute(r); },400); }
+    }
     if(activeKey!==r.card.id){ activeKey=r.card.id; }
     { const sv=rl("seenv",{}); if(!sv[r.card.id] || Date.now()-sv[r.card.id]>36e5){ sv[r.card.id]=Date.now(); const ks=Object.keys(sv); if(ks.length>1500) ks.sort((x,y)=>sv[x]-sv[y]).slice(0,ks.length-1500).forEach(k=>delete sv[k]); try{ localStorage.setItem("gg_seenv",JSON.stringify(sv)); }catch(e){} } }
     players.forEach((o,id)=>{ if(id!==r.card.id && safeState(o)===1) pauseRec(o); });   // תמיד נגן אחד
@@ -1903,8 +1912,8 @@ function onState(r, st){
 }
 function turnSoundOn(card){
   const r=players.get(card.id); if(!r||!r.ready) return;
-  soundOn=true;
-  try{ r.p.unMute(); r.p.setVolume(100); if(safeState(r)!==1) r.p.playVideo(); }catch(e){}
+  soundOn=true; soundWanted=true;
+  try{ r.p.unMute(); r.p.setVolume(100); if(safeState(r)!==1 && canPlayNow()) r.p.playVideo(); }catch(e){}
   setTimeout(()=>syncMute(r),250);
 }
 const canPlayNow = () => !document.hidden && !overlayOn();
@@ -1931,12 +1940,18 @@ function pauseActive(){ players.forEach(pauseRec); }
 feed.addEventListener("scroll",()=>{ if(scrollRaf) return; scrollRaf=requestAnimationFrame(()=>{ scrollRaf=0; updateActive(); }); },{passive:true});
 document.addEventListener("visibilitychange",()=>{ document.hidden ? pauseActive() : playActive(); });
 window.addEventListener("pagehide", pauseActive);
-/* נגיעה ראשונה במסך = קול. דפדפנים מאפשרים קול רק אחרי נגיעה, אז מנצלים אותה */
-document.addEventListener("click",e=>{
-  if(soundOn || !activeKey || !EMBED) return;
-  if(e.target.closest(".sheet,.over,input,textarea,a,.scrim")) return;
-  const card=document.getElementById(activeKey); if(card && card.classList.contains("yt-ready")) turnSoundOn(card);
-},true);
+/* כל נגיעה במסך = קול. דפדפנים מאפשרים קול רק אחרי נגיעה, אז מנצלים כל אחת:
+   אם הסרטון הנוכחי מושתק או לא מתנגן, הנגיעה מפעילה אותו עם קול */
+function gestureSound(e){
+  soundOn=true;
+  if(!soundWanted || !activeKey || !EMBED) return;
+  if(e.target && e.target.closest && e.target.closest(".snd")) return;   // לכפתור הקול יש טיפול משלו
+  const r=players.get(activeKey); if(!r || !r.ready || r.failed) return;
+  let m=true; try{ m=r.p.isMuted(); }catch(e){}
+  const st=safeState(r);
+  if(m || (st!==1 && st!==3)) turnSoundOn(r.card);
+}
+["pointerdown","touchend","click","keydown"].forEach(t=>document.addEventListener(t,gestureSound,{capture:true,passive:true}));
 window.addEventListener("resize", ()=>updateActive());
 feed.addEventListener("input",e=>{
   const ta=e.target.closest("[data-bat]"); if(!ta) return; const key=ta.dataset.bat;
