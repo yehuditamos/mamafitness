@@ -315,6 +315,16 @@ body.bigv .vert .sbar{height:auto;padding-top:28px}
 .stbeats li::before,.tlsteps li::before{content:counter(b);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#16130F;font-weight:900;font-size:13px;margin-left:8px}
 .stbeats li.on,.tlsteps li.on{display:block;animation:pop .35s}
 .stnext{margin-left:64px;width:calc(100% - 64px)}
+#pickBtn{font-size:16px}
+.pkg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 16px}
+.pkl{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.pkc{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:right;border:2px solid var(--line,#ddd);background:#fff;border-radius:16px;padding:11px 12px;font:inherit;font-weight:800;font-size:15px;color:var(--ink);line-height:1.25}
+.pkc span{font-size:22px}.pkc small{font-weight:600;font-size:12px;opacity:.65}
+.pkc.on{border-color:var(--ink);background:var(--ink);color:#fff}.pkc.on small{opacity:.8}
+.pkn{background:#FFF3D6;border-radius:14px;padding:11px 13px;font-size:14px;line-height:1.45;margin-bottom:12px}
+.lnk{border:0;background:none;font:inherit;font-weight:900;color:var(--tomato);padding:0;text-decoration:underline}
+.btn[disabled]{opacity:.45}
+
 .like1{width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.28);backdrop-filter:blur(8px);color:#fff;font-size:30px;line-height:1;display:grid;place-items:center;padding:0 0 3px;transition:transform .15s}
 .like1:active{transform:scale(.85)}
 .like1.on{color:var(--lc,#FF4D2E);border-color:var(--lc,#FF4D2E);box-shadow:0 0 10px var(--lc,#FF4D2E),0 0 26px var(--lc,#FF4D2E),inset 0 0 10px var(--lc,#FF4D2E);text-shadow:0 0 8px var(--lc,#FF4D2E);animation:pop .4s}
@@ -527,6 +537,7 @@ textarea:focus,input:focus{box-shadow:0 0 0 4px rgba(255,77,46,.18)}
   <div class="flex"></div>
   <button class="pill inb" id="inboxBtn" aria-label="הודעות"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><b class="badge" id="inboxN" hidden>0</b></button>
   <button class="pill" id="timerPill" aria-label="משך שימוש"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerTxt">10:00</span></button>
+  <button class="pill i" id="pickBtn" aria-label="לבחור מה אני רואה">🎛️</button>
   <button class="pill i pen" id="ffBtn" aria-label="פריפלואו"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
 </header>
 <div class="timebar"><i id="timeFill"></i></div>
@@ -1157,7 +1168,7 @@ function mergeContent(c){
   addI(c.st,STR,x=>x.tag && x.who && Array.isArray(x.beats) && x.beats.length>=2 && x.ask);
   addI(c.nm,NM,x=>x.n && x.h);
   addI(c.pl,PL,x=>x.a && x.b && x.aUp && x.aDown && x.bUp && x.bDown && x.fact);
-  if(Array.isArray(c.era)) c.era.forEach(x=>{ if(x && /^[a-z0-9]{3,40}$/i.test(x.id||"") && x.q && Array.isArray(x.opts) && x.opts.length>=2 && x.opts.every(o=>o&&o.t&&o.r) && !G[x.id]){ G[x.id]={era:true, q:x.q, opts:x.opts.map(o=>O(o.t,o.r))}; changed=true; } });
+  if(Array.isArray(c.era)) c.era.forEach(x=>{ if(x && /^[a-z0-9]{3,40}$/i.test(x.id||"") && x.q && Array.isArray(x.opts) && x.opts.length>=2 && x.opts.every(o=>o&&o.t&&o.r) && !G[x.id]){ G[x.id]={era:true, q:x.q, opts:x.opts.map(o=>O(o.t,o.r)), ...(Array.isArray(x.topics)?{topics:x.topics, love:x.topics.includes("love")}:{})}; changed=true; } });
   addI(c.tl,TL,x=>x.name && Array.isArray(x.steps) && x.steps.length>=2 && x.proof);
   if(c.updated) CONTENT_UPDATED=c.updated;
   return changed;
@@ -1193,17 +1204,53 @@ const PREF = { hide: rl("hide",[]), less: rl("less",{}), seen: rl("seen",{}), sk
 const DAY = 864e5;
 const seenWithin = (k,days) => PREF.seen[k] && Date.now()-PREF.seen[k] < days*DAY;
 const lessOf = k => PREF.less[k]||0;
+
+/* ---------- בחירת תכנים: כל אחד בוחר מה הוא רואה. נשמר רק במכשיר, בלי חשבון ---------- */
+const PICK_T = {
+  biz:{e:"💼",n:"עסקים, שיווק ומכירות"}, money:{e:"💰",n:"כסף וחיסכון"}, founders:{e:"🚀",n:"יזמים וסיפורי הצלחה"},
+  growth:{e:"🌱",n:"התפתחות אישית והרגלים"}, mind:{e:"🧘",n:"ראש שקט ורגשות"}, love:{e:"❤️",n:"זוגיות, הורות וקשרים"},
+  career:{e:"🧭",n:"קריירה והובלת צוות"}, world:{e:"🌍",n:"חדשות טובות מהעולם"} };
+const SPK = {"Alex Hormozi":["biz","money","career"],"Leila Hormozi":["biz","career"],"Mel Robbins":["growth","mind"],"The Diary Of A CEO":["money","career","growth"],
+  "עידן וולר":["biz","founders"],"Tony Robbins":["growth","mind"],"Simon Sinek":["career","growth"],"TEDx":["growth","mind"],"Angela Duckworth":["growth"],
+  "Chris Voss":["biz","career"],"James Clear":["growth"],"Tim Urban":["growth","mind"],"Morgan Housel":["money"],"Esther Perel":["love","mind"],"Good Inside":["love","growth"]};
+const KW = {love:/marri|love|relationship|dating|partner|kids|child|parent|mom|זוגיות|הורות|ילד|זוג|אמא|הורים/i,
+  money:/money|rich|sav(e|ing)|wealth|poor|broke|\$|pric|invest|כסף|מיליון|חיסכון|עשיר|מחיר/i,
+  career:/employee|team|raise|career|hire|fire|meeting|leader|boss|job|צוות|עובד|קריירה|מנהל|גיוס/i,
+  mind:/stress|anxi|calm|sleep|procrastinat|worr|overthink|לחץ|רוגע|שקט|חרדה|שינה/i,
+  founders:/rock bottom|startup|founder|exit|built|יזמ|אקזיט|התחלות|מיליון דולר/i, biz:/business|sales|lead|market|brand|offer|customer|עסק|שיווק|לקוח|מכיר|הצע/i};
+const vidLang = v => /[֐-׿]/.test(v.title||"") ? "he" : "en";
+function vidTopics(v){ const t=new Set(Array.isArray(v.topics)?v.topics:(SPK[v.who]||["growth"])); const txt=(v.title||"")+" "+(v.he||"")+" "+(v.hook||"");
+  Object.entries(KW).forEach(([k,re])=>{ if(re.test(txt)) t.add(k); }); return [...t]; }
+function cardTopics(f){
+  if(Array.isArray(f.topics)) return f.topics;
+  switch(f.type){
+    case "st": return ["founders","money"]; case "nm": return ["money","founders"]; case "nw": return ["world"];
+    case "bk": return [{self:"growth",biz:"biz",money:"money",mind:"mind"}[f.cat]||"growth"];
+    case "pl": return ["money","biz"]; case "gs": return ["biz","money","growth"]; case "tl": return ["growth","mind","career"];
+    case "g": return f.era?["growth","career"]:f.hard?["growth","biz"]:["growth","mind"];
+    case "m": return /^b|^biz/.test(f.key.split("-")[1]||"")?["biz"]:["growth","mind"];
+    case "k": return ["biz","growth"]; case "q": return ["mind"]; case "ba": return ["biz"]; case "fw": return ["mind"]; case "p": return ["growth"];
+    default: return ["growth"]; } }
+let PICK = rl("pick", null);
+const pickVid = v => !PICK || ((PICK.lang==="both" || vidLang(v)===PICK.lang) && ((PICK.sp||[]).includes(v.who) || vidTopics(v).some(t=>PICK.t.includes(t))));
 function buildFeed(){
   const answered = {...rl("guts",{}), ...rl("polls",{})};
   const ok = x => !PREF.hide.includes(x.key);
   let vids = shuffle(Object.keys(S).map(k=>({type:"v", key:"v-"+k, sk:k, ...S[k]})));
+  if(PICK){ const allV=vids; vids=allV.filter(pickVid);
+    // מעט סרטונים בנושא? משלימים מנושאים קרובים באותה שפה (עסקים, התפתחות)
+    const effN=()=>{ const c={}; vids.forEach(v=>c[v.who]=(c[v.who]||0)+1); return Object.values(c).reduce((a,n)=>a+Math.min(n,6),0); };
+    if(effN()<12){ const have=new Set(vids.map(v=>v.key)), near={founders:["biz","money"],money:["biz","founders"],career:["biz","growth"],love:["mind","growth"],mind:["growth"],world:["growth","mind"],biz:["founders","money"],growth:["mind"]};
+      const adj=new Set(PICK.t.flatMap(t=>near[t]||[]));
+      vids.push(...allV.filter(v=>!have.has(v.key) && (PICK.lang==="both"||vidLang(v)===PICK.lang) && vidTopics(v).some(t=>adj.has(t))).slice(0,Math.max(4,12-effN()))); } }
   { const seen=rl("seenv",{}), cut=Date.now()-4*864e5, fresh=vids.filter(v=>!(seen[v.key]>cut)), old=vids.filter(v=>seen[v.key]>cut).sort((a,b)=>seen[a.key]-seen[b.key]);
     vids = fresh.length>=20 ? fresh : [...fresh, ...old];
     // גיוון: לכל דובר/ת לכל היותר 4 סרטונים בפיד, ומסודרים בסבב כך שאף אחד לא משתלט
     const by={}; vids.forEach(v=>{ const w=v.who||"?"; (by[w]=by[w]||[]).push(v); });
     // דוברים שיהודית ביקשה במיוחד: עד 6 בפיד, והראשונים בסבב
-    const FAV=["עידן וולר"];
-    const lanes=shuffle(Object.entries(by).filter(([w])=>!FAV.includes(w)).map(([w,l])=>l.slice(0,4)));
+    const FAV= PICK && PICK.sp && PICK.sp.length ? PICK.sp : ["עידן וולר"];
+    const cap = PICK ? Math.max(4, Math.ceil(30/Math.max(1,Object.keys(by).length))) : 4;
+    const lanes=shuffle(Object.entries(by).filter(([w])=>!FAV.includes(w)).map(([w,l])=>l.slice(0,cap)));
     FAV.forEach(w=>{ if(by[w]) lanes.unshift(by[w].slice(0,6)); });
     const out=[];
     for(let r=0; out.length<45 && lanes.some(l=>l.length); r++) lanes.forEach(l=>{ if(l.length && out.length<45) out.push(l.shift()); });
@@ -1248,8 +1295,19 @@ function buildFeed(){
   // הסרטון של הספר תמיד מיד אחרי הספר
   out.filter(x=>x && x.type==="bk" && x.next).forEach(b=>{ const vi=out.findIndex(x=>x && x.key===b.next); if(vi<0){ b.next=null; return; } const v=out.splice(vi,1)[0]; out.splice(out.indexOf(b)+1,0,v); });
   let fin0=out.filter(Boolean); const now=Date.now();
+  if(PICK && PICK.t && PICK.t.length){
+    // פיד לפי בחירה: כל הכרטיסים מכל הסוגים שמתאימים לנושאים, עם תקרה לכל סוג
+    const gsA=rl("gs",{}), plA=rl("pl",{}), hit=f=>cardTopics(f).some(t=>PICK.t.includes(t));
+    const fresh=x=>ok(x) && !(x.key in answered) && !seenWithin(x.key,3) && !(x.key in gsA) && !(x.key in plA);
+    const caps={bk:6,nw:8,ba:3,g:10,m:8,q:4,k:3,fw:1,p:3,gs:6,st:8,nm:8,pl:6,tl:4};
+    let cards=[]; Object.keys(caps).forEach(t=>{ if(!SRC[t]) return; let l=Object.keys(SRC[t]).filter(k=>!(t==="g"&&(k==="body"||!G[k].opts))).map(k=>mk(t,k)).filter(x=>hit(x)&&fresh(x)); cards.push(...shuffle(l).slice(0,caps[t])); });
+    if(cards.length<25){ const more=shuffle(Object.keys(caps).filter(t=>SRC[t]&&t!=="nw").flatMap(t=>Object.keys(SRC[t]).filter(k=>!(t==="g"&&(k==="body"||!G[k].opts))).map(k=>mk(t,k))).filter(x=>!hit(x)&&fresh(x)&&cardTopics(x).some(t=>t==="growth"||t==="mind"))); const have=new Set(cards.map(c=>c.key)); for(const x of more){ if(cards.length>=25) break; if(!have.has(x.key)){ cards.push(x); have.add(x.key); } } }
+    cards=shuffle(cards); const vq=fin0.filter(f=>f.type==="v"), w=[];
+    const k=Math.max(1, Math.round(cards.length/Math.max(1,vq.length)));
+    while(vq.length||cards.length){ if(vq.length) w.push(vq.shift()); for(let i=0;i<k && cards.length;i++) w.push(cards.shift()); if(w.length>=90) break; }
+    fin0=w; }
   // יחס כמו באינסטגרם: בערך כל כרטיס שני סרטון, ומעט משימות
-  { let tasks=0; fin0=fin0.filter(f=>KIND[f.type]!=="a" || ++tasks<=2);
+  if(!PICK || !PICK.t || !PICK.t.length) { let tasks=0; fin0=fin0.filter(f=>KIND[f.type]!=="a" || ++tasks<=2);
     const units=[], vq=[];
     for(let i=0;i<fin0.length;i++){ const f=fin0[i];
       if(f.type==="bk" && f.next && fin0[i+1] && fin0[i+1].key===f.next){ units.push([f,fin0[i+1]]); i++; }
@@ -1258,7 +1316,7 @@ function buildFeed(){
       if(pls.length<3) pls.push(...shuffle(Object.keys(PL).filter(k=>!("pl-"+k in pa) && !pls.some(u=>u[0].key==="pl-"+k))).slice(0,3-pls.length).map(k=>[mk("pl",k)]));
       pls.slice(0,3).forEach((u,j)=>units.splice(Math.min(1+j*5,units.length),0,u)); }
     { const ga=rl("guts",{}); let eras=units.filter(u=>u[0].type==="g"&&u[0].era); for(const u of eras) units.splice(units.indexOf(u),1);
-      if(eras.length<2) eras.push(...shuffle(Object.keys(G).filter(k=>G[k].era && !("g-"+k in ga) && !eras.some(u=>u[0].key==="g-"+k))).slice(0,2-eras.length).map(k=>[mk("g",k)]));
+      if(eras.length<2) eras.push(...shuffle(Object.keys(G).filter(k=>G[k].era && !G[k].love && !("g-"+k in ga) && !eras.some(u=>u[0].key==="g-"+k))).slice(0,2-eras.length).map(k=>[mk("g",k)]));
       eras.slice(0,2).forEach((u,j)=>units.splice(Math.min(3+j*6,units.length),0,u)); }
     { const t=likeTaste(); if(Object.keys(t).length){
         const wr=x=>Math.random()/(1+tasteScore(x,t)*0.6);
@@ -1447,7 +1505,7 @@ function cardHTML(it){
     const a=guts[it.key];
     return `<article class="card g ${it.era?"era":""} ${a?"answered":""}" id="${it.key}" data-k="${it.key}" style="--acc:#FF4D2E">
       <div class="bg" style="background:#0E0C0A"><div class="blob" style="width:80vw;height:80vw;max-width:460px;max-height:460px;background:#FF4D2E;top:-30%;left:-30%;opacity:.35"></div></div>
-      <div class="content" style="color:#F3EEE4"><span class="gk">${it.era?"✨ שאלה לעידן החדש":it.hard?"שאלה קשה. בלי לברוח.":"רגע. שאלה אחת."}</span>
+      <div class="content" style="color:#F3EEE4"><span class="gk">${it.love?"❤️ שאלה על הקשרים":it.era?"✨ שאלה לעידן החדש":it.hard?"שאלה קשה. בלי לברוח.":"רגע. שאלה אחת."}</span>
         <h2 class="hook">${kin(it.q)}</h2>
         ${it.opts?`<div class="opts gopts">${it.opts.map((o,i)=>`<button class="opt gopt ${a&&a.i===i?"pick":""}" data-g="${it.key}" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>${it.era?`<form class="gin era" data-g="${it.key}"><textarea rows="1" maxlength="80" placeholder="או במילים שלך…">${a&&a.text?esc(a.text):""}</textarea><button>זה שלי ←</button></form>`:""}`
           :`<form class="gin" data-g="${it.key}"><textarea rows="2" maxlength="140" placeholder="${esc(it.input)}">${a&&a.text?esc(a.text):""}</textarea><button>זהו ←</button></form>`}
@@ -2149,6 +2207,41 @@ async function startTilt(card){
 }
 document.addEventListener("click",e=>{ const t=e.target.closest("[data-tilt]"); if(t){ e.stopPropagation(); startTilt(t.closest(".card")); } },true);
 
+
+/* מסך בחירה */
+function openPick(first){
+  const st={t:new Set(PICK?PICK.t:[]), lang:PICK?PICK.lang:null, sp:new Set(PICK?PICK.sp||[]:[]), step:1};
+  const allV=Object.values(S);
+  const vCount=(lang,ts)=>allV.filter(v=>(lang==="both"||vidLang(v)===lang)&&(!ts.size||vidTopics(v).some(t=>ts.has(t)))).length;
+  const draw=()=>{
+    let h="";
+    if(st.step===1) h=`<h3>${first?"ברוכה הבאה ל־GoGram 🌱":"מה בא לך לראות?"}</h3><p class="lead">סמני כמה שבא לך. אפשר לשנות בכל רגע מהכפתור 🎛️ למעלה.</p>
+      <div class="pkg">${Object.entries(PICK_T).map(([k,o])=>`<button class="pkc ${st.t.has(k)?"on":""}" data-pt="${k}"><span>${o.e}</span>${o.n}</button>`).join("")}</div>
+      <button class="btn ink full" data-pn="2" ${st.t.size?"":"disabled"}>${st.t.size?"הבא ←":"בחרי לפחות נושא אחד"}</button>`;
+    if(st.step===2){ const he=vCount("he",st.t), en=vCount("en",st.t);
+      h=`<h3>באיזו שפה הסרטונים?</h3><p class="lead">כל הכרטיסים בעברית. השאלה היא רק על השורטים.</p>
+      <div class="pkl">
+        <button class="pkc ${st.lang==="he"?"on":""}" data-pl="he"><span>🇮🇱</span>עברית<small>${he} סרטונים בנושאים שבחרת</small></button>
+        <button class="pkc ${st.lang==="en"?"on":""}" data-pl="en"><span>🌐</span>אנגלית, עם תרגום לעברית<small>${en} סרטונים</small></button>
+        <button class="pkc ${st.lang==="both"?"on":""}" data-pl="both"><span>✨</span>גם וגם<small>${he+en} סרטונים · מומלץ</small></button></div>
+      ${st.lang==="he"?`<div class="pkn">בעברית יש כרגע פחות סרטונים (${he}). אפשר לראות גם שורטים באנגלית עם תרגום לעברית. <button class="lnk" data-pl="both">להוסיף גם אנגלית ←</button></div>`:""}
+      <div class="row"><button class="btn paper" data-pn="1">→ חזרה</button><button class="btn ink" data-pn="3" ${st.lang?"":"disabled"}>הבא ←</button></div>`; }
+    if(st.step===3){ const by={}; allV.forEach(v=>{ if((st.lang==="both"||vidLang(v)===st.lang) && vidTopics(v).some(t=>st.t.has(t))) by[v.who]=(by[v.who]||0)+1; });
+      const list=Object.entries(by).sort((a,b)=>b[1]-a[1]);
+      h=`<h3>יש מישהו שתרצי לראות יותר?</h3><p class="lead">לא חובה. מי שתבחרי יופיע ראשון ויותר פעמים.</p>
+      <div class="pkg sp">${list.map(([w,n])=>`<button class="pkc ${st.sp.has(w)?"on":""}" data-ps="${esc(w)}">${esc(w)}<small>${n} סרטונים</small></button>`).join("")||`<p class="note">אין עדיין דוברים בשילוב הזה.</p>`}</div>
+      <div class="row"><button class="btn paper" data-pn="2">→ חזרה</button><button class="btn ink" data-pdone="1">${st.sp.size?"סיימתי ✓":"דלגי, סיימתי ✓"}</button></div>`; }
+    openSheet(h+`<p class="note">הבחירות נשמרות רק בטלפון שלך. בלי חשבון, בלי שם, בלי מייל.</p>`);
+    $("#sheet").onclick=e=>{ const b=e.target.closest("button"); if(!b||b.disabled) return;
+      if(b.dataset.pt){ const k=b.dataset.pt; st.t.has(k)?st.t.delete(k):st.t.add(k); draw(); }
+      else if(b.dataset.pl){ st.lang=b.dataset.pl; draw(); }
+      else if(b.dataset.ps){ const w=b.dataset.ps; st.sp.has(w)?st.sp.delete(w):st.sp.add(w); draw(); }
+      else if(b.dataset.pn){ st.step=+b.dataset.pn; draw(); }
+      else if(b.dataset.pdone){ PICK={t:[...st.t], lang:st.lang, sp:[...st.sp], at:Date.now()}; LS.set("pick",PICK); closeSheet();
+        destroyAll(); FEED.length=0; FEED.push(...buildFeed()); renderFeed(); drawGrow(); $("#feed").scrollTo(0,0); led(); toast("הפיד נבנה מחדש בשבילך ✦"); } };
+  };
+  draw();
+}
 /* ---------- sheet ---------- */
 function openSheet(html){ const s=$("#sheet"); s.innerHTML=`<div class="grab"></div>`+html; s.scrollTop=0; $("#scrim").classList.add("on"); s.classList.add("on"); }
 function closeSheet(){ $("#sheet").onclick=null; $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); setTimeout(playActive,350); }
@@ -2664,7 +2757,7 @@ $("#infoBtn").onclick=()=>{
    <div class="stack"><button class="btn tomato full" id="infoA2hs">הוספה למסך הבית</button><button class="btn ink full" id="demoRecall">להתנסות עכשיו בשאלת החזרה</button><button class="btn line full" id="wipe">מחיקת כל מה ששמרתי</button></div>`);
   $("#infoA2hs").onclick=sheetInstall;
   $("#demoRecall").onclick=()=>{ const ins=pickInsight(true); closeSheet(); if(!ins){ toast("קודם לחצי ״לקחתי״ על תוכן כלשהו"); return; } showRecall(ins); };
-  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips","pages","intent","storySeen","likes","keep","seenv","pl","gs","locks","ledi"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
+  $("#wipe").onclick=()=>{ const w=$("#wipe"); if(w.dataset.c){ ["insights","actions","shares","session","limit","last","polls","peak","seenhint","moves","guts","nudged","joined","sharesToday","topics","hide","less","seen","skips","pages","intent","storySeen","likes","keep","seenv","pl","gs","locks","ledi","pick","bigv"].forEach(k=>{try{localStorage.removeItem("gg_"+k);}catch(e){}}); insights=[];actions=[];shares=[];polls={};moves=[];guts={};nudged=0;topics=[]; newSession(); renderFeed(); drawGrow(); closeSheet(); toast("נמחק"); } else { w.dataset.c="1"; w.textContent="בטוחה? לחיצה נוספת מוחקת"; } };
 };
 
 /* ---------- boot ---------- */
@@ -2675,6 +2768,8 @@ let DL=null;
   LS.set("last",now); setInterval(()=>LS.set("last",Date.now()),15000);
   document.addEventListener("visibilitychange",()=>{ lastTick=Date.now(); if(!document.hidden) LS.set("last",Date.now()); else LS.set("session",session); });
   renderFeed(); drawTimer(); drawGrow(); setInterval(tick,1000);
+  $("#pickBtn").onclick=()=>openPick(false);
+  if(!PICK) setTimeout(()=>openPick(true),700);
   drawInbox(); setInterval(drawInbox, 60000);
   { const n=inboxItems().length; if(n) setTimeout(()=>{ if(!overlayOn()) toast(n===1?"📬 משהו מחכה לך":`📬 ${n} דברים מחכים לך`); drawInbox(true); },1400); }
   if(now-last>RECALL_GAP){ const ins=pickInsight(false); if(ins) showRecall(ins); }
