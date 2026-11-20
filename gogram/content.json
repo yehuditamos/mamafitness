@@ -1,6 +1,81 @@
 {
- "updated": "2026-11-19T19:00:31.000Z",
+ "updated": "2026-11-20T04:58:44.000Z",
  "news": [
+  {
+   "id": "casspi2011",
+   "e": "🏀",
+   "where": "ישראל",
+   "h": "עומרי כספי השקיע מוקדם, *והחברה נמכרה ב־4.5 מיליארד דולר*",
+   "p": "פאלו אלטו נטוורקס, שהקים הישראלי ניר צוק, רוכשת את Applied Compute בעסקת מניות. קרן Swish של כספי, שליוותה אותה מהסיד, צפויה לרווח יפה.",
+   "src": "Globes",
+   "url": "https://en.globes.co.il/en/article-with-45b-acquisition-palo-alto-provides-big-returns-for-casspi-1001564102",
+   "d": "19.11.2026",
+   "c": [
+    "#E65100",
+    "#2B1200",
+    "#FFD180"
+   ]
+  },
+  {
+   "id": "vero2011",
+   "e": "🛡️",
+   "where": "ישראל",
+   "h": "שני יזמים ישראלים גייסו *11 מיליון דולר* כדי לשמור על AI בטוח",
+   "p": "Vero, שהוקמה ב־2025 בתל אביב ובניו יורק, בנתה מערכת ששומרת על כללי אבטחה בזמן שסוכני AI עובדים. לדבריה היא כבר עובדת עם כמה מחברות Fortune 500.",
+   "src": "Ynetnews",
+   "url": "https://www.ynetnews.com/business/article/sjhlifnamg",
+   "d": "19.11.2026",
+   "c": [
+    "#1565C0",
+    "#0A1A33",
+    "#90CAF9"
+   ]
+  },
+  {
+   "id": "dudleya2011",
+   "e": "🌱",
+   "where": "העולם",
+   "h": "סטודנטים בקליפורניה *מצילים צמח נדיר* שגדל רק ליד הקמפוס",
+   "p": "חוקרים וסטודנטים באוניברסיטת סנטה קלרה אוספים זרעים, מגדלים את הצמח ומחזירים אותו לטבע. במקביל פיתחו זנים צבעוניים למשתלות, כדי שלא יהיה טעם לגנוב אותו מהשטח.",
+   "src": "Good News Network",
+   "url": "https://www.goodnewsnetwork.org/students-fighting-to-save-poached-plant-species-that-only-exists-near-their-campus/",
+   "d": "18.11.2026",
+   "c": [
+    "#2E7D32",
+    "#0B2410",
+    "#C5E1A5"
+   ]
+  },
+  {
+   "id": "newsbound2011",
+   "e": "📣",
+   "where": "ישראל",
+   "h": "סטארט־אפ ישראלי שעוזר לחברות *לעשות יחסי ציבור לבד* גייס 3 מיליון דולר",
+   "p": "Newsbound של רן פלד עוקבת אחרי החדשות, מאתרת עיתונאים ומנסחת פניות, ומומחים אנושיים בודקים כל שלב. לפי החברה, 70% מהלקוחות המשלמים שלה כבר עזבו משרדי יחסי ציבור.",
+   "src": "CTech by Calcalist",
+   "url": "https://www.calcalistech.com/ctechnews/article/hjvcityrfl",
+   "d": "17.11.2026",
+   "c": [
+    "#6A1B9A",
+    "#1E0A2B",
+    "#E1BEE7"
+   ]
+  },
+  {
+   "id": "buffett2011",
+   "e": "🦃",
+   "where": "העולם",
+   "h": "וורן באפט נתן מתנת חג ההודיה של *5.5 מיליארד דולר*",
+   "p": "המשקיע המפורסם המשיך לתרום מהונו ואמר שטוב לב הוא דבר שאין לו מחיר.",
+   "src": "Good News Network",
+   "url": "https://www.goodnewsnetwork.org/warren-buffett-gives-away-5-5-billion-thanksgiving-gift/",
+   "d": "17.11.2026",
+   "c": [
+    "#AD1457",
+    "#2B0A18",
+    "#F8BBD0"
+   ]
+  },
   {
    "id": "nevolabs1911",
    "e": "🔬",
@@ -47,66 +122,6 @@
    ]
   },
   {
-   "id": "parkmagnet1911",
-   "e": "🧲",
-   "where": "העולם",
-   "h": "מגנטים זעירים במוח שיפרו תנועה בעכברים *בלי שתל ובלי חוטים*",
-   "p": "חוקרים בגרמניה הפעילו חלקיקים מגנטיים במוח בעזרת שדה חיצוני, והתוצאה דמתה לקוצב מוחי. בינתיים זה רק בבעלי חיים, והדרך עוד ארוכה.",
-   "src": "ScienceDaily",
-   "url": "https://www.sciencedaily.com/releases/2026/11/261116023354.htm",
-   "d": "17.11.2026",
-   "c": [
-    "#059669",
-    "#052E22",
-    "#A7F3D0"
-   ]
-  },
-  {
-   "id": "bananaman1911",
-   "e": "🍌",
-   "where": "העולם",
-   "h": "ילד בתחפושת בננה על אופניים *הפך לגיבור של עיר שלמה*",
-   "p": "בלינטון שבאינדיאנה כולם מחפשים את \"איש הבננה\". קבוצת ריצה של בנות ארגנה ריצה לכבודו, ותושבים התחפשו אליו בהאלווין.",
-   "src": "Sunny Skyz",
-   "url": "https://www.sunnyskyz.com/good-news/6356/Banana-Man-Has-Become-an-Unlikely-Superhero-Bringing-Smiles-to-an-Indiana-Town",
-   "d": "16.11.2026",
-   "c": [
-    "#CA8A04",
-    "#2E2003",
-    "#FEF08A"
-   ]
-  },
-  {
-   "id": "wtseo1911",
-   "e": "🏆",
-   "where": "העולם",
-   "h": "קהילה שאישה אחת הקימה ב־2019 *מחברת 12,000 נשים בטק*",
-   "p": "Women in Tech SEO של ארידג' אבו־עלי זכתה בפרס בטקס המיזמים החברתיים בבריטניה. הקהילה מציעה מנטורינג, מלגות והזדמנויות לעלות לבמה.",
-   "src": "Business Focus",
-   "url": "https://businessfocusmagazine.com/2026/11/16/from-a-9m-grocery-to-a-1400-farmer-co-op-britains-most-hopeful-businesses-revealed",
-   "d": "16.11.2026",
-   "c": [
-    "#9333EA",
-    "#2A0B3D",
-    "#E9D5FF"
-   ]
-  },
-  {
-   "id": "bay1911",
-   "e": "🚀",
-   "where": "ישראל",
-   "h": "בגיל 31 היא גייסה 50 מיליון דולר *תוך תשעה חודשים*",
-   "p": "יובל זכריה, מנכ\"לית ומייסדת שותפה של Bay, הגיעה ל־3 מיליון דולר מכירות שנתיות בפחות מחצי שנה. בדרך היא טיפלה באביה אחרי תאונה ונשאה בחובות המשפחה.",
-   "src": "Ynet Global",
-   "url": "https://www.ynetnews.com/business/article/bjthc8pamg",
-   "d": "16.11.2026",
-   "c": [
-    "#7C3AED",
-    "#1E1033",
-    "#E9D5FF"
-   ]
-  },
-  {
    "id": "kacey1911",
    "e": "👭",
    "where": "העולם",
@@ -149,21 +164,6 @@
     "#0369A1",
     "#06202F",
     "#BAE6FD"
-   ]
-  },
-  {
-   "id": "corma1911",
-   "e": "🦄",
-   "where": "ישראל",
-   "h": "סטארט־אפ ישראלי יצא מהחשאיות והפך *ליוניקורן תוך שלושה חודשים*",
-   "p": "Corma, שהוקמה ב־2025 ומעסיקה כ־25 עובדים בתל אביב ובסן פרנסיסקו, גייסה 125 מיליון דולר לפי שווי של מיליארד דולר.",
-   "src": "CTech by Calcalist",
-   "url": "https://www.calcalistech.com/ctechnews/article/bjiqapu0me",
-   "d": "16.11.2026",
-   "c": [
-    "#059669",
-    "#052E1F",
-    "#A7F3D0"
    ]
   },
   {
@@ -224,7 +224,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "C2lG8mrhYec",
@@ -237,7 +242,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "1btznVNvtN8",
@@ -250,7 +260,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "zkqtlEwEyaM",
@@ -263,7 +278,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "mSxxM2IooYk",
@@ -276,7 +296,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "dLw8vh1OmpM",
@@ -289,7 +314,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "a8SCYATDjDg",
@@ -302,7 +332,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "zZfRKrjJgp4",
@@ -315,7 +350,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "uWRtrNn62Gg",
@@ -328,7 +368,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "kWXB0ZJhZfk",
@@ -341,7 +386,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "7euSftqxFvE",
@@ -354,7 +404,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "Ta92oGQtGh4",
@@ -367,7 +422,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "zzx8eeBt4lk",
@@ -380,7 +440,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "1TqD6gyRJ60",
@@ -393,7 +458,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "ASFFDoHVRPQ",
@@ -406,7 +476,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "Y1bKMwFOxyo",
@@ -419,7 +494,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "0d9CQSgDpX0",
@@ -432,7 +512,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "fe_neYuBewY",
@@ -445,7 +530,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "MRVr8T4saSk",
@@ -458,7 +548,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "DJ209tYmon8",
@@ -471,7 +566,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "WSP5M0S9l9c",
@@ -484,7 +584,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "jA1XroBaXVg",
@@ -497,7 +602,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "Qyoo8CdVHd4",
@@ -510,7 +620,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "D-Yl4jZ0V3g",
@@ -523,7 +638,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "mwa9WxmUuhY",
@@ -536,7 +656,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "vtJHzKRK5BY",
@@ -549,7 +674,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "H5X-BcpGL38",
@@ -562,7 +692,12 @@
    "c1": "#1F1F1F",
    "c2": "#0A0A0A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "money",
+    "career"
+   ]
   },
   {
    "id": "BBXDF1n3Hbs",
@@ -575,7 +710,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "i3YBBy5e9-M",
@@ -588,7 +727,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "xoy2bQjgtKs",
@@ -601,7 +744,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "Vluu4mXFWTE",
@@ -614,7 +761,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "IBHewh8vqgY",
@@ -627,7 +778,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "cWiEzQQaKhA",
@@ -640,7 +795,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "shuzNuQyFZQ",
@@ -653,7 +812,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "jF5TPw9i_Ow",
@@ -666,7 +829,11 @@
    "c1": "#C2185B",
    "c2": "#2A0F1E",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "growth",
+    "mind"
+   ]
   },
   {
    "id": "EFle5Uf1AGo",
@@ -679,7 +846,12 @@
    "c1": "#283593",
    "c2": "#0A0D2B",
    "c3": "#7FD1FF",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "money",
+    "career",
+    "growth"
+   ]
   },
   {
    "id": "oceXzAvm8YQ",
@@ -692,7 +864,12 @@
    "c1": "#283593",
    "c2": "#0A0D2B",
    "c3": "#7FD1FF",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "money",
+    "career",
+    "growth"
+   ]
   },
   {
    "id": "eIeNj7Pozn4",
@@ -705,7 +882,12 @@
    "c1": "#283593",
    "c2": "#0A0D2B",
    "c3": "#7FD1FF",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "money",
+    "career",
+    "growth"
+   ]
   },
   {
    "id": "vhR-JOM6-vM",
@@ -718,7 +900,12 @@
    "c1": "#283593",
    "c2": "#0A0D2B",
    "c3": "#7FD1FF",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "money",
+    "career",
+    "growth"
+   ]
   },
   {
    "id": "H4GXjqpAb4k",
@@ -731,7 +918,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "qdSeD0To9pk",
@@ -744,7 +935,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "mrVsGiGeSes",
@@ -757,7 +952,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "BXF4w76dkwk",
@@ -770,7 +969,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "qx2D5tEC6-o",
@@ -783,7 +986,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "aPpqa1VJdkU",
@@ -796,7 +1003,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "S6BOcJAKMZw",
@@ -809,7 +1020,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "W35pRmosjtE",
@@ -822,7 +1037,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "N6jYw3yThJE",
@@ -835,7 +1054,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "9FjLt-HfKLs",
@@ -848,7 +1071,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "JYxfJFMw70I",
@@ -861,7 +1088,11 @@
    "c1": "#0277BD",
    "c2": "#01223A",
    "c3": "#FFD25C",
-   "added": "2026-11-18"
+   "added": "2026-11-18",
+   "topics": [
+    "biz",
+    "founders"
+   ]
   },
   {
    "id": "HLH9LsD_Ng0",
