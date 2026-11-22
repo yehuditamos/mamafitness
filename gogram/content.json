@@ -1,6 +1,96 @@
 {
- "updated": "2026-11-21T20:59:10+02:00",
+ "updated": "2026-11-22T07:09:04+02:00",
  "news": [
+  {
+   "id": "vero11mseed",
+   "e": "🚀",
+   "where": "ישראל",
+   "h": "סטארט־אפ ישראלי בן שנה גייס *11 מיליון דולר* בסבב סיד",
+   "p": "Vero, שנוסדה ב־2025 על ידי אלעד טסלר ודניאל מירוב, מאבטחת שימוש בבינה מלאכותית בארגונים. לדבריה, היא כבר עובדת עם כמה מחברות Fortune 500.",
+   "src": "ynetnews",
+   "url": "https://www.ynetnews.com/business/article/sjhlifnamg",
+   "d": "19.11.2026",
+   "c": [
+    "#5B5BD6",
+    "#16163A",
+    "#C9C9FF"
+   ]
+  },
+  {
+   "id": "tlvportcandles",
+   "e": "🕯️",
+   "where": "ישראל",
+   "h": "מאות נרות צפים עם משאלות *יאירו את נמל תל אביב* בחנוכה",
+   "p": "ילדות, ילדים ומבוגרים יכתבו ויקשטו משאלה אישית על נר שיצוף במרינה. האירוע יתקיים ב־6 עד 10 בדצמבר, עם הדלקת חנוכייה משותפת בערב הראשון.",
+   "src": "ynetnews",
+   "url": "https://www.ynetnews.com/culture/article/rj0hnxoazx",
+   "d": "20.11.2026",
+   "c": [
+    "#F2A93B",
+    "#2A1B08",
+    "#FFE3B0"
+   ]
+  },
+  {
+   "id": "whalebreathgenome",
+   "e": "🐋",
+   "where": "העולם",
+   "h": "רחפן אסף את *הנשיפה של לווייתנים*, ומדעניות פענחו מזה גנום שלם",
+   "p": "צוות בינלאומי אסף 58 דגימות נשיפה מ־26 לווייתנים גבנונים בקנדה, בלי לגעת בהם. קודם לכן היה זמין לציבור רק גנום אחד של גבנון מצפון האוקיינוס השקט.",
+   "src": "Good News Network",
+   "url": "https://www.goodnewsnetwork.org/breath-of-whale-captured-via-drone-to-complete-genome-sequence/",
+   "d": "21.11.2026",
+   "c": [
+    "#2F8FBF",
+    "#0B2230",
+    "#B8E4F7"
+   ]
+  },
+  {
+   "id": "crisprcholesterol",
+   "e": "🧬",
+   "where": "העולם",
+   "h": "זריקה אחת של עריכה גנטית *הורידה את הכולסטרול הרע בכחצי*",
+   "p": "בניסוי ראשון בבני אדם בהובלת קליבלנד קליניק, במינון הגבוה ירד הכולסטרול הרע ב־52.5% אחרי שנה. לא דווחו תופעות לוואי חמורות שקשורות לטיפול.",
+   "src": "Good News Network",
+   "url": "https://www.goodnewsnetwork.org/first-human-trial-to-slash-bad-cholesterol-by-50pt-with-one-crispr-injection/",
+   "d": "21.11.2026",
+   "c": [
+    "#D9487A",
+    "#2E0E1B",
+    "#FFC6DA"
+   ]
+  },
+  {
+   "id": "chesterrhinocalf",
+   "e": "🦏",
+   "where": "העולם",
+   "h": "מצלמת אבטחה תיעדה *לידה נדירה של קרנף* בגן החיות צ'סטר",
+   "p": "האם אשה ילדה אחרי היריון של 15 חודשים, והגור עמד על הרגליים תוך שעה. זה חלק מתוכנית רבייה אירופית לשימור המין, שנותרו ממנו כ־4,000 בטבע.",
+   "src": "Inside Ecology",
+   "url": "https://insideecology.com/2026/11/19/rare-rhino-birth-captured-on-cctv-at-chester-zoo/",
+   "d": "19.11.2026",
+   "c": [
+    "#7A8B3C",
+    "#1C2109",
+    "#DDE8B0"
+   ]
+  },
+  {
+   "id": "dornochoysters",
+   "e": "🦪",
+   "where": "העולם",
+   "h": "צדפות בר *חזרו להתרבות בסקוטלנד* אחרי יותר ממאה שנה",
+   "p": "פרויקט שהחל ב־2017 שחרר יותר מ־140 אלף צדפות למפרץ דורנוך. היעד הוא כ־4 מיליון צדפות עד 2031.",
+   "src": "Positive News",
+   "url": "https://www.positive.news/society/good-news-stories-from-week-47-of-2026/",
+   "d": "20.11.2026",
+   "c": [
+    "#3E8E7E",
+    "#0D2420",
+    "#BFEDE2"
+   ]
+  },
   {
    "id": "biostreamfda",
    "e": "🧪",
@@ -119,96 +209,6 @@
     "#5C6BC0",
     "#141A3D",
     "#E3E7FA"
-   ]
-  },
-  {
-   "id": "voyagerlightday",
-   "e": "🚀",
-   "where": "העולם",
-   "h": "האמפייר סטייט הואר בזהב *לכבוד וויאג'ר 1*",
-   "p": "החללית ששוגרה ב־1977 הגיעה למרחק של יום אור אחד מכדור הארץ, כ־26 מיליארד ק\"מ. אות ממנה צריך עכשיו 24 שעות כדי להגיע אלינו.",
-   "src": "Good News Network",
-   "url": "https://www.goodnewsnetwork.org/empire-state-building-lit-up-with-gold-to-celebrate-nasa-spacecraft-passing-one-light-day-from-earth/",
-   "d": "19.11.2026",
-   "c": [
-    "#FFB300",
-    "#2A1E00",
-    "#FFF4D1"
-   ]
-  },
-  {
-   "id": "leoaidad",
-   "e": "👨‍👦",
-   "where": "ישראל",
-   "h": "אבא בן 73 איבד עבודה בקורונה, *והבן שלו קיבל אותו לסטארט־אפ*",
-   "p": "ד\"ר מאור פריד הקים את LEO AI, מערכת AI לתכנון מוצרים פיזיים. אביו יוסף מגיע פעם או פעמיים בשבוע לעזור במשרד.",
-   "src": "Ynetnews",
-   "url": "https://www.ynetnews.com/business/article/by7d4vv0ze",
-   "d": "20.11.2026",
-   "c": [
-    "#1E88E5",
-    "#0B1F3A",
-    "#BBDEFB"
-   ]
-  },
-  {
-   "id": "decartamazon",
-   "e": "🚀",
-   "where": "ישראל",
-   "h": "לפי גלובס, אמזון קרובה לקנות את Decart הישראלית *ביותר מ־7 מיליארד דולר*",
-   "p": "הטכנולוגיה של Decart עוזרת למעבדים להפיק יותר חישובי AI על כל קילוואט־שעה. העסקה צפויה להיחשף בסוף החודש.",
-   "src": "Globes",
-   "url": "https://en.globes.co.il/en/article-amazon-nears-deal-to-buy-decart-for-over-7b-1001564112",
-   "d": "19.11.2026",
-   "c": [
-    "#7B1FA2",
-    "#1E0B2A",
-    "#E1BEE7"
-   ]
-  },
-  {
-   "id": "torontochef100",
-   "e": "🍲",
-   "where": "העולם",
-   "h": "שפית מטורונטו מבשלת *100 ארוחות חמות* בכל יום שלישי",
-   "p": "מאז 2021 מאדי גולדברג מתנדבת בבנק מזון, ומכינה ארוחות ממה שנתרם באותו שבוע. את הבישולים היא משתפת באינסטגרם.",
-   "src": "Good Good Good",
-   "url": "https://www.goodgoodgood.co/articles/toronto-chef-food-bank-maddy-goldberg",
-   "d": "19.11.2026",
-   "c": [
-    "#F4511E",
-    "#2E0E05",
-    "#FFCCBC"
-   ]
-  },
-  {
-   "id": "chesterchick",
-   "e": "🐣",
-   "where": "העולם",
-   "h": "כפפת גומי עם מים חמים *הצילה אפרוח נדיר* בגן חיות באנגליה",
-   "p": "שומרת בגן החיות של צ'סטר חיממה כל הלילה אפרוח שהתקרר, ובבוקר אמו קיבלה אותו בחזרה. רק 15 ציפורים מהמין הזה גדלות בגני חיות באירופה.",
-   "src": "Good Good Good",
-   "url": "https://www.goodgoodgood.co/articles/endangered-species-peacock-pheasant-chicks",
-   "d": "19.11.2026",
-   "c": [
-    "#43A047",
-    "#0D2410",
-    "#C8E6C9"
-   ]
-  },
-  {
-   "id": "casspi2011",
-   "e": "🏀",
-   "where": "ישראל",
-   "h": "עומרי כספי השקיע מוקדם, *והחברה נמכרה ב־4.5 מיליארד דולר*",
-   "p": "פאלו אלטו נטוורקס, שהקים הישראלי ניר צוק, רוכשת את Applied Compute בעסקת מניות. קרן Swish של כספי, שליוותה אותה מהסיד, צפויה לרווח יפה.",
-   "src": "Globes",
-   "url": "https://en.globes.co.il/en/article-with-45b-acquisition-palo-alto-provides-big-returns-for-casspi-1001564102",
-   "d": "19.11.2026",
-   "c": [
-    "#E65100",
-    "#2B1200",
-    "#FFD180"
    ]
   }
  ],
